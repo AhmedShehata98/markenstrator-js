@@ -1,0 +1,82 @@
+@import url("https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css");
+@import url("https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css");
+@import url("https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css");
+@import url("https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css");
+/**/
+@tailwind base;
+@tailwind components;
+@layer components {
+  .header {
+    @apply fixed top-0 bg-white dark:bg-zinc-800 dark:text-white dark:border-zinc-500 border-b h-14 min-w-full;
+  }
+  .navbar-container {
+    @apply pr-4 lg:pr-6 flex items-center justify-between h-14 min-w-full;
+  }
+  .navbar {
+    @apply flex items-center gap-2;
+  }
+  .navbar-search {
+    @apply flex flex-row-reverse items-center border rounded-full overflow-hidden h-8 dark:bg-zinc-600 dark:border-zinc-500;
+  }
+  .navbar-link {
+    @apply bg-gray-200 w-9 h-9 flex items-center justify-center rounded-full shadow-inner hover:bg-gray-100 dark:bg-zinc-700 dark:text-white dark:border-zinc-400 dark:hover:bg-zinc-900;
+  }
+  .menu-btn {
+    @apply bg-gray-200 w-9 h-9 flex lg:hidden items-center justify-center rounded-full shadow-inner hover:bg-gray-100 dark:bg-zinc-700 dark:text-white dark:border-zinc-400;
+  }
+  .account-menu {
+    @apply w-full lg:w-52 min-h-fit bg-white border absolute top-full right-0 lg:right-7 p-2 capitalize shadow -translate-y-4 opacity-0  transition-all pointer-events-none dark:bg-zinc-700 dark:border-zinc-400;
+  }
+  .show-account-menu {
+    @apply translate-y-0 opacity-100 pointer-events-auto transition-all;
+  }
+  .account-menu-items {
+    @apply flex gap-3 items-center justify-between hover:bg-gray-200 px-2 py-1 cursor-pointer rounded-md dark:hover:bg-zinc-500;
+  }
+  .sidebar-menu {
+    @apply fixed left-0 py-4 lg:py-14 bg-white w-16 h-screen border-r flex flex-col items-center dark:bg-zinc-800 dark:border-zinc-500 transition-all lg:-translate-x-0 -translate-x-full;
+  }
+  .side-menu-show {
+    @apply w-full lg:w-16 items-start justify-start lg:items-center absolute lg:fixed left-0 translate-x-0 z-30;
+  }
+  .side-menu-hide {
+    @apply w-auto items-start lg:items-center justify-start -translate-x-full lg:-translate-x-0 absolute left-0;
+  }
+  .sidebar-navigation {
+    @apply w-16 gap-4 flex flex-col items-center justify-around;
+  }
+  .sidebar-items {
+    @apply w-8 h-8 bg-gray-100 flex items-center justify-center rounded-lg text-sky-700 hover:bg-sky-300 hover:text-gray-800 shadow-inner dark:bg-zinc-600 dark:text-sky-200;
+  }
+  .sidebar-items-active {
+    @apply bg-sky-300 text-gray-800 dark:text-zinc-100 dark:bg-sky-500;
+  }
+  .main-home {
+    @apply flex min-h-screen w-full bg-zinc-100 dark:bg-zinc-700 mt-14;
+  }
+  .home-content-container {
+    @apply flex flex-col px-3 lg:px-10 w-full min-h-screen mt-7;
+  }
+  .home-content-children {
+    @apply w-full flex gap-3 items-start justify-between flex-col lg:flex-row mb-3;
+  }
+  .overview-statistics {
+    @apply flex flex-col lg:flex-row justify-between grid-cols-1 lg:grid lg:grid-cols-4 gap-4 text-center h-fit w-full mb-3 shadow;
+  }
+  .statistics-box {
+    @apply flex flex-col justify-between items-center bg-white rounded-md shadow-sm px-2 py-4 hover:-translate-y-3 transition-transform duration-500 dark:bg-zinc-800;
+  }
+  .statistic-box-icon {
+    @apply aspect-square bg-cyan-500 text-white p-3 rounded-full;
+  }
+  .Progressbar {
+    @apply flex flex-col items-start justify-between gap-2 mt-8;
+  }
+  .Progressbar-item-container {
+    @apply min-w-full flex justify-between gap-5 items-center capitalize text-gray-600 font-bold dark:text-zinc-300;
+  }
+  .progress-status {
+    @apply h-3 rounded-md inline-block w-full relative before:absolute before:top-0 before:left-0 before:h-full before:rounded-md before:transition-all underline-offset-2;
+  }
+}
+@tailwind utilities;
