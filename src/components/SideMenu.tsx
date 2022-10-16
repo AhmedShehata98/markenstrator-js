@@ -1,41 +1,31 @@
-import React, { forwardRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import UserPannelBtn from "./UserPannelBtn";
+import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
+import { TOGGLE_THEME } from "../Redux/Slice/AppSlice";
+import SidebarNavLink from "./SidebarNavLink";
+import { nanoid } from "@reduxjs/toolkit";
+import { routesList } from "../Router/RoutesList";
 
-const SideMenu = forwardRef((props, ref: React.LegacyRef<HTMLElement>) => {
-  function StoreThemeClass(className: string): void {
-    window.localStorage.setItem("themeMode", className);
-  }
-  function getThemeClass(localStoreageThemeKey: string): string | null {
-    return window.localStorage.getItem(localStoreageThemeKey);
-  }
-  const toggleThemeMode: React.MouseEventHandler<HTMLButtonElement> = (
-    event
-  ): void => {
-    const htmlElement = window.document.documentElement as HTMLHtmlElement;
-    const button = event.target as HTMLElement;
-    const icon = button.firstChild as HTMLElement;
-    //
-    if (htmlElement.classList.contains("dark")) {
-      htmlElement.classList.remove("dark");
-      htmlElement.classList.add("light");
+const SideMenu = () => {
+  const dispatch = useAppDispatch();
+  const { showSidebar } = useAppSelector((state) => state["app-settings"]);
+  const sidebarRef = useRef<HTMLElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (showSidebar) {
+      sidebarRef.current?.classList.remove("side-menu-hide");
+      sidebarRef.current?.classList.add("side-menu-show");
     } else {
-      htmlElement.classList.remove("light");
-      htmlElement.classList.add("dark");
+      sidebarRef.current?.classList.remove("side-menu-show");
+      sidebarRef.current?.classList.add("side-menu-hide");
     }
-    StoreThemeClass(htmlElement.className);
-    if (icon.classList.contains("fi-sr-moon")) {
-      icon.classList.remove("fi-sr-moon");
-      icon.classList.add("fi-sr-sun");
-    } else {
-      icon.classList.remove("fi-sr-sun");
-      icon.classList.add("fi-sr-moon");
-    }
-  };
+  }, [showSidebar]);
+
   return (
-    <aside ref={ref} className="sidebar-menu">
-      <form className="flex items-center justify-between border-2 border-gray-400 w-10/12 mb-3 mx-auto px-2 lg:hidden">
+    <aside ref={sidebarRef} className="sidebar-menu">
+      <form className="side-menu-search">
         <input
-          className="rounded-full h-8 focus:outline-none placeholder:capitalize placeholder:text-sm dark:bg-zinc-600"
+          className="side-menu-input"
           type="search"
           placeholder="search on something .."
         />
@@ -53,32 +43,50 @@ const SideMenu = forwardRef((props, ref: React.LegacyRef<HTMLElement>) => {
             icon={
               <i className="fi fi-sr-moon pointer-events-none select-none"></i>
             }
-            clickHandler={toggleThemeMode}
+            clickHandler={(ev) => dispatch(TOGGLE_THEME())}
           />
         </span>
       </div>
       <nav className="sidebar-navigation">
-        <a href="#" className="sidebar-items sidebar-items-active">
-          <i className="fi fi-rr-apps leading-3"></i>
-        </a>
-        <a href="#" className="sidebar-items">
-          <i className="fi fi-rr-box leading-3"></i>
-        </a>
-        <a href="#" className="sidebar-items">
-          <i className="fi fi-br-shopping-cart-add leading-3"></i>
-        </a>
-        <a href="#" className="sidebar-items">
-          <i className="fi fi-rs-chart-pie leading-3"></i>
-        </a>
-        <a href="#" className="sidebar-items">
-          <i className="fi fi-rs-users leading-3"></i>
-        </a>
-        <a href="#" className="sidebar-items">
-          <i className="fi fi-rs-treatment leading-3"></i>
-        </a>
+        <SidebarNavLink
+          key={nanoid(3)}
+          icon={<i className="fi fi-rr-apps leading-3"></i>}
+          title="dashboard"
+          to={routesList.app || "#"}
+        />
+        <SidebarNavLink
+          key={nanoid(3)}
+          icon={<i className="fi fi-br-shopping-cart-add leading-3"></i>}
+          title="add products"
+          to={routesList.addProducts || "#"}
+        />
+        <SidebarNavLink
+          key={nanoid(3)}
+          icon={<i className="fi fi-rs-chart-pie leading-3"></i>}
+          title="statistics"
+          to={routesList.statistics || "#"}
+        />
+        <SidebarNavLink
+          key={nanoid(3)}
+          icon={<i className="fi fi-rs-users leading-3"></i>}
+          title="users"
+          to={routesList.users || "#"}
+        />
+        <SidebarNavLink
+          key={nanoid(3)}
+          icon={<i className="fi fi-rs-treatment leading-3"></i>}
+          title="invoices"
+          to={routesList.invoices || "#"}
+        />
+        <SidebarNavLink
+          key={nanoid(3)}
+          icon={<i className="fi fi-rr-settings leading-3"></i>}
+          title="settings"
+          to={routesList.settings || "#"}
+        />
       </nav>
     </aside>
   );
-});
+};
 
 export default SideMenu;

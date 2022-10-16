@@ -1,75 +1,38 @@
 import React, { useLayoutEffect, useRef } from "react";
 import logo from "../assets/images/logo.png";
 import UserPannelBtn from "./UserPannelBtn";
+import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
+import { TOGGLE_THEME, TOGGLE_SIDEBAR } from "../Redux/Slice/AppSlice";
 
-type NavbarProps = {
-  showSidebarRef: React.MutableRefObject<null | HTMLElement>;
-};
-
-const Navbar = ({ showSidebarRef }: NavbarProps) => {
+const Navbar = () => {
+  const { currentTheme, showSidebar } = useAppSelector(
+    (state) => state["app-settings"]
+  );
+  const dispatch = useAppDispatch();
   const accountMenuRef = useRef<HTMLUListElement>(null);
   const handleAccountMenu = (e: React.MouseEvent<HTMLButtonElement>): void => {
     accountMenuRef.current?.classList.toggle("show-account-menu");
   };
-  const toggleSidebar = (event: React.MouseEvent<HTMLElement>): void => {
-    const element = event.target as HTMLElement;
-    const icon = element.firstChild as HTMLElement;
+  // const toggleSidebar = (event: React.MouseEvent<HTMLElement>): void => {
+  //   const element = event.target as HTMLElement;
+  //   const icon = element.firstChild as HTMLElement;
 
-    if (icon.classList.contains("fi-br-menu-burger")) {
-      icon.classList.remove("fi-br-menu-burger");
-      icon.classList.add("fi-br-cross");
-    } else {
-      icon.classList.remove("fi-br-cross");
-      icon.classList.add("fi-br-menu-burger");
-    }
+  //   if (icon.classList.contains("fi-br-menu-burger")) {
+  //     icon.classList.remove("fi-br-menu-burger");
+  //     icon.classList.add("fi-br-cross");
+  //   } else {
+  //     icon.classList.remove("fi-br-cross");
+  //     icon.classList.add("fi-br-menu-burger");
+  //   }
 
-    if (showSidebarRef.current?.classList.contains("side-menu-show")) {
-      showSidebarRef.current?.classList.remove("side-menu-show");
-      showSidebarRef.current?.classList.add("side-menu-hide");
-    } else {
-      showSidebarRef.current?.classList.remove("side-menu-hide");
-      showSidebarRef.current?.classList.add("side-menu-show");
-    }
-  };
-
-  function StoreThemeClass(className: string): void {
-    window.localStorage.setItem("themeMode", className);
-  }
-  function getThemeClass(localStoreageThemeKey: string): string | null {
-    return window.localStorage.getItem(localStoreageThemeKey);
-  }
-  const toggleThemeMode: React.MouseEventHandler<HTMLButtonElement> = (
-    event
-  ): void => {
-    const htmlElement = window.document.documentElement as HTMLHtmlElement;
-    const button = event.target as HTMLElement;
-    const icon = button.firstChild as HTMLElement;
-    //
-    if (htmlElement.classList.contains("dark")) {
-      htmlElement.classList.remove("dark");
-      htmlElement.classList.add("light");
-    } else {
-      htmlElement.classList.remove("light");
-      htmlElement.classList.add("dark");
-    }
-    StoreThemeClass(htmlElement.className);
-    if (icon.classList.contains("fi-sr-moon")) {
-      icon.classList.remove("fi-sr-moon");
-      icon.classList.add("fi-sr-sun");
-    } else {
-      icon.classList.remove("fi-sr-sun");
-      icon.classList.add("fi-sr-moon");
-    }
-  };
-
-  useLayoutEffect(() => {
-    const htmlElement = window.document.documentElement as HTMLHtmlElement;
-    const themeClass: string | null = getThemeClass("themeMode");
-
-    if (Boolean(themeClass)) {
-      htmlElement.classList.add(themeClass!);
-    }
-  }, []);
+  //   if (showSidebarRef.current?.classList.contains("side-menu-show")) {
+  //     showSidebarRef.current?.classList.remove("side-menu-show");
+  //     showSidebarRef.current?.classList.add("side-menu-hide");
+  //   } else {
+  //     showSidebarRef.current?.classList.remove("side-menu-hide");
+  //     showSidebarRef.current?.classList.add("side-menu-show");
+  //   }
+  // };
 
   return (
     <header className="header">
@@ -96,9 +59,13 @@ const Navbar = ({ showSidebarRef }: NavbarProps) => {
             <UserPannelBtn
               className="menu-btn"
               icon={
-                <i className="fi fi-br-menu-burger pointer-events-none select-none"></i>
+                showSidebar ? (
+                  <i className="fi fi-br-cross pointer-events-none select-none"></i>
+                ) : (
+                  <i className="fi fi-br-menu-burger pointer-events-none select-none"></i>
+                )
               }
-              clickHandler={toggleSidebar}
+              clickHandler={(ev) => dispatch(TOGGLE_SIDEBAR())}
             />
             <UserPannelBtn
               className="navbar-link hidden lg:flex"
@@ -108,9 +75,13 @@ const Navbar = ({ showSidebarRef }: NavbarProps) => {
             <UserPannelBtn
               className="navbar-link hidden lg:flex"
               icon={
-                <i className="fi fi-sr-moon pointer-events-none select-none"></i>
+                currentTheme === "light" ? (
+                  <i className="fi fi-sr-sun pointer-events-none select-none"></i>
+                ) : (
+                  <i className="fi fi-sr-moon pointer-events-none select-none"></i>
+                )
               }
-              clickHandler={toggleThemeMode}
+              clickHandler={(ev) => dispatch(TOGGLE_THEME())}
             />
           </div>
           <a className="flex items-center gap-2" href="#">

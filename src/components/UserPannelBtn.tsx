@@ -7,6 +7,7 @@ type UserBtnPannlProps = {
 };
 
 function UserPannelBtn({ clickHandler, icon, className }: UserBtnPannlProps) {
+  console.log(clickHandler);
   return (
     <button
       className={className}

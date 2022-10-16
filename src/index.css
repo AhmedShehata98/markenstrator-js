@@ -18,6 +18,12 @@
   .navbar-search {
     @apply flex flex-row-reverse items-center border rounded-full overflow-hidden h-8 dark:bg-zinc-600 dark:border-zinc-500;
   }
+  .side-menu-search {
+    @apply flex items-center justify-between border-2 border-gray-400 w-11/12 mb-3 mx-auto lg:hidden;
+  }
+  .side-menu-input {
+    @apply w-full h-8 px-3 focus:outline-none dark:focus:bg-zinc-900 placeholder:capitalize placeholder:text-sm dark:bg-zinc-600;
+  }
   .navbar-link {
     @apply bg-gray-200 w-9 h-9 flex items-center justify-center rounded-full shadow-inner hover:bg-gray-100 dark:bg-zinc-700 dark:text-white dark:border-zinc-400 dark:hover:bg-zinc-900;
   }
@@ -34,22 +40,28 @@
     @apply flex gap-3 items-center justify-between hover:bg-gray-200 px-2 py-1 cursor-pointer rounded-md dark:hover:bg-zinc-500;
   }
   .sidebar-menu {
-    @apply fixed left-0 py-4 lg:py-14 bg-white w-16 h-screen border-r flex flex-col items-center dark:bg-zinc-800 dark:border-zinc-500 transition-all lg:-translate-x-0 -translate-x-full;
+    @apply fixed left-0 py-4 lg:py-14 bg-white w-16 h-screen border-r flex flex-col items-center dark:bg-zinc-800 dark:border-zinc-500 transition-all lg:-translate-x-0 -translate-x-full z-10;
   }
   .side-menu-show {
-    @apply w-full lg:w-16 items-start justify-start lg:items-center absolute lg:fixed left-0 translate-x-0 z-30;
+    @apply w-3/4 lg:w-48 items-start justify-start lg:items-center absolute lg:fixed left-0 translate-x-0 z-30;
   }
   .side-menu-hide {
     @apply w-auto items-start lg:items-center justify-start -translate-x-full lg:-translate-x-0 absolute left-0;
   }
   .sidebar-navigation {
-    @apply w-16 gap-4 flex flex-col items-center justify-around;
+    @apply w-48 gap-1 flex flex-col items-start justify-around px-2;
   }
   .sidebar-items {
-    @apply w-8 h-8 bg-gray-100 flex items-center justify-center rounded-lg text-sky-700 hover:bg-sky-300 hover:text-gray-800 shadow-inner dark:bg-zinc-600 dark:text-sky-200;
+    @apply min-w-full flex justify-start gap-5 py-1 px-2 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-600 transition-[background-color] duration-300 ease-out;
+  }
+  .sidebar-icon {
+    @apply w-8 h-8 bg-gray-100 flex items-center justify-center rounded-lg text-sky-700 hover:bg-sky-300 hover:text-gray-800 shadow-inner dark:bg-zinc-700 dark:text-sky-200;
+  }
+  .sidebar-paragraph {
+    @apply font-semibold my-auto text-gray-700 capitalize text-start dark:text-gray-100;
   }
   .sidebar-items-active {
-    @apply bg-sky-300 text-gray-800 dark:text-zinc-100 dark:bg-sky-500;
+    @apply bg-gray-200 dark:bg-zinc-600;
   }
   .main-home {
     @apply flex min-h-screen w-full bg-zinc-100 dark:bg-zinc-700 mt-14;
@@ -77,6 +89,27 @@
   }
   .progress-status {
     @apply h-3 rounded-md inline-block w-full relative before:absolute before:top-0 before:left-0 before:h-full before:rounded-md before:transition-all underline-offset-2;
+  }
+  .login-wrapper {
+    @apply relative min-w-full min-h-screen flex justify-end items-center;
+  }
+  .login-box {
+    @apply flex items-center justify-center flex-col w-full h-screen lg:w-2/5 rounded-sm shadow bg-gray-100 dark:bg-zinc-700 p-3;
+  }
+  .login-hero {
+    @apply relative w-[67%] h-screen lg:flex items-center justify-center hidden bg-contain bg-center bg-no-repeat rounded-md before:absolute before:inset-0 before:bg-blue-900 before:w-full before:h-full before:opacity-50;
+  }
+  .login-input-wrapper {
+    @apply flex items-center gap-2 px-3 h-10 w-full border-l-4 bg-gray-300 border-l-cyan-700 dark:border-l-cyan-500 dark:bg-gray-800 rounded;
+  }
+  .login-input {
+    @apply w-full bg-transparent focus:outline-none placeholder:capitalize placeholder:text-gray-600 dark:placeholder:text-gray-400 dark:text-gray-100;
+  }
+  .login-btn {
+    @apply w-full flex items-center justify-center gap-3 capitalize py-2 px-4 rounded text-black bg-cyan-600 dark:bg-cyan-300 dark:hover:bg-cyan-500 transition-colors dark:text-black;
+  }
+  .login-btn-disabled {
+    @apply bg-gray-300 dark:bg-gray-500 text-gray-200 dark:text-gray-400 pointer-events-none;
   }
 }
 @tailwind utilities;
