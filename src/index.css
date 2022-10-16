@@ -6,8 +6,14 @@
 @tailwind base;
 @tailwind components;
 @layer components {
+  .body-prevent-scroll-not_LG {
+    @apply fixed w-full  lg:static;
+  }
+  .body-prevent-scroll-lg {
+    @apply lg:fixed w-full;
+  }
   .header {
-    @apply fixed top-0 bg-white dark:bg-zinc-800 dark:text-white dark:border-zinc-500 border-b h-14 min-w-full;
+    @apply fixed top-0 z-30 bg-white dark:bg-zinc-800 dark:text-white dark:border-zinc-500 border-b h-14 min-w-full;
   }
   .navbar-container {
     @apply pr-4 lg:pr-6 flex items-center justify-between h-14 min-w-full;
@@ -40,13 +46,13 @@
     @apply flex gap-3 items-center justify-between hover:bg-gray-200 px-2 py-1 cursor-pointer rounded-md dark:hover:bg-zinc-500;
   }
   .sidebar-menu {
-    @apply fixed left-0 py-4 lg:py-14 bg-white w-16 h-screen border-r flex flex-col items-center dark:bg-zinc-800 dark:border-zinc-500 transition-all lg:-translate-x-0 -translate-x-full z-10;
+    @apply lg:!fixed lg:left-0 lg:top-14 py-4 lg:py-14 bg-white w-48 h-screen border-r flex flex-col items-center dark:bg-zinc-800 dark:border-zinc-500 transition-all lg:-translate-x-0 -translate-x-full z-10;
   }
   .side-menu-show {
-    @apply w-3/4 lg:w-48 items-start justify-start lg:items-center absolute lg:fixed left-0 translate-x-0 z-30;
+    @apply w-3/4 lg:w-48 items-start justify-start lg:items-center absolute lg:!fixed left-0 translate-x-0 z-30 drop-shadow-2xl lg:drop-shadow-none;
   }
   .side-menu-hide {
-    @apply w-auto items-start lg:items-center justify-start -translate-x-full lg:-translate-x-0 absolute left-0;
+    @apply w-auto items-start lg:items-center justify-start -translate-x-full lg:-translate-x-0 absolute drop-shadow-none;
   }
   .sidebar-navigation {
     @apply w-48 gap-1 flex flex-col items-start justify-around px-2;

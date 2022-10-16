@@ -6,18 +6,6 @@ const StreamChart = (
     React.ClassAttributes<HTMLDivElement> &
     React.HTMLAttributes<HTMLDivElement>
 ) => {
-  const keysArr: string[] = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nav",
-    "Dec",
-  ];
   const data = [
     {
       Jan: 40,
@@ -151,13 +139,46 @@ const StreamChart = (
       <div className="w-full aspect-video h-36 dark:text-zinc-100">
         <ResponsiveStream
           data={data}
-          keys={keysArr}
+          keys={[
+            "Jan",
+            "Feb",
+            "Mar",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nav",
+            "Dec",
+          ]}
           enableGridX={true}
-          enableGridY={false}
-          curve="cardinal"
+          enableGridY={true}
+          colors={{ scheme: "blues" }}
+          borderColor={{ theme: "background" }}
+          curve="linear"
           offsetType="diverging"
           fillOpacity={0.85}
-          margin={{ top: 0, right: 50, bottom: 25, left: 35 }}
+          margin={{ top: 0, right: 90, bottom: 25, left: 30 }}
+          legends={[
+            {
+              anchor: "bottom-right",
+              direction: "column",
+              translateX: 100,
+              itemWidth: 80,
+              itemHeight: 20,
+              itemTextColor: "#999999",
+              symbolSize: 12,
+              symbolShape: "circle",
+              effects: [
+                {
+                  on: "hover",
+                  style: {
+                    itemTextColor: "#000000",
+                  },
+                },
+              ],
+            },
+          ]}
         />
       </div>
     </div>

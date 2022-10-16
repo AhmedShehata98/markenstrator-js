@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { SyntheticEvent, useLayoutEffect, useRef } from "react";
 import UserPannelBtn from "./UserPannelBtn";
 import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
 import { TOGGLE_THEME } from "../Redux/Slice/AppSlice";
@@ -15,9 +15,11 @@ const SideMenu = () => {
     if (showSidebar) {
       sidebarRef.current?.classList.remove("side-menu-hide");
       sidebarRef.current?.classList.add("side-menu-show");
+      window.document.body.classList.add("body-prevent-scroll-not_LG");
     } else {
       sidebarRef.current?.classList.remove("side-menu-show");
       sidebarRef.current?.classList.add("side-menu-hide");
+      window.document.body.classList.remove("body-prevent-scroll-not_LG");
     }
   }, [showSidebar]);
 
