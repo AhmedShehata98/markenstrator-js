@@ -2,6 +2,7 @@
 @import url("https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css");
 @import url("https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css");
 @import url("https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css");
+@import url("https://cdn-uicons.flaticon.com/uicons-thin-rounded/css/uicons-thin-rounded.css");
 /**/
 @tailwind base;
 @tailwind components;
@@ -116,6 +117,18 @@
   }
   .login-btn-disabled {
     @apply bg-gray-300 dark:bg-gray-500 text-gray-200 dark:text-gray-400 pointer-events-none;
+  }
+  .section-main {
+    @apply flex items-start justify-center  flex-wrap gap-3 min-h-screen lg:w-[1174px] bg-gray-100 dark:bg-zinc-700 mt-14 ml-auto px-4 py-4;
+  }
+  .input-wrapper {
+    @apply flex flex-col items-start justify-start min-h-fit capitalize mb-3;
+  }
+  .form-input {
+    @apply h-9 w-full px-4 mt-2 bg-white border border-slate-300 rounded dark:border-slate-400 dark:bg-zinc-700 focus:outline-none focus:bg-gray-50 dark:placeholder:text-gray-400 dark:focus:bg-gray-500 dark:text-white;
+  }
+  .form-label {
+    @apply text-sm text-gray-600 font-semibold dark:text-gray-200 capitalize;
   }
 }
 @tailwind utilities;

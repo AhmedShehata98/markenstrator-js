@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
+import React from "react";
+
+// components
 import CustomerReviews from "../components/CustomerReviews";
-import LoadingModule from "../components/LoadingModule";
 import PieChart from "../components/PieChart";
-import SideMenu from "../components/SideMenu";
 import Statistics from "../components/Statistics";
 import StreamChart from "../components/StreamChart";
 import TopSeller from "../components/TopSeller";
@@ -10,7 +10,6 @@ import TopSeller from "../components/TopSeller";
 const Home = () => {
   return (
     <main className="main-home">
-      <SideMenu />
       <section className="home-content-container lg:ml-48">
         <article className="home-content-children">
           <div className="flex flex-col w-full lg:w-3/4 h-full flex-wrap">

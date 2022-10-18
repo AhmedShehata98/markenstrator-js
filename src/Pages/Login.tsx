@@ -1,9 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
+
+// assets
 import background from "../assets/images/carlos-muza-hpjSkU2UYSU-unsplash.webp";
 import logo from "../assets/images/logo.png";
+
+// 3rd party libraries
 import { Link, useLocation } from "react-router-dom";
 import { useAppDispatch } from "../Redux/ReduxHooks";
 import { SET_PAGE_TITLE } from "../Redux/Slice/AppSlice";
+
+// redux actions
+import { LOGIN_ACCOUNT_ACTION } from "../Redux/Slice/UserSlice";
+
 const Login = () => {
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
@@ -17,6 +25,16 @@ const Login = () => {
     const value: string = ev.target.value;
     //
     setFormdata((prev) => ({ ...prev, [name]: value }));
+  };
+  //
+  const handleSubmit = (ev: React.FormEvent) => {
+    ev.preventDefault();
+    dispatch(
+      LOGIN_ACCOUNT_ACTION({
+        email: formdata.email,
+        password: formdata.password,
+      })
+    );
   };
   //
   useEffect(() => {
@@ -45,7 +63,10 @@ const Login = () => {
               wlecome back, please login to your account .
             </small>
           </div>
-          <form className=" p-2 w-3/5 rounded-md">
+          <form
+            className=" p-2 w-3/5 rounded-md"
+            onSubmit={(ev: React.FormEvent) => handleSubmit(ev)}
+          >
             <div className="flex flex-col capitalize mt-2">
               <label
                 className="text-gray-600 text-sm dark:text-gray-100"

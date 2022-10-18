@@ -5,8 +5,9 @@ type SidebarNavLinkPropsType = {
   title: string;
   icon: JSX.Element;
   to: string;
+  end?: boolean;
 };
-const SidebarNavLink = ({ icon, title, to }: SidebarNavLinkPropsType) => {
+const SidebarNavLink = ({ icon, title, to, end }: SidebarNavLinkPropsType) => {
   return (
     <NavLink
       className={({ isActive }) =>
@@ -15,6 +16,7 @@ const SidebarNavLink = ({ icon, title, to }: SidebarNavLinkPropsType) => {
           : "sidebar-items"
       }
       to={to || "#"}
+      end={end}
     >
       <span className="sidebar-icon ">{icon}</span>
       <p className="sidebar-paragraph">{title}</p>
