@@ -34,7 +34,7 @@ type VariantsType = {
 type MediaType = {
   id: string;
   assest: object | undefined;
-  fileLivePreview?: string | ArrayBuffer | null;
+  fileLivePreview?: string | undefined;
 };
 interface IProductFormData {
   productName: string;
@@ -67,9 +67,10 @@ const AddProducts = () => {
   const [ClonedMediaInput, setClonedMediaInput] = useState<IClonedMediaInput[]>(
     []
   );
+  const [mediaInputList, setMediaInputList] = useState<MediaType[]>([]);
   const isClonedVariants = useRef<boolean>(false);
   const isClonedMedia = useRef<boolean>(false);
-  // const mediaData = useRef<MediaType[]>([]);
+
   const variantsDataList = useRef<VariantsType[]>([]);
   const variantsSchemaData = useRef<VariantsType>({
     color: "#e66465",
@@ -80,7 +81,6 @@ const AddProducts = () => {
     id: "",
     assest: {},
   });
-  const [mediaInputList, setMediaInputList] = useState<MediaType[]>([]);
 
   function handleDeleteVariant(
     _ev: React.MouseEvent,
@@ -129,7 +129,9 @@ const AddProducts = () => {
   const setFieldsReadonly = (ev: React.MouseEvent) => {
     const element = ev.target as Element;
 
-    const topLevelParentElement = element.closest(".variant-item");
+    const topLevelParentElement = element.closest(
+      ".variant-item"
+    ) as HTMLDivElement;
     const childrenNodesLength: number = topLevelParentElement?.children.length;
     const sizeElem = topLevelParentElement?.firstElementChild
       ?.lastElementChild as HTMLInputElement;
@@ -161,8 +163,10 @@ const AddProducts = () => {
     dataList: typeof variantsDataList
   ) {
     const element = ev.target as Element;
-    const topLevelParentElement = element.closest(".variant-item");
-    const childrenNodesLength: number = topLevelParentElement?.children.length;
+    const topLevelParentElement = element.closest(
+      ".variant-item"
+    ) as HTMLDivElement;
+    const childrenNodesLength: number = topLevelParentElement.children.length;
     const sizeElem = topLevelParentElement?.firstElementChild
       ?.lastElementChild as HTMLInputElement;
     const sizeValue = sizeElem.valueAsNumber;
@@ -188,7 +192,7 @@ const AddProducts = () => {
           label="size"
           name="size"
           type="number"
-          onChange={(ev: React.ChangeEvent) =>
+          onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
             handleVariantData(ev, variantsSchemaData)
           }
         />
@@ -198,7 +202,7 @@ const AddProducts = () => {
           label="color"
           name="color"
           type="color"
-          onChange={(ev: React.ChangeEvent) =>
+          onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
             handleVariantData(ev, variantsSchemaData)
           }
         />
@@ -208,7 +212,7 @@ const AddProducts = () => {
           label="stock"
           name="stock"
           type="number"
-          onChange={(ev: React.ChangeEvent) =>
+          onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
             handleVariantData(ev, variantsSchemaData)
           }
         />
@@ -260,10 +264,10 @@ const AddProducts = () => {
     mediadataSchema: typeof mediaInputSchemaData,
     setMediaInputList: React.Dispatch<React.SetStateAction<MediaType[]>>
   ) => {
-    setMediaInputList((currentList: MediaType[]): MediaType[] => {
-      // setValue("media", [...currentList, mediadataSchema.current]);
-      return [...currentList, mediadataSchema.current];
-    });
+    setMediaInputList((currentList: MediaType[]): MediaType[] => [
+      ...currentList,
+      mediadataSchema.current,
+    ]);
   };
 
   const handleMediaInputData = (
@@ -280,7 +284,7 @@ const AddProducts = () => {
       mediaInputSchemaData.current = {
         id,
         assest: value,
-        fileLivePreview: fileReader.result,
+        fileLivePreview: fileReader.result as string,
       };
       handleAddToMediaList(mediaInputSchemaData, setMediaInputList);
     };
@@ -296,44 +300,6 @@ const AddProducts = () => {
       return filterdData;
     });
   };
-  // const addNewMediaInput = (
-  //   id: string,
-  //   setClonedMediaInput: React.Dispatch<
-  //     React.SetStateAction<IClonedMediaInput[]>
-  //   >
-  // ) => {
-  //   const props = { key: nanoid(4) };
-  //   const element: JSX.Element = (
-  //     <ProductMediaBox
-  //       key={nanoid(3)}
-  //       className="bg-white rounded p-2 h-28 scroll-pl-3 snap-start snap-always shadow min-w-max lg:w-30 dark:bg-zinc-700 border border-slate-300 dark:border-slate-500"
-  //     >
-  //       <MediaInput
-  //         id={"media-assets"}
-  //         label={"browse image"}
-  //         type={"file"}
-  //         name={"media"}
-  //         key={nanoid(4)}
-  //         onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-  //           handleMediaInputData(
-  //             ev,
-  //             mediaInputSchemaData,
-  //             mediaInputList,
-  //             nanoid(4)
-  //           );
-  //         }}
-  //       />
-  //     </ProductMediaBox>
-  //   );
-  //   const clonedElement = React.cloneElement(element, props);
-  //   setClonedMediaInput((prevElem) => [
-  //     ...prevElem,
-  //     {
-  //       id,
-  //       element: clonedElement,
-  //     },
-  //   ]);
-  // };
 
   const sendProductData: SubmitHandler<IProductFormData> = (data) => {
     console.table(data);

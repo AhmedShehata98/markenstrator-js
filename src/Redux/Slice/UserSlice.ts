@@ -91,7 +91,7 @@ export const userSlice = createSlice({
       window.localStorage.setItem("LOGGED_IN", JSON.stringify(isAvaliable));
     });
     builder.addCase(LOGIN_ACCOUNT_ACTION.rejected, (state, actions) => {
-      const payload: LoginPromiseResultType = actions.payload;
+      const payload = actions.payload as LoginPromiseResultType;
       state.pending = false;
       state.isLoggedIn = payload.isAvaliable;
       state.userData = payload.data;

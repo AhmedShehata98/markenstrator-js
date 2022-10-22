@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEventHandler } from "react";
 
 type VariantInputProps = {
   type: string;
@@ -6,7 +6,7 @@ type VariantInputProps = {
   label: string;
   value?: string;
   id: string;
-  onChange?: (ev: React.ChangeEvent) => void;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 };
 
 const VariantInput = ({

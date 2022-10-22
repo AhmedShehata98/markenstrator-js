@@ -1,7 +1,7 @@
 import React, { MouseEventHandler } from "react";
 
 type PreviewUploadedMediaProps = {
-  imageSrc: string;
+  imageSrc: string | undefined;
   alt: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
