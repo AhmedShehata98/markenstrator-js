@@ -1,13 +1,13 @@
 import React, { ChangeEvent, useId } from "react";
 
 type VariantProps = {
-  inputHandler?: (ev: ChangeEvent) => void;
-  id: string | number;
+  children: React.ReactNode;
 };
-const VariantItem = ({ id, inputHandler }: VariantProps) => {
+const VariantItem = ({ children }: VariantProps) => {
   return (
-    <div className="w-full h-16 flex items-center justify-between gap-2">
-      <span className="input-wrapper w-1/4 min-h-full">
+    <div className="variant-item">
+      {children}
+      {/* <span className="input-wrapper w-1/4 min-h-full">
         <label className="form-label mb-2" htmlFor="size">
           size
         </label>
@@ -56,7 +56,7 @@ const VariantItem = ({ id, inputHandler }: VariantProps) => {
           </span>
           <p className="hidden lg:block">remove</p>
         </button>
-      </span>
+      </span> */}
     </div>
   );
 };
