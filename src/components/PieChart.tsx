@@ -38,7 +38,7 @@ const PieChart = () => {
             total earnings of this month
           </small>
         </span>
-        <i className="fi fi-rs-chart-pie text-sky-500 text-xl"></i>
+        <i className="fi fi-rs-chart-pie text-indigo-500 text-xl"></i>
       </span>
       <div className="h-32 w-full flex items-center justify-start">
         <span className="h-full w-[70%] relative">

@@ -4,22 +4,35 @@ import { NavLink } from "react-router-dom";
 type SidebarNavLinkPropsType = {
   title: string;
   icon: JSX.Element;
+  collapse?: boolean;
   to: string;
   end?: boolean;
+  children?: React.ReactNode;
 };
-const SidebarNavLink = ({ icon, title, to, end }: SidebarNavLinkPropsType) => {
+
+const SidebarNavLink = ({
+  collapse,
+  icon,
+  title,
+  to,
+  end,
+}: SidebarNavLinkPropsType) => {
   return (
     <NavLink
       className={({ isActive }) =>
-        Boolean(isActive)
-          ? "sidebar-items sidebar-items-active"
-          : "sidebar-items"
+        isActive ? "sidebar-items sidebar-items-active" : "sidebar-items"
       }
       to={to || "#"}
       end={end}
     >
-      <span className="sidebar-icon ">{icon}</span>
-      <p className="sidebar-paragraph">{title}</p>
+      <button className={`${"sidebar-btn"}`}>
+        <span className="sidebar-icon w-1/5 pointer-events-none select-none">
+          {icon}
+        </span>
+        <p className="w-3/5 text-start px-3 pointer-events-none select-none ">
+          {title}
+        </p>
+      </button>
     </NavLink>
   );
 };

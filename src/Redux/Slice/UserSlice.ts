@@ -1,26 +1,26 @@
 import {
   loginDataTypes,
   LoginPromiseResultType,
-  initialStateTypes,
-  loginAccontActionTypes,
-  userDataTypes,
+  IinitialState,
+  IUserData,
 } from "./UserSliceTypes";
-import { usersDatabase, userAllDataTypes } from "./../../Utilities/dummyUsers";
-import {
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-  PayloadActionCreator,
-} from "@reduxjs/toolkit";
+import { usersDatabase, userAllDataTypes } from "../../Utilities/dummyData";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 //
 
-const initialState: initialStateTypes = {
+const initialState: IinitialState = {
   pending: false,
-  isLoggedIn: Boolean(localStorage.getItem("LOGGED_IN"))
-    ? JSON.parse(localStorage.getItem("LOGGED_IN")!)
+  isLoggedIn: Boolean(sessionStorage.getItem("LOGGED_IN"))
+    ? JSON.parse(sessionStorage.getItem("LOGGED_IN")!)
     : false,
-  userData: {},
+  userData: Boolean(window.sessionStorage.USER_DATA)
+    ? JSON.parse(sessionStorage.USER_DATA)
+    : {},
+  isError: "idle",
+  isSuccess: "idle",
+  successMessage: "",
+  errorMessage: "",
 };
 
 async function SimulateLoggin(
@@ -32,7 +32,7 @@ async function SimulateLoggin(
     const matchData = db.find(
       (data, index) =>
         data.email === loginData.email && data.password === loginData.password
-    );
+    ) as IUserData;
     Boolean(matchData)
       ? setTimeout(
           () =>
@@ -48,7 +48,7 @@ async function SimulateLoggin(
             reject({
               isAvaliable: false,
               data: {},
-              message: "login failed user is not avaliable",
+              message: "incorrect ,email or password ",
             }),
           timer
         );
@@ -75,28 +75,70 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    LOGOUT_ACCOUNT: (state: initialStateTypes, actions: PayloadAction) => {},
+    LOGOUT_ACCOUNT: (state: IinitialState, actions: PayloadAction) => {
+      state.pending = false;
+      state.isError = "idle";
+      state.isSuccess = "idle";
+      state.successMessage = "";
+      state.errorMessage = "";
+      state.userData = {};
+      state.isLoggedIn = false;
+      window.sessionStorage.LOGGED_IN &&
+        window.sessionStorage.setItem("LOGGED_IN", JSON.stringify(false));
+      window.sessionStorage.USER_DATA &&
+        window.sessionStorage.setItem("USER_DATA", JSON.stringify({}));
+    },
+    BACK_INITIAL_STATE: (state: IinitialState, actions: PayloadAction) => {
+      state.pending = false;
+      state.isError = "idle";
+      state.isSuccess = "idle";
+      state.successMessage = "";
+      state.errorMessage = "";
+      state.userData = {};
+      state.isLoggedIn = false;
+    },
   },
   extraReducers(builder) {
     builder.addCase(LOGIN_ACCOUNT_ACTION.pending, (state, _) => {
       state.pending = true;
       state.isLoggedIn = false;
+      state.isSuccess = "idle";
+      state.isError = "idle";
+      state.errorMessage = "";
+      state.successMessage = "";
       state.userData = {};
     });
-    builder.addCase(LOGIN_ACCOUNT_ACTION.fulfilled, (state, actions) => {
-      const { data, isAvaliable }: LoginPromiseResultType = actions.payload;
-      state.pending = false;
-      state.isLoggedIn = isAvaliable;
-      state.userData = data;
-      window.localStorage.setItem("LOGGED_IN", JSON.stringify(isAvaliable));
-    });
+    builder.addCase(
+      LOGIN_ACCOUNT_ACTION.fulfilled,
+      (state, actions: PayloadAction<LoginPromiseResultType>) => {
+        state.pending = false;
+        state.isLoggedIn = actions.payload.isAvaliable;
+        state.isError = "idle";
+        state.errorMessage = "";
+        state.isSuccess = true;
+        state.successMessage = actions.payload.message;
+        state.userData = actions.payload.data || {};
+        window.sessionStorage.setItem(
+          "USER_DATA",
+          JSON.stringify(actions.payload.data)
+        );
+        window.sessionStorage.setItem(
+          "LOGGED_IN",
+          JSON.stringify(actions.payload.isAvaliable)
+        );
+      }
+    );
     builder.addCase(LOGIN_ACCOUNT_ACTION.rejected, (state, actions) => {
       const payload = actions.payload as LoginPromiseResultType;
       state.pending = false;
+      state.isError = true;
+      state.successMessage = "";
+      state.isSuccess = "idle";
+      state.errorMessage = payload.message;
       state.isLoggedIn = payload.isAvaliable;
-      state.userData = payload.data;
+      state.userData = {};
     });
   },
 });
 
-export const { LOGOUT_ACCOUNT } = userSlice.actions;
+export const { LOGOUT_ACCOUNT, BACK_INITIAL_STATE } = userSlice.actions;

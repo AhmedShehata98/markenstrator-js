@@ -4,7 +4,7 @@ const Statistics = () => {
   return (
     <ul className="overview-statistics">
       <li className="statistics-box">
-        <span className="statistic-box-icon dark:bg-cyan-300 dark:text-zinc-800">
+        <span className="statistic-box-icon dark:bg-violet-300 dark:text-zinc-800">
           <i className="fi fi-rr-coins text-2xl leading-3"></i>
         </span>
         <span className="flex flex-col mt-3 dark:text-zinc-100">

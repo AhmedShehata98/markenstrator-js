@@ -1,11 +1,13 @@
 import { RootState } from "./../Store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import React from "react";
+import { IProductFormData } from "../../Types/pages-types";
 
 type initialStateTypes = {
   loading: boolean;
   currentTheme: string | null;
   showSidebar: boolean;
+  initinalProductsData: Partial<IProductFormData>;
 };
 type actionTypes = {
   payload?: "string";
@@ -22,6 +24,7 @@ const initialState: initialStateTypes = {
     ? window.localStorage.getItem("themeMode")
     : "light",
   showSidebar: false,
+  initinalProductsData: {},
 };
 export const appSlice = createSlice({
   name: "app-settings",
@@ -32,16 +35,14 @@ export const appSlice = createSlice({
       //
       // Toggling Theme class in HTML element
       if (htmlElement.classList.contains("dark")) {
-        htmlElement.classList.remove("dark");
-        htmlElement.classList.add("light");
+        htmlElement.classList.replace("dark", "light");
       } else {
-        htmlElement.classList.remove("light");
-        htmlElement.classList.add("dark");
+        htmlElement.classList.replace("light", "dark");
       }
       //
       // Storing theme in LocalStoreage
-      window.localStorage.setItem("themeMode", htmlElement.className.trim());
-      state.currentTheme = htmlElement.className.trim();
+      window.localStorage.setItem("themeMode", htmlElement.classList[0].trim());
+      state.currentTheme = htmlElement.classList[0].trim();
     },
     TOGGLE_SIDEBAR: (state, action: actionTypes) => {
       state.showSidebar = !state.showSidebar;
@@ -49,11 +50,21 @@ export const appSlice = createSlice({
     SET_PAGE_TITLE: (_, action: setTitleActionType) => {
       window.document.title = `Marketify - ${action.payload.title}`;
     },
+    SET_ADD_PRODUCT_INITIAL_STATE: (
+      state: initialStateTypes,
+      action: PayloadAction<Partial<IProductFormData>>
+    ) => {
+      state.initinalProductsData = action.payload;
+    },
   },
 });
 
-export const { TOGGLE_THEME, TOGGLE_SIDEBAR, SET_PAGE_TITLE } =
-  appSlice.actions;
+export const {
+  TOGGLE_THEME,
+  TOGGLE_SIDEBAR,
+  SET_PAGE_TITLE,
+  SET_ADD_PRODUCT_INITIAL_STATE,
+} = appSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectAppSettings = (state: RootState) => state["app-settings"];

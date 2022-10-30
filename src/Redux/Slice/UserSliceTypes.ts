@@ -1,4 +1,5 @@
-import { userAllDataTypes } from "./../../Utilities/dummyUsers";
+import { ISettingProfile } from "../../Types/pages-types";
+import { userAllDataTypes } from "../../Utilities/dummyData";
 
 export type loginDataTypes = {
   email: string | "";
@@ -6,23 +7,27 @@ export type loginDataTypes = {
 };
 export type LoginPromiseResultType = {
   isAvaliable: boolean;
-  data: userAllDataTypes | undefined;
+  data: Partial<IUserData>;
   message: "login successfully" | "login failed user is not avaliable";
 };
-export type userDataTypes = {
+export interface IUserData extends Partial<ISettingProfile> {
   username: string;
   firstname: string;
   lastname: string;
   avatarUrl: string;
   email: string;
-  role: "string";
+  role: string;
   phonenumber?: number;
-};
-export type initialStateTypes = {
+}
+export interface IinitialState {
   pending: boolean;
   isLoggedIn: boolean;
-  userData?: userDataTypes | object;
-};
+  userData: Partial<IUserData>;
+  isError: boolean | "idle";
+  isSuccess: boolean | "idle";
+  successMessage: string;
+  errorMessage: string;
+}
 export type loginAccontActionTypes = {
   payload: LoginPromiseResultType;
 };

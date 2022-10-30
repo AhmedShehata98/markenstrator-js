@@ -5,7 +5,7 @@ const CustomerReviews = () => {
     <div className="w-full h-full bg-white p-3 rounded-md shadow dark:bg-zinc-800 dark:text-zinc-100">
       <span className="card-headding flex justify-between items-center">
         <p className="text-sm font-semibold capitalize">customer reviews</p>
-        <i className="fi fi-sr-refresh text-sky-500 text-xl"></i>
+        <i className="fi fi-sr-refresh text-violet-500 text-xl"></i>
       </span>
       <div className="rate-in-starts flex gap-6 items-center justify-start mt-4 ">
         <span className="flex gap-1">
@@ -63,7 +63,7 @@ const CustomerReviews = () => {
         </div>
       </div>
       <button
-        className="px-4 py-2 flex items-center justify-center  rounded-full font-semibold capitalize mt-10 mx-auto hover:underline underline-offset-3 text-blue-900 bg-blue-200 dark:bg-sky-100 dark:text-sky-800"
+        className="px-4 py-2 flex items-center justify-center  rounded-full font-semibold capitalize mt-10 mx-auto hover:underline underline-offset-3 text-violet-900 bg-indigo-200 dark:bg-indigo-100 dark:text-violet-800"
         type="button"
       >
         <small>see all customer reviews</small>

@@ -1,8 +1,9 @@
-import React, { SyntheticEvent, useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import UserPannelBtn from "./UserPannelBtn";
 import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
 import { TOGGLE_THEME } from "../Redux/Slice/AppSlice";
 import SidebarNavLink from "./SidebarNavLink";
+import CollapseMenu from "../components/CollapseMenu";
 import { nanoid } from "@reduxjs/toolkit";
 import { routesList } from "../Router/RoutesList";
 
@@ -53,39 +54,59 @@ const SideMenu = () => {
         <SidebarNavLink
           key={nanoid(3)}
           icon={<i className="fi fi-sr-apps leading-3"></i>}
-          title="dashboard"
-          to={routesList.app || "#"}
+          title="overview"
+          to={routesList?.app || "#"}
           end={true}
         />
+
+        <CollapseMenu
+          key={nanoid(3)}
+          title="products"
+          to={routesList?.allProducts || "#"}
+          icon={<i className="fi fi-sr-boxes leading-3"></i>}
+          dropdownChildrenData={[
+            {
+              id: nanoid(5),
+              title: "all products",
+              to: routesList.allProducts as string,
+            },
+            {
+              id: nanoid(5),
+              title: "category",
+              to: routesList.category as string,
+            },
+          ]}
+        />
+
         <SidebarNavLink
           key={nanoid(3)}
-          icon={<i className="fi fi-sr-boxes"></i>}
-          title="add products"
-          to={routesList.addProducts || "#"}
+          icon={<i className="fi fi-sr-list leading-3"></i>}
+          title="Orders"
+          to={routesList?.orders || "#"}
         />
         <SidebarNavLink
           key={nanoid(3)}
           icon={<i className="fi fi-sr-chart-pie leading-3"></i>}
           title="statistics"
-          to={routesList.statistics || "#"}
+          to={routesList?.statistics || "#"}
         />
         <SidebarNavLink
           key={nanoid(3)}
           icon={<i className="fi fi-sr-users leading-3"></i>}
           title="users"
-          to={routesList.users || "#"}
+          to={routesList?.users || "#"}
         />
         <SidebarNavLink
           key={nanoid(3)}
           icon={<i className="fi fi-sr-treatment leading-3"></i>}
           title="invoices"
-          to={routesList.invoices || "#"}
+          to={routesList?.invoices || "#"}
         />
         <SidebarNavLink
           key={nanoid(3)}
           icon={<i className="fi fi-sr-settings leading-3"></i>}
           title="settings"
-          to={routesList.settings || "#"}
+          to={routesList?.settings || "#"}
         />
       </nav>
     </aside>

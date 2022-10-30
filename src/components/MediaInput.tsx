@@ -15,7 +15,7 @@ const MediaInput = ({ onChange, id, label, name, type }: MediaInputProps) => {
         htmlFor={id}
         className="h-24 w-30 flex flex-col items-center justify-center gap-1 text-gray-700 text-center capitalize cursor-pointer"
       >
-        <span className="text-2xl text-cyan-800 dark:text-cyan-300">
+        <span className="text-2xl text-violet-800 dark:text-violet-300">
           <i className="fi fi-rr-picture"></i>
         </span>
         <p className="text-gray-800 dark:text-gray-100">{label}</p>

@@ -1,11 +1,13 @@
 import { userSlice } from "./Slice/UserSlice";
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { appSlice } from "./Slice/AppSlice";
+import { ordersSlice } from "./Slice/OrdersSlice";
 
 const store = configureStore({
   reducer: {
     [appSlice.name]: appSlice.reducer,
     [userSlice.name]: userSlice.reducer,
+    [ordersSlice.name]: ordersSlice.reducer,
   },
 });
 

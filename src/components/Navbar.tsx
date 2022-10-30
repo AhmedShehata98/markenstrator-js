@@ -1,54 +1,57 @@
 import React, { useLayoutEffect, useRef } from "react";
 import logo from "../assets/images/logo.png";
+import logoDark from "../assets/images/logo-dark.png";
 import UserPannelBtn from "./UserPannelBtn";
 import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
 import { TOGGLE_THEME, TOGGLE_SIDEBAR } from "../Redux/Slice/AppSlice";
+import { LOGOUT_ACCOUNT } from "../Redux/Slice/UserSlice";
 
 const Navbar = () => {
-  const { currentTheme, showSidebar } = useAppSelector(
-    (state) => state["app-settings"]
-  );
+  const {
+    "app-settings": { currentTheme, showSidebar },
+    user: { pending, isLoggedIn, userData },
+  } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const accountMenuRef = useRef<HTMLUListElement>(null);
   const handleAccountMenu = (e: React.MouseEvent<HTMLButtonElement>): void => {
     accountMenuRef.current?.classList.toggle("show-account-menu");
   };
-  // const toggleSidebar = (event: React.MouseEvent<HTMLElement>): void => {
-  //   const element = event.target as HTMLElement;
-  //   const icon = element.firstChild as HTMLElement;
-
-  //   if (icon.classList.contains("fi-br-menu-burger")) {
-  //     icon.classList.remove("fi-br-menu-burger");
-  //     icon.classList.add("fi-br-cross");
-  //   } else {
-  //     icon.classList.remove("fi-br-cross");
-  //     icon.classList.add("fi-br-menu-burger");
-  //   }
-
-  //   if (showSidebarRef.current?.classList.contains("side-menu-show")) {
-  //     showSidebarRef.current?.classList.remove("side-menu-show");
-  //     showSidebarRef.current?.classList.add("side-menu-hide");
-  //   } else {
-  //     showSidebarRef.current?.classList.remove("side-menu-hide");
-  //     showSidebarRef.current?.classList.add("side-menu-show");
-  //   }
-  // };
 
   return (
     <header className="header">
       <section className="navbar-container">
-        <img src={logo} alt="logo" className="w-20 " />
+        {currentTheme === "dark" ? (
+          <img src={logoDark} alt="logo" className="h-52 object-cover" />
+        ) : (
+          <img src={logo} alt="logo" className="w-20 " />
+        )}
         <span className="hidden lg:flex lg:flex-col ">
-          <h4 className="font-semibold text-gray-600 capitalize dark:text-zinc-100">
-            good morning , ahmed shehata
-          </h4>
-          <p className="text-xs text-gray-400 capitalize">
-            welcome to marketify app dashboard{" "}
-          </p>
+          {pending && Object.entries(userData!)?.length === 0 && (
+            <span className="flex flex-wrap flex-col items-start justify-center w-36 animate-pulse">
+              <span className="h-4">
+                <small className="inline-block w-10 h-4  rounded-xl mr-2 bg-zinc-300 dark:bg-zinc-500"></small>
+                <small className="inline-block w-24 h-4 rounded-xl  bg-zinc-300 dark:bg-zinc-500"></small>
+              </span>
+              <span className="h-3">
+                <small className="inline-block w-20 h-3 rounded-xl mr-2  bg-zinc-300 dark:bg-zinc-500"></small>
+                <small className="inline-block w-7 h-3 rounded-xl  bg-zinc-300 dark:bg-zinc-500"></small>
+              </span>
+            </span>
+          )}
+          {!pending && Object.entries(userData!)?.length >= 1 && (
+            <>
+              <h4 className="font-semibold text-gray-600 capitalize dark:text-zinc-100">
+                {`good morning , ${userData?.username}`}
+              </h4>
+              <p className="text-xs text-gray-400 capitalize">
+                welcome to marketify app dashboard
+              </p>
+            </>
+          )}
         </span>
         <form className="navbar-search hidden lg:flex">
           <input
-            className="rounded-full h-8 focus:outline-none placeholder:capitalize placeholder:text-sm dark:bg-zinc-600"
+            className="rounded-full h-8 focus:outline-none placeholder:capitalize placeholder:text-sm bg-inherit border-0 dark:placeholder:text-zinc-300 dark:bg-zinc-600"
             type="search"
             placeholder="search on something"
           />
@@ -60,25 +63,25 @@ const Navbar = () => {
               className="menu-btn"
               icon={
                 showSidebar ? (
-                  <i className="fi fi-br-cross pointer-events-none select-none"></i>
+                  <i className="fi fi-br-cross leading-3 pointer-events-none select-none"></i>
                 ) : (
-                  <i className="fi fi-br-menu-burger pointer-events-none select-none"></i>
+                  <i className="fi fi-br-menu-burger leading-3 pointer-events-none select-none"></i>
                 )
               }
               clickHandler={(ev) => dispatch(TOGGLE_SIDEBAR())}
             />
             <UserPannelBtn
               className="navbar-link hidden lg:flex"
-              icon={<i className="fi fi-rr-bell"></i>}
+              icon={<i className="fi fi-rr-bell leading-3"></i>}
               clickHandler={() => console.log("notification btn")}
             />
             <UserPannelBtn
               className="navbar-link hidden lg:flex"
               icon={
                 currentTheme === "light" ? (
-                  <i className="fi fi-sr-sun pointer-events-none select-none"></i>
+                  <i className="fi fi-sr-sun leading-3 pointer-events-none select-none"></i>
                 ) : (
-                  <i className="fi fi-sr-moon pointer-events-none select-none"></i>
+                  <i className="fi fi-sr-moon leading-3 pointer-events-none select-none"></i>
                 )
               }
               clickHandler={(ev) => dispatch(TOGGLE_THEME())}
@@ -98,7 +101,7 @@ const Navbar = () => {
               }
             >
               <p className=" capitalize text-sm font-bold text-gray-700 dark:text-zinc-100">
-                ahmed shehata
+                {`${userData?.firstname} ${userData?.lastname}`}
               </p>
               <i className="fi fi-br-angle-down leading-[0.5rem] text-xs dark:text-zinc-100"></i>
             </button>
@@ -115,11 +118,14 @@ const Navbar = () => {
                 settings
               </p>
             </li>
-            <li className="account-menu-items ">
-              <span className="w-7 h-7 bg-gray-200 flex items-center justify-center rounded-full dark:bg-zinc-400">
+            <li
+              className="account-menu-items "
+              onClick={() => dispatch(LOGOUT_ACCOUNT())}
+            >
+              <span className="w-7 h-7 bg-gray-200 flex items-center justify-center rounded-full dark:bg-zinc-400 select-none pointer-events-none">
                 <i className="fi fi-rr-sign-out-alt text-sm text-rose-400 leading-3 dark:text-rose-700"></i>
               </span>
-              <p className="font-bold text-sm text-rose-400 text-center dark:text-rose-400">
+              <p className="font-bold text-sm text-rose-400 text-center dark:text-rose-400 select-none pointer-events-none">
                 sign out
               </p>
             </li>

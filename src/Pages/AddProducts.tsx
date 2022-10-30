@@ -1,11 +1,4 @@
-import React, {
-  MouseEvent,
-  ReactElement,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import { useForm, SubmitHandler, UseFormSetValue } from "react-hook-form";
 import InputWrapper from "../components/InputWrapper";
@@ -15,64 +8,38 @@ import VariantInput from "../components/VariantInput";
 import VariantItem from "../components/VariantItem";
 import PreviewUploadedMedia from "../components/PreviewUploadedMedia";
 import MediaInput from "../components/MediaInput";
-
-interface IClonedVariants {
-  id: number | string;
-  element: React.FunctionComponentElement<any>;
-}
-interface IClonedMediaInput {
-  id: number | string;
-  element: React.FunctionComponentElement<any>;
-}
-
-type VariantsType = {
-  size: number;
-  color: string;
-  stock: number;
-};
-
-type MediaType = {
-  id: string;
-  assest: object | undefined;
-  fileLivePreview?: string | undefined;
-};
-interface IProductFormData {
-  productName: string;
-  price: {
-    unit: string;
-    value: number;
-  };
-  sku: string;
-  weight: {
-    unit: string;
-    value: number;
-  };
-  description: string;
-  brand: string;
-  category: string;
-  collection: string;
-  media: MediaType[];
-  variants: VariantsType[];
-}
+import {
+  IClonedVariants,
+  IProductFormData,
+  MediaType,
+  VariantsType,
+} from "../Types/pages-types";
+import { useAppSelector } from "../Redux/ReduxHooks";
 
 const AddProducts = () => {
+  const { initinalProductsData } = useAppSelector(
+    (state) => state["app-settings"]
+  );
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
+    getValues,
     formState: { errors },
-  } = useForm<IProductFormData>();
+  } = useForm<Partial<IProductFormData>>();
   const [documentWidth, setDocumentWidth] = useState<number>(window.innerWidth);
   const [clonedVariants, setClonedVariants] = useState<IClonedVariants[]>([]);
-  const [ClonedMediaInput, setClonedMediaInput] = useState<IClonedMediaInput[]>(
-    []
-  );
+  // const [ClonedMediaInput, setClonedMediaInput] = useState<IClonedMediaInput[]>(
+  //   []
+  // );
   const [mediaInputList, setMediaInputList] = useState<MediaType[]>([]);
   const isClonedVariants = useRef<boolean>(false);
-  const isClonedMedia = useRef<boolean>(false);
+  // const isClonedMedia = useRef<boolean>(false);
 
   const variantsDataList = useRef<VariantsType[]>([]);
   const variantsSchemaData = useRef<VariantsType>({
+    id: "8",
     color: "#e66465",
     size: 0,
     stock: 0,
@@ -149,8 +116,10 @@ const AddProducts = () => {
   function addToVariantList(
     ev: React.MouseEvent,
     storeData: typeof variantsDataList,
-    variantSchemaData: typeof variantsSchemaData
+    variantSchemaData: typeof variantsSchemaData,
+    id: string
   ): void {
+    variantSchemaData.current = { ...variantSchemaData.current, id };
     storeData.current.push(variantSchemaData.current);
     //
     changeAddBtnStyle(ev);
@@ -236,7 +205,12 @@ const AddProducts = () => {
             className="py-2 px-2 lg:py-1 lg:px-2 flex items-center justify-center gap-2 capitalize bordder-0 font-semibold rounded bg-slate-600 dark:bg-slate-600 text-gray-200 dark:text-gray-100 hover:bg-slate-600 dark:hover:bg-slate-500"
             type="button"
             onClick={(ev: React.MouseEvent) =>
-              addToVariantList(ev, variantsDataList, variantsSchemaData)
+              addToVariantList(
+                ev,
+                variantsDataList,
+                variantsSchemaData,
+                nanoid(2)
+              )
             }
           >
             <span className="flex items-center select-none pointer-events-none">
@@ -301,7 +275,7 @@ const AddProducts = () => {
     });
   };
 
-  const sendProductData: SubmitHandler<IProductFormData> = (data) => {
+  const sendProductData: SubmitHandler<Partial<IProductFormData>> = (data) => {
     console.table(data);
   };
 
@@ -327,6 +301,34 @@ const AddProducts = () => {
   //     isClonedMedia.current = true;
   //   }
   // }, []);
+
+  useEffect(() => {
+    if (
+      typeof initinalProductsData === "object" &&
+      Object.keys(initinalProductsData).length > 0
+    ) {
+      reset({
+        productName: initinalProductsData?.productName || "",
+        price: {
+          value: initinalProductsData?.price?.value || 0,
+          unit: initinalProductsData?.price?.unit || "",
+        },
+        sku: initinalProductsData?.sku || "",
+        weight: {
+          value: initinalProductsData?.weight?.value || 0,
+          unit: initinalProductsData?.weight?.unit || "",
+        },
+        description: initinalProductsData.description,
+        media: initinalProductsData.media,
+        variants: initinalProductsData.variants,
+        brand: initinalProductsData.brand || "",
+        category: initinalProductsData.category || "",
+        collection: initinalProductsData.collection || "",
+      });
+      setMediaInputList(initinalProductsData.media as MediaType[]);
+      variantsDataList.current.push(...initinalProductsData.variants!);
+    }
+  }, [initinalProductsData, reset]);
 
   return (
     <form
@@ -489,23 +491,41 @@ const AddProducts = () => {
           <ProductMediaWrapper>
             <h3 className="absolute top-0 left-1 form-label ">media</h3>
 
-            {mediaInputList?.map((media) => {
-              return (
-                <ProductMediaBox
-                  key={nanoid(3)}
-                  className="relative bg-white rounded h-28 min-w-max lg:h-28 lg:w-28 scroll-pl-3 snap-start snap-always overflow-hidden dark:bg-zinc-800 border-2 border-zinc-200"
-                >
-                  <PreviewUploadedMedia
-                    key={nanoid(3)}
-                    alt={`media-assest #${media.id}`}
-                    imageSrc={media.fileLivePreview}
-                    onClick={() =>
-                      handleDeleteMediaAsset(media.id, setMediaInputList)
-                    }
-                  />
-                </ProductMediaBox>
-              );
-            })}
+            {getValues("media") !== undefined
+              ? getValues("media")?.map((media) => {
+                  return (
+                    <ProductMediaBox
+                      key={nanoid(3)}
+                      className="relative bg-white rounded h-28 min-w-max lg:h-28 lg:w-28 scroll-pl-3 snap-start snap-always overflow-hidden dark:bg-zinc-800 border-2 border-zinc-200"
+                    >
+                      <PreviewUploadedMedia
+                        key={nanoid(3)}
+                        alt={`media-assest #${media.id}`}
+                        imageSrc={media.fileLivePreview}
+                        onClick={() =>
+                          handleDeleteMediaAsset(media.id, setMediaInputList)
+                        }
+                      />
+                    </ProductMediaBox>
+                  );
+                })
+              : mediaInputList.map((media) => {
+                  return (
+                    <ProductMediaBox
+                      key={nanoid(3)}
+                      className="relative bg-white rounded h-28 min-w-max lg:h-28 lg:w-28 scroll-pl-3 snap-start snap-always overflow-hidden dark:bg-zinc-800 border-2 border-zinc-200"
+                    >
+                      <PreviewUploadedMedia
+                        key={nanoid(3)}
+                        alt={`media-assest #${media.id}`}
+                        imageSrc={media.fileLivePreview}
+                        onClick={() =>
+                          handleDeleteMediaAsset(media.id, setMediaInputList)
+                        }
+                      />
+                    </ProductMediaBox>
+                  );
+                })}
             <ProductMediaBox
               key={nanoid(3)}
               className="bg-white rounded p-2 h-28 scroll-pl-3 snap-start snap-always shadow min-w-max lg:w-30 dark:bg-zinc-700 border border-slate-300 dark:border-slate-500"
@@ -533,7 +553,85 @@ const AddProducts = () => {
             <h3 className="font-medium capitalize mb-3 text-gray-700 dark:text-gray-100">
               variants
             </h3>
-            {clonedVariants.map((elem) => elem.element)}
+            {getValues("variants") !== undefined
+              ? getValues("variants")?.map((elem) => {
+                  return (
+                    <VariantItem key={nanoid(4)}>
+                      <VariantInput
+                        key={nanoid(3)}
+                        id="size"
+                        label="size"
+                        name="size"
+                        type="number"
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                          handleVariantData(ev, variantsSchemaData)
+                        }
+                        value={elem.size.toString()}
+                      />
+                      <VariantInput
+                        key={nanoid(3)}
+                        id="color"
+                        label="color"
+                        name="color"
+                        type="color"
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                          handleVariantData(ev, variantsSchemaData)
+                        }
+                        value={elem.color.toString()}
+                      />
+                      <VariantInput
+                        key={nanoid(3)}
+                        id="stock"
+                        label="stock"
+                        name="stock"
+                        type="number"
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                          handleVariantData(ev, variantsSchemaData)
+                        }
+                        value={elem.stock.toString()}
+                      />
+                      <span className="flex items-end justify-end gap-2 w-1/4 min-h-full">
+                        <button
+                          className="py-2 px-2 lg:py-1 lg:px-2 flex items-center justify-center gap-1 capitalize bordder-0 font-semibold rounded bg-red-700 dark:bg-red-400 text-gray-200 dark:text-gray-900 hover:bg-red-600 dark:hover:bg-red-300"
+                          type="button"
+                          onClick={(
+                            ev: React.MouseEvent<HTMLButtonElement>
+                          ) => {
+                            handleDeleteVariant(ev, elem.id, setClonedVariants);
+                            removeFromVariantList(ev, variantsDataList);
+                          }}
+                        >
+                          <span className="flex items-center select-none pointer-events-none">
+                            <i className="fi fi-rr-trash leading-3 select-none pointer-events-none"></i>
+                          </span>
+                          <p className="hidden lg:block select-none pointer-events-none">
+                            delete
+                          </p>
+                        </button>
+                        <button
+                          className="py-2 px-2 lg:py-1 lg:px-2 flex items-center justify-center gap-2 capitalize bordder-0 font-semibold rounded text-gray-200 hover:bg-slate-600 dark:hover:bg-slate-500 dark:text-gray-700 dark:bg-emerald-300 bg-emerald-600 select-none pointer-events-none"
+                          type="button"
+                          onClick={(ev: React.MouseEvent) =>
+                            addToVariantList(
+                              ev,
+                              variantsDataList,
+                              variantsSchemaData,
+                              nanoid(3)
+                            )
+                          }
+                        >
+                          <span className="flex items-center select-none pointer-events-none">
+                            <i className="fi fi-br-check leading-3 select-none pointer-events-none"></i>
+                          </span>
+                          <p className="hidden lg:block select-none pointer-events-none">
+                            add
+                          </p>
+                        </button>
+                      </span>
+                    </VariantItem>
+                  );
+                })
+              : clonedVariants.map((elem) => elem.element)}
             <div className="w-full h-9 flex items-center justify-between gap-2 my-4">
               <button
                 className="flex gap-2 justify-center items-center w-full h-full bg-zinc-200 border-2 border-dashed rounded border-cyan-700 dark:bg-zinc-800 dark:border-cyan-300 text-cyan-800 dark:text-cyan-300"
