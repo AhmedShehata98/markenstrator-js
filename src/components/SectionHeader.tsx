@@ -23,7 +23,7 @@ const SectionHeader = ({
           {children}
         </form>
         <NavLink
-          className="flex items-center gap-1 bg-violet-500 dark:bg-sky-400 dark:text-black text-white px-3 py-1 rounded shadow"
+          className="flex items-center gap-1 bg-violet-500 dark:bg-sky-400 dark:text-black text-white px-4 h-8 rounded shadow"
           to={to}
         >
           <i className="fi fi-sr-plus-small leading-3 select-none pointer-events-none"></i>

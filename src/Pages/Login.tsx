@@ -133,7 +133,7 @@ const Login = () => {
   useLayoutEffect(() => {
     let timeout: number;
     if (pending === false && isLoggedIn) {
-      timeout = setTimeout(() => {
+      timeout = +setTimeout(() => {
         redirect("/", { status: 200, statusText: "ok" });
       }, 2000);
     }
@@ -144,7 +144,7 @@ const Login = () => {
   }, [pending, isLoggedIn, isError, isSuccess]);
 
   useEffect(() => {
-    let firstTimeout: number;
+    let timeout: number;
 
     if (isSuccess === true) {
       handleSubmitBtnBackground(submitBtnRef, "add", isError, isSuccess);
@@ -152,13 +152,13 @@ const Login = () => {
       handleSubmitBtnBackground(submitBtnRef, "add", isError, isSuccess);
     }
 
-    firstTimeout = setTimeout(() => {
+    timeout = +setTimeout(() => {
       handleSubmitBtnBackground(submitBtnRef, "remove", isError, isSuccess);
       dispatch(BACK_INITIAL_STATE());
     }, 1600);
 
     return () => {
-      clearTimeout(firstTimeout);
+      clearTimeout(timeout);
     };
   }, [isError, isSuccess]);
 

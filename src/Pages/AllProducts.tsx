@@ -33,7 +33,7 @@ const AllProducts = () => {
           to={routesList.addProducts}
         >
           <input
-            className="bg-inherit outline-none"
+            className="bg-inherit outline-none py-0 border-0 mr-3 rounded focus:!border-slate-400"
             type="search"
             name="search-product"
             id="search-product"

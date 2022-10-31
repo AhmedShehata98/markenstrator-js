@@ -4,6 +4,8 @@ import OrderCard from "../components/OrderCard";
 import { ordersList, IOrders } from "../Utilities/dummyData";
 import { DELETE_ORDER, SET_ORDER } from "../Redux/Slice/OrdersSlice";
 import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
+import SectionHeader from "../components/SectionHeader";
+import { Dropdown } from "flowbite-react";
 
 const Orders = () => {
   const { ordersList, pending, success, error } = useAppSelector(
@@ -90,7 +92,7 @@ const Orders = () => {
       }
     >
       <section className="p-3">
-        <header className="w-full flex flex-col gap-2 sm:flex-row">
+        {/* <header className="w-full flex flex-col gap-2 sm:flex-row">
           <h4 className="capitalize text-xl font-semibold dark:text-zinc-100">
             orders
           </h4>
@@ -191,7 +193,40 @@ const Orders = () => {
               </button>
             </li>
           </ul>
-        </header>
+        </header> */}
+        <SectionHeader title="orders list" buttonTitle="add Order" to="#">
+          <Dropdown label="Search by :" size={"xs"} color={"text-zinc-200"}>
+            <Dropdown.Item>order state</Dropdown.Item>
+            <Dropdown.Item>username</Dropdown.Item>
+            <Dropdown.Item>price</Dropdown.Item>
+          </Dropdown>
+          <div className="flex items-center justify-between gap-3 bg-inherit dark:border-slate-600 rounded h-full px-2 text-gray-500 bg-gray-50 dark:bg-zinc-800">
+            <span className="h-full flex items-center border px-4">
+              <input
+                type="search"
+                className="w-full h-full outline-none bg-inherit py-0 mr-4 border-0 dark:text-zinc-200"
+                placeholder="search orders ..."
+                onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                  setQuery(ev.target.value)
+                }
+                value={query}
+              />
+              <i className="fi fi-rr-search leading-3"></i>
+            </span>
+            <button
+              type="button"
+              className="flex items-center justify-center w-8 rounded-sm aspect-square border border-slate-300  bg-violet-100 dark:text-indigo-400 dark:bg-zinc-800 dark:border-indigo-300"
+            >
+              <i className="fi fi-sr-rotate-right leading-3 text-indigo-700 dark:text-indigo-300"></i>
+            </button>
+            <button
+              type="button"
+              className="flex items-center justify-center w-8 rounded-sm aspect-square text-white border border-indigo-800 bg-indigo-700 dark:bg-indigo-400 dark:text-black dark:border-indigo-400"
+            >
+              <i className="fi fi-sr-download leading-3 text-white dark:text-black"></i>
+            </button>
+          </div>
+        </SectionHeader>
         <article>
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  w-full min-h-screen mt-7 gap-4 justify-center items-start">
             {ordersList &&
