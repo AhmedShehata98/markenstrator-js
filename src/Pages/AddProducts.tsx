@@ -17,7 +17,7 @@ import {
 import { useAppSelector } from "../Redux/ReduxHooks";
 
 const AddProducts = () => {
-  const { initinalProductsData } = useAppSelector(
+  const { initinalProductsData, displayProductDetails } = useAppSelector(
     (state) => state["app-settings"]
   );
   const {
@@ -303,10 +303,7 @@ const AddProducts = () => {
   // }, []);
 
   useEffect(() => {
-    if (
-      typeof initinalProductsData === "object" &&
-      Object.keys(initinalProductsData).length > 0
-    ) {
+    if (Object.keys(initinalProductsData).length > 0 && displayProductDetails) {
       reset({
         productName: initinalProductsData?.productName || "",
         price: {
@@ -327,7 +324,30 @@ const AddProducts = () => {
       });
       setMediaInputList(initinalProductsData.media as MediaType[]);
       variantsDataList.current.push(...initinalProductsData.variants!);
+    } else {
+      reset({
+        productName: "",
+        price: {
+          value: 0,
+          unit: "",
+        },
+        sku: "",
+        weight: {
+          value: 0,
+          unit: "",
+        },
+        description: "",
+        media: [],
+        variants: [],
+        brand: "",
+        category: "",
+        collection: "",
+      });
+      setMediaInputList([]);
+      variantsDataList.current = [];
     }
+    console.log(displayProductDetails);
+    console.log(Object.keys(initinalProductsData).length);
   }, [initinalProductsData, reset]);
 
   return (

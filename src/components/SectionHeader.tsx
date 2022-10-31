@@ -6,12 +6,14 @@ type SectionHeaderProps = {
   children?: React.ReactNode;
   to: string;
   buttonTitle: string;
+  onClick?: React.MouseEventHandler;
 };
 const SectionHeader = ({
   buttonTitle,
   children,
   title,
   to,
+  onClick,
 }: SectionHeaderProps) => {
   return (
     <header className="flex sm:items-center items-start gap-3 sm:gap-0 justify-between flex-col sm:flex-row w-full my-3">
@@ -25,6 +27,7 @@ const SectionHeader = ({
         <NavLink
           className="flex items-center gap-1 bg-violet-500 dark:bg-sky-400 dark:text-black text-white px-4 h-8 rounded shadow"
           to={to}
+          onClick={onClick}
         >
           <i className="fi fi-sr-plus-small leading-3 select-none pointer-events-none"></i>
           <p>{buttonTitle}</p>

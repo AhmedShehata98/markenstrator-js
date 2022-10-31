@@ -6,7 +6,7 @@ import { SET_ADD_PRODUCT_INITIAL_STATE } from "../Redux/Slice/AppSlice";
 import { nanoid } from "@reduxjs/toolkit";
 import { routesList } from "../Router/RoutesList";
 type AllProductsTableProps = {
-  AllProductsTableData: Partial<IAllProductsData>[];
+  AllProductsTableData: IAllProductsData[];
   children?: React.ReactNode;
 };
 // interface AllProductsTableData {
@@ -28,10 +28,13 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
   const navigate = useNavigate();
   const optionsMenuRef = useRef<HTMLUListElement | null>(null);
 
-  const handleShowProductDetails = (
-    productDetails: Partial<IAllProductsData>
-  ) => {
-    dispatch(SET_ADD_PRODUCT_INITIAL_STATE(productDetails));
+  const handleShowProductDetails = (productDetails: IAllProductsData) => {
+    dispatch(
+      SET_ADD_PRODUCT_INITIAL_STATE({
+        data: productDetails,
+        displayProductDetails: true,
+      })
+    );
     // redirect(routesList.addProducts, { status: 200, statusText: "OK" });
     navigate(routesList.addProducts);
     console.log("redirect");

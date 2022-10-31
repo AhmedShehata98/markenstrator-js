@@ -8,6 +8,7 @@ type initialStateTypes = {
   currentTheme: string | null;
   showSidebar: boolean;
   initinalProductsData: Partial<IProductFormData>;
+  displayProductDetails: boolean;
 };
 type actionTypes = {
   payload?: "string";
@@ -25,6 +26,7 @@ const initialState: initialStateTypes = {
     : "light",
   showSidebar: false,
   initinalProductsData: {},
+  displayProductDetails: false,
 };
 export const appSlice = createSlice({
   name: "app-settings",
@@ -52,9 +54,13 @@ export const appSlice = createSlice({
     },
     SET_ADD_PRODUCT_INITIAL_STATE: (
       state: initialStateTypes,
-      action: PayloadAction<Partial<IProductFormData>>
+      action: PayloadAction<{
+        data: IProductFormData;
+        displayProductDetails: boolean;
+      }>
     ) => {
-      state.initinalProductsData = action.payload;
+      state.initinalProductsData = action.payload.data;
+      state.displayProductDetails = action.payload.displayProductDetails;
     },
   },
 });

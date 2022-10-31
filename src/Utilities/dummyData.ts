@@ -138,7 +138,7 @@ export const ordersList: IOrders[] = [
   },
 ];
 
-export const productsDataList: Partial<IAllProductsData>[] = [
+export const productsDataList: IAllProductsData[] = [
   {
     id: 0,
     brand: "samsung",
