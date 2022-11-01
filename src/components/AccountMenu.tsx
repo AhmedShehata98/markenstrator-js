@@ -8,7 +8,7 @@ const AccountMenu = forwardRef((props, ref: LegacyRef<HTMLUListElement>) => {
   const dispatch = useAppDispatch();
 
   return (
-    <ul className="account-menu " ref={ref}>
+    <ul className="account-menu hide-menu" ref={ref}>
       <span className="flex flex-col h-6 mb-2 border-b w-full">
         <p className="font-bold text-xs text-gray-700 pb-2 dark:text-white">
           account menu

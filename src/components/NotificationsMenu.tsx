@@ -12,10 +12,7 @@ const NotificationsMenu = forwardRef(
     ref: LegacyRef<HTMLDivElement>
   ) => {
     return (
-      <div
-        ref={ref}
-        className="notification-menu-wrapper notification-menu-hide"
-      >
+      <div ref={ref} className="notification-menu-wrapper hide-menu">
         <div className="flex items-center justify-between px-3 py-2 bg-white dark:bg-zinc-800 border-b">
           <span className="flex items-center justify-center">
             <p className="text-sm font-semibold capitalize">notifications</p>
