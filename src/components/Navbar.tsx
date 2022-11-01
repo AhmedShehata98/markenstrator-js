@@ -5,6 +5,8 @@ import UserPannelBtn from "./UserPannelBtn";
 import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
 import { TOGGLE_THEME, TOGGLE_SIDEBAR } from "../Redux/Slice/AppSlice";
 import { LOGOUT_ACCOUNT } from "../Redux/Slice/UserSlice";
+import { Link } from "react-router-dom";
+import { routesList } from "../Router/RoutesList";
 
 const Navbar = () => {
   const {
@@ -107,16 +109,23 @@ const Navbar = () => {
             </button>
           </a>
           <ul className="account-menu " ref={accountMenuRef}>
-            <p className="font-bold text-xs text-gray-700 mt-1 mb-3 dark:text-white">
-              account menu
-            </p>
-            <li className="account-menu-items ">
-              <span className="w-7 h-7 bg-gray-200 flex items-center justify-center rounded-full dark:bg-zinc-400 ">
-                <i className="fi fi-rr-settings text-sm leading-3 dark:text-black"></i>
-              </span>
-              <p className="font-bold text-sm text-gray-600 text-center dark:text-white">
-                settings
+            <span className="flex flex-col h-6 mb-2 border-b w-full">
+              <p className="font-bold text-xs text-gray-700 pb-2 dark:text-white">
+                account menu
               </p>
+            </span>
+            <li className="account-menu-items ">
+              <Link
+                className="w-full flex gap-3"
+                to={routesList?.settings || "#"}
+              >
+                <span className="w-7 h-7 bg-gray-200 flex items-center justify-center rounded-full dark:bg-zinc-400 ">
+                  <i className="fi fi-rr-settings text-sm leading-3 dark:text-black"></i>
+                </span>
+                <p className="font-bold text-sm text-gray-600 text-center dark:text-white">
+                  settings
+                </p>
+              </Link>
             </li>
             <li
               className="account-menu-items "

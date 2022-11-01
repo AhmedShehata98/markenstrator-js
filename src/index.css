@@ -70,7 +70,7 @@
     @apply translate-y-0 opacity-100 pointer-events-auto transition-all;
   }
   .account-menu-items {
-    @apply flex gap-3 items-center justify-between hover:bg-gray-200 px-2 py-1 cursor-pointer rounded-md dark:hover:bg-zinc-500;
+    @apply flex gap-3 items-center justify-start  hover:bg-gray-200 px-2 py-1 cursor-pointer rounded-md dark:hover:bg-zinc-500;
   }
   .sidebar-menu {
     @apply lg:!fixed lg:left-0 lg:top-14 py-4 lg:py-14 bg-white w-48 h-screen border-r flex flex-col items-center dark:bg-zinc-800 dark:border-zinc-500 transition-all lg:-translate-x-0 -translate-x-full z-10;
