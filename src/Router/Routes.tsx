@@ -30,6 +30,9 @@ const Signup: React.LazyExoticComponent<() => JSX.Element> = lazy(
 const Settings: React.LazyExoticComponent<() => JSX.Element> = lazy(
   () => import("../Pages/Settings")
 );
+const Categories: React.LazyExoticComponent<() => JSX.Element> = lazy(
+  () => import("../Pages/Categories")
+);
 const NotFounded: React.LazyExoticComponent<() => JSX.Element> = lazy(
   () => import("../Pages/NotFounded")
 );
@@ -84,6 +87,14 @@ export default function Routes() {
           element={
             <Suspense fallback={<LoadingModule />}>
               <AddProducts />
+            </Suspense>
+          }
+        />
+        <Route
+          path={routesList?.category}
+          element={
+            <Suspense fallback={<LoadingModule />}>
+              <Categories />
             </Suspense>
           }
         />

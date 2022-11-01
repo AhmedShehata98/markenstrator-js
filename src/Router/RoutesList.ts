@@ -10,5 +10,6 @@ export const routesList = {
   signUp: "sign-up",
   resetPassword: "reset-password",
   category: "category",
+  addCategory: "add-Category",
   orders: "orders",
 };

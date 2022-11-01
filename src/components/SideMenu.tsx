@@ -86,12 +86,6 @@ const SideMenu = () => {
         />
         <SidebarNavLink
           key={nanoid(3)}
-          icon={<i className="fi fi-sr-chart-pie leading-3"></i>}
-          title="statistics"
-          to={routesList?.statistics || "#"}
-        />
-        <SidebarNavLink
-          key={nanoid(3)}
           icon={<i className="fi fi-sr-users leading-3"></i>}
           title="users"
           to={routesList?.users || "#"}

@@ -35,9 +35,8 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
         displayProductDetails: true,
       })
     );
-    // redirect(routesList.addProducts, { status: 200, statusText: "OK" });
+
     navigate(routesList.addProducts);
-    console.log("redirect");
   };
 
   const handleShowOptionsMenu = (ev: React.MouseEvent) => {

@@ -1,5 +1,5 @@
 import { nanoid } from "@reduxjs/toolkit";
-import { IAllProductsData } from "./../Types/pages-types";
+import { IAllProductsData, ICategoryData } from "./../Types/pages-types";
 export type userAllDataTypes = {
   username: string;
   firstname: string;
@@ -310,6 +310,81 @@ export const productsDataList: IAllProductsData[] = [
         stock: 2170,
       },
     ],
+  },
+];
+
+export const CategoryiesList: ICategoryData[] = [
+  {
+    id: 0,
+    "category-name": "eleconics",
+    "category-products-count": "76 products",
+    icon: "fi fi-rr-screen",
+  },
+  {
+    id: 1,
+    "category-name": "games",
+    "category-products-count": "26 products",
+    icon: "fi fi-rr-gamepad",
+  },
+  {
+    id: 2,
+    "category-name": "beauty",
+    "category-products-count": "106 products",
+    icon: "fi fi-rr-barber-shop",
+  },
+  {
+    id: 3,
+    "category-name": "fashion",
+    "category-products-count": "56 products",
+    icon: "fi fi-rs-gem",
+  },
+  {
+    id: 4,
+    "category-name": "furniture",
+    "category-products-count": "14 products",
+    icon: "fi fi-rr-chair-office",
+  },
+  {
+    id: 5,
+    "category-name": "books",
+    "category-products-count": "53 products",
+    icon: "fi fi-rr-book-bookmark",
+  },
+  {
+    id: 6,
+    "category-name": "gadget",
+    "category-products-count": "44 products",
+    icon: "fi fi-rr-keyboard",
+  },
+  {
+    id: 7,
+    "category-name": "music",
+    "category-products-count": "32 products",
+    icon: "fi fi-rr-music",
+  },
+  {
+    id: 8,
+    "category-name": "health",
+    "category-products-count": "20 products",
+    icon: "fi fi-rr-stethoscope",
+  },
+  {
+    id: 9,
+    "category-name": "investment",
+    "category-products-count": "12 products",
+    icon: "fi fi-rr-lightbulb-dollar",
+  },
+  {
+    id: 10,
+    "category-name": "sports & gym ",
+    "category-products-count": "12 products",
+    icon: "fi fi-sr-gym",
+  },
+  {
+    id: 11,
+    "category-name": "food & market",
+    "category-products-count": "12 products",
+    icon: "fi fi-rr-hamburger-soda",
   },
 ];
 

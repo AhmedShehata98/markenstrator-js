@@ -79,3 +79,9 @@ export interface ISettingProfile {
   phone: string;
   address: string;
 }
+export interface ICategoryData {
+  id: number | string;
+  icon: string;
+  "category-name": string;
+  "category-products-count": string;
+}
