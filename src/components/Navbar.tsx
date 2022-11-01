@@ -7,6 +7,9 @@ import { TOGGLE_THEME, TOGGLE_SIDEBAR } from "../Redux/Slice/AppSlice";
 import { LOGOUT_ACCOUNT } from "../Redux/Slice/UserSlice";
 import { Link } from "react-router-dom";
 import { routesList } from "../Router/RoutesList";
+import AccountMenu from "./AccountMenu";
+import NotificationsMenu from "./NotificationsMenu";
+import { notificationMenuData } from "../Utilities/dummyData";
 
 const Navbar = () => {
   const {
@@ -15,8 +18,12 @@ const Navbar = () => {
   } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const accountMenuRef = useRef<HTMLUListElement>(null);
+  const notificationsMenu = useRef<HTMLDivElement>(null);
   const handleAccountMenu = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    accountMenuRef.current?.classList.toggle("show-account-menu");
+    accountMenuRef.current?.classList.toggle("hide-menu");
+  };
+  const handleShowNotificationsMenu = () => {
+    notificationsMenu.current?.classList.toggle("hide-menu");
   };
 
   return (
@@ -75,7 +82,7 @@ const Navbar = () => {
             <UserPannelBtn
               className="navbar-link hidden lg:flex"
               icon={<i className="fi fi-rr-bell leading-3"></i>}
-              clickHandler={() => console.log("notification btn")}
+              clickHandler={() => handleShowNotificationsMenu()}
             />
             <UserPannelBtn
               className="navbar-link hidden lg:flex"
@@ -89,9 +96,9 @@ const Navbar = () => {
               clickHandler={(ev) => dispatch(TOGGLE_THEME())}
             />
           </div>
-          <a className="flex items-center gap-2" href="#">
+          <figure className="flex items-center gap-2">
             <img
-              className="w-9 h-9 rounded-full hidden lg:inline-block"
+              className="w-8 h-8 rounded-full hidden lg:inline-block"
               src="https://picsum.photos/200"
               alt="user-image"
             />
@@ -107,38 +114,12 @@ const Navbar = () => {
               </p>
               <i className="fi fi-br-angle-down leading-[0.5rem] text-xs dark:text-zinc-100"></i>
             </button>
-          </a>
-          <ul className="account-menu " ref={accountMenuRef}>
-            <span className="flex flex-col h-6 mb-2 border-b w-full">
-              <p className="font-bold text-xs text-gray-700 pb-2 dark:text-white">
-                account menu
-              </p>
-            </span>
-            <li className="account-menu-items ">
-              <Link
-                className="w-full flex gap-3"
-                to={routesList?.settings || "#"}
-              >
-                <span className="w-7 h-7 bg-gray-200 flex items-center justify-center rounded-full dark:bg-zinc-400 ">
-                  <i className="fi fi-rr-settings text-sm leading-3 dark:text-black"></i>
-                </span>
-                <p className="font-bold text-sm text-gray-600 text-center dark:text-white">
-                  settings
-                </p>
-              </Link>
-            </li>
-            <li
-              className="account-menu-items "
-              onClick={() => dispatch(LOGOUT_ACCOUNT())}
-            >
-              <span className="w-7 h-7 bg-gray-200 flex items-center justify-center rounded-full dark:bg-zinc-400 select-none pointer-events-none">
-                <i className="fi fi-rr-sign-out-alt text-sm text-rose-400 leading-3 dark:text-rose-700"></i>
-              </span>
-              <p className="font-bold text-sm text-rose-400 text-center dark:text-rose-400 select-none pointer-events-none">
-                sign out
-              </p>
-            </li>
-          </ul>
+          </figure>
+          <AccountMenu ref={accountMenuRef} />
+          <NotificationsMenu
+            ref={notificationsMenu}
+            notificationMenuData={notificationMenuData}
+          />
         </nav>
       </section>
     </header>

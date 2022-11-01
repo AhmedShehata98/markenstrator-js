@@ -85,3 +85,12 @@ export interface ICategoryData {
   "category-name": string;
   "category-products-count": string;
 }
+
+export interface INotificationsMenu {
+  id: number | string;
+  type: "alert" | "success" | "warning" | "danger";
+  icon: string;
+  title: string;
+  summury: string;
+  date: string;
+}

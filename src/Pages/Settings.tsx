@@ -8,9 +8,9 @@ const Settings = () => {
   const { documentWidth } = useDocumentWidth();
   // const {} = useForm<>()
   return (
-    <main className="main-wrapper">
+    <main className="main-wrapper dark:bg-zinc-800">
       <span className="sidebar-space"></span>
-      <section className="content-container">
+      <section className="content-container p-0">
         <article className="w-full bg-white dark:bg-zinc-800 rounded p-2">
           <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
             <li className="flex flex-col mb-3">

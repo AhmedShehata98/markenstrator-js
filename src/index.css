@@ -30,6 +30,15 @@
   select {
     @apply border border-slate-300 dark:border-slate-700 py-1 uppercase text-xs font-bold dark:bg-zinc-500 text-zinc-500 dark:text-zinc-200;
   }
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  ::-webkit-scrollbar-track {
+    @apply rounded-lg bg-zinc-200 dark:bg-zinc-800;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-lg bg-violet-600  dark:bg-violet-400  hover:bg-violet-500 dark:hover:bg-violet-300 cursor-pointer;
+  }
 }
 @tailwind components;
 @layer components {
@@ -64,10 +73,7 @@
     @apply bg-gray-200 w-9 h-9 flex lg:hidden items-center justify-center rounded-full shadow-inner hover:bg-gray-100 dark:bg-zinc-700 dark:text-white dark:border-zinc-400;
   }
   .account-menu {
-    @apply w-full lg:w-52 min-h-fit bg-white border absolute top-full right-0 lg:right-7 p-2 capitalize shadow -translate-y-4 opacity-0  transition-all pointer-events-none dark:bg-zinc-700 dark:border-zinc-400;
-  }
-  .show-account-menu {
-    @apply translate-y-0 opacity-100 pointer-events-auto transition-all;
+    @apply w-full lg:w-52 min-h-fit bg-white border absolute top-full right-0 lg:right-7 p-2 capitalize shadow transition-all duration-300 dark:bg-zinc-700 dark:border-zinc-400;
   }
   .account-menu-items {
     @apply flex gap-3 items-center justify-start  hover:bg-gray-200 px-2 py-1 cursor-pointer rounded-md dark:hover:bg-zinc-500;
@@ -227,6 +233,15 @@
   }
   .options-button {
     @apply flex items-center justify-center p-1 mr-2 aspect-square cursor-pointer rounded-full hover:bg-gray-300 dark:hover:bg-zinc-800;
+  }
+  .notification-menu-wrapper {
+    @apply w-72 absolute top-full right-64 shadow-md border transition-all duration-300 border-slate-300 dark:border-slate-500 bg-zinc-100 dark:bg-zinc-700;
+  }
+  .notification-menu-list {
+    @apply flex flex-col p-1 gap-2 max-w-full divide-y max-h-[65vh] overflow-y-auto;
+  }
+  .hide-menu {
+    @apply -translate-y-4 scale-95 opacity-0 pointer-events-none select-none;
   }
 }
 @tailwind utilities;

@@ -1,5 +1,9 @@
 import { nanoid } from "@reduxjs/toolkit";
-import { IAllProductsData, ICategoryData } from "./../Types/pages-types";
+import {
+  IAllProductsData,
+  ICategoryData,
+  INotificationsMenu,
+} from "./../Types/pages-types";
 export type userAllDataTypes = {
   username: string;
   firstname: string;
@@ -385,6 +389,63 @@ export const CategoryiesList: ICategoryData[] = [
     "category-name": "food & market",
     "category-products-count": "12 products",
     icon: "fi fi-rr-hamburger-soda",
+  },
+];
+
+export const notificationMenuData: INotificationsMenu[] = [
+  {
+    id: 0,
+    date: new Date().toTimeString(),
+    type: "alert",
+    icon: "fi fi-sr-badge-check",
+    title: "transaction success .",
+    summury:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis consequuntur quaerat eaque non dignissimos.",
+  },
+  {
+    id: 1,
+    date: new Date().toTimeString(),
+    type: "alert",
+    icon: "fi fi-sr-bell-ring",
+    title: "attention for sold prodocts .",
+    summury:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis consequuntur quaerat eaque non dignissimos.",
+  },
+  {
+    id: 3,
+    date: new Date().toTimeString(),
+    type: "danger",
+    icon: "fi fi-sr-exclamation",
+    title: "eleconics products is sold out .",
+    summury:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis consequuntur quaerat eaque non dignissimos.",
+  },
+  {
+    id: 4,
+    date: new Date().toTimeString(),
+    type: "warning",
+    icon: "fi fi-sr-bell-ring",
+    title: "A returned product from a customer.",
+    summury:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis consequuntur quaerat eaque non dignissimos.",
+  },
+  {
+    id: 5,
+    date: new Date().toTimeString(),
+    type: "success",
+    icon: "fi fi-sr-badge-check",
+    title: "transaction success .",
+    summury:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis consequuntur quaerat eaque non dignissimos.",
+  },
+  {
+    id: 6,
+    date: new Date().toTimeString(),
+    type: "success",
+    icon: "fi fi-sr-badge-check",
+    title: "transaction success .",
+    summury:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis consequuntur quaerat eaque non dignissimos.",
   },
 ];
 
