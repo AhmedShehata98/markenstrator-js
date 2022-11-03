@@ -20,19 +20,17 @@ const SidebarNavLink = ({
   return (
     <NavLink
       className={({ isActive }) =>
-        isActive ? "sidebar-items sidebar-items-active" : "sidebar-items"
+        isActive ? "sidebar-link sidebar-link-active" : "sidebar-link"
       }
       to={to || "#"}
       end={end}
     >
-      <button className={`${"sidebar-btn"}`}>
-        <span className="sidebar-icon w-1/5 pointer-events-none select-none">
-          {icon}
-        </span>
-        <p className="w-3/5 text-start px-3 pointer-events-none select-none ">
-          {title}
-        </p>
-      </button>
+      <span className="sidebar-icon pointer-events-none select-none">
+        {icon}
+      </span>
+      <p className="uppercase text-sm md:text-base font-semibold pointer-events-none select-none">
+        {title}
+      </p>
     </NavLink>
   );
 };

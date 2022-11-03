@@ -12,7 +12,6 @@ const CartegoriesCards = ({ categoriesData }: CartegoriesCardsProps) => {
           categoriesData &&
           categoriesData.map((category) => {
             return (
-              <li className="flex flex-col items-start justify-start transition-transform ease-out duration-700 hover:-translate-y-1 shadow border p-3 backdrop-blur-lg rounded bg-gradient-to-tl from-neutral-100 to-zinc-50 dark:border-slate-500 dark:from-neutral-800 dark:to-zinc-700">
                 <span className="flex items-center first:text-emerald-500 dark:first:text-emerald-300 first:text-3xl mb-2">
                   <i
                     className={`${category.icon} leading-3 pointer-events-none`}

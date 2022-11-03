@@ -53,12 +53,17 @@ const SideMenu = () => {
       <nav className="sidebar-navigation">
         <SidebarNavLink
           key={nanoid(3)}
-          icon={<i className="fi fi-sr-apps leading-3"></i>}
+          icon={<i className="fi fi-sr-apps text-inherit leading-3"></i>}
           title="overview"
-          to={routesList?.app || "#"}
+          to={routesList?.app}
           end={true}
         />
-
+        <SidebarNavLink
+          title="orders"
+          to={routesList?.orders}
+          key={nanoid(3)}
+          icon={<i className="fi fi-sr-list text-inherit leading-3"></i>}
+        />
         <CollapseMenu
           key={nanoid(3)}
           title="products"
@@ -80,27 +85,21 @@ const SideMenu = () => {
 
         <SidebarNavLink
           key={nanoid(3)}
-          icon={<i className="fi fi-sr-list leading-3"></i>}
-          title="Orders"
-          to={routesList?.orders || "#"}
-        />
-        <SidebarNavLink
-          key={nanoid(3)}
-          icon={<i className="fi fi-sr-users leading-3"></i>}
+          icon={<i className="fi fi-sr-users text-inherit leading-3"></i>}
           title="users"
-          to={routesList?.users || "#"}
+          to={routesList?.users}
         />
         <SidebarNavLink
           key={nanoid(3)}
-          icon={<i className="fi fi-sr-treatment leading-3"></i>}
+          icon={<i className="fi fi-sr-treatment text-inherit leading-3"></i>}
           title="invoices"
-          to={routesList?.invoices || "#"}
+          to={routesList?.invoices}
         />
         <SidebarNavLink
           key={nanoid(3)}
-          icon={<i className="fi fi-sr-settings leading-3"></i>}
+          icon={<i className="fi fi-sr-settings text-inherit leading-3"></i>}
           title="settings"
-          to={routesList?.settings || "#"}
+          to={routesList?.settings}
         />
       </nav>
     </aside>
