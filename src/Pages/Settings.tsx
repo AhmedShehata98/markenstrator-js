@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import useDocumentWidth from "../Hooks/useDocumentWidth";
 import ChangePassword from "../components/ChangePassword";
 import Notifications from "../components/Notifications";
@@ -6,9 +6,29 @@ import EditProfile from "../components/EditProfile";
 
 const Settings = () => {
   const { documentWidth } = useDocumentWidth();
-  // const {} = useForm<>()
+  const settingsRef = useRef<HTMLElement | null>(null);
+  let timeout: ReturnType<typeof setTimeout>;
+
+  useEffect(() => {
+    timeout = setTimeout(() => {
+      settingsRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    }, 5);
+    return () => {
+      clearTimeout(timeout);
+      settingsRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    };
+  }, []);
   return (
-    <main className="main-wrapper dark:bg-zinc-800">
+    <main
+      ref={settingsRef}
+      className="main-wrapper section-fade-closed dark:bg-zinc-800"
+    >
       <span className="sidebar-space"></span>
       <section className="content-container p-0">
         <article className="w-full bg-white dark:bg-zinc-800 rounded p-2">

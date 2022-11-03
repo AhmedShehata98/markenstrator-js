@@ -1,3 +1,4 @@
+import { nanoid } from "@reduxjs/toolkit";
 import React, { forwardRef, LegacyRef } from "react";
 import { Link } from "react-router-dom";
 import { INotificationsMenu } from "../Types/pages-types";
@@ -32,7 +33,10 @@ const NotificationsMenu = forwardRef(
             notificationMenuData &&
             notificationMenuData.map((notificationData) => {
               return (
-                <li className="flex items-center justify-center w-full px-3 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                <li
+                  key={nanoid(4)}
+                  className="flex items-center justify-center w-full px-3 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                >
                   <Link
                     className="flex items-center justify-center gap-3 max-w-full"
                     to={"#"}

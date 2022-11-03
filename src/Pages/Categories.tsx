@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CartegoriesCards from "../components/CartegoriesCards";
 import SectionHeader from "../components/SectionHeader";
 import { routesList } from "../Router/RoutesList";
@@ -6,8 +6,29 @@ import { CategoryiesList } from "../Utilities/dummyData";
 
 const Categories = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const CategoriesRef = useRef<HTMLElement | null>(null);
+  let timeout: ReturnType<typeof setTimeout>;
+
+  useEffect(() => {
+    timeout = setTimeout(() => {
+      CategoriesRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    }, 5);
+    return () => {
+      clearTimeout(timeout);
+      CategoriesRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    };
+  }, []);
   return (
-    <main className="main-wrapper dark:bg-zinc-800">
+    <main
+      ref={CategoriesRef}
+      className="main-wrapper section-fade-closed dark:bg-zinc-800"
+    >
       <span className="sidebar-space "></span>
       <section className="content-container dark:bg-zinc-800">
         <SectionHeader

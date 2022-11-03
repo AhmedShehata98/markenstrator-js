@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 
 // components
 import CustomerReviews from "../components/CustomerReviews";
@@ -8,8 +8,25 @@ import StreamChart from "../components/StreamChart";
 import TopSeller from "../components/TopSeller";
 
 const Home = () => {
+  let timeout: ReturnType<typeof setTimeout>;
+  const homeRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    timeout = setTimeout(() => {
+      homeRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    }, 5);
+    return () => {
+      clearTimeout(timeout);
+      homeRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    };
+  }, []);
   return (
-    <main className="main-home">
+    <main ref={homeRef} className="main-home section-fade-closed">
       <section className="home-content-container lg:ml-48">
         <article className="home-content-children">
           <div className="flex flex-col w-full lg:w-3/4 h-full flex-wrap">

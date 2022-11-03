@@ -25,7 +25,7 @@ const Login = () => {
     isSuccess,
     successMessage,
   } = useAppSelector((state) => state.user);
-  const { pathname } = useLocation();
+
   const dispatch = useAppDispatch();
   const [formdata, setFormdata] = useState({
     email: "",
@@ -170,19 +170,45 @@ const Login = () => {
       >
         <form
           onSubmit={(ev: React.FormEvent) => handleSubmit(ev)}
-          className="flex flex-col items-center justify-center z-10 w-11/12 sm:w-3/5 md:w-[40%] lg:w-[30%] h-[77vh] border shadow-lg p-3 bg-gray-100  sm:ml-14 sm:mr-4 rounded-md"
+          className="flex flex-col items-center justify-center z-10 w-11/12 sm:w-3/5 md:w-[40%] lg:w-[30%] h-[77vh] border shadow-lg p-3 bg-gray-100 dark:bg-zinc-800 dark:border-slate-500 sm:ml-14 sm:mr-4 rounded-md"
         >
-          <div className="flex justify-center items-center gap-3 flex-col  w-3/4 h-32">
-            <span className="grid place-content-center w-14 aspect-square rounded-full bg-indigo-400">
-              <i className="fi fi-sr-mode-portrait text-3xl text-indigo-900 leading-3"></i>
-            </span>
-            <h4 className="flex items-center justify-center text-2xl font-bold uppercase">
-              login
+          <div className="flex justify-center items-start gap-3 flex-col w-3/4 h-32">
+            <h4 className="text-lg font-medium uppercase mb-2 dark:text-white">
+              welcome back
             </h4>
+            <span className="flex items-center justify-start gap-2 capitalize">
+              <p className="dark:text-white">sign in : </p>
+              <span className="flex justify-start items-center gap-1">
+                <button
+                  type="button"
+                  className="flex items-center justify-center text-lg border-slate-500 w-8 h-7 rounded transition-colors  bg-[#3b5998] text-white bg-opacity-80"
+                >
+                  <i className="fi fi-brands-facebook leading-3"></i>
+                </button>
+
+                <button
+                  type="button"
+                  className="flex items-center justify-center text-lg border-slate-500 w-8 h-7 rounded transition-colors bg-[#555555] text-white bg-opacity-80"
+                >
+                  <i className="fi fi-brands-apple leading-3"></i>
+                </button>
+
+                <button
+                  type="button"
+                  className="flex items-center justify-center text-lg border-slate-500 w-8 h-7 rounded transition-colors bg-[#EA4335] text-white bg-opacity-80"
+                >
+                  <i className="fi fi-brands-google leading-3"></i>
+                </button>
+              </span>
+            </span>
           </div>
           <span className="login-input-wrapper w-3/4">
-            <label className="form-label" htmlFor="email">
-              <i className="fi fi-br-at leading-3"></i>
+            <label
+              className="form-label"
+              htmlFor="email"
+              aria-required={"true"}
+            >
+              e-mail
             </label>
             <input
               className="form-input"
@@ -198,9 +224,19 @@ const Login = () => {
             />
           </span>
           <span className="login-input-wrapper w-3/4">
-            <label className="form-label" htmlFor="password">
-              <i className="fi fi-sr-lock leading-3"></i>
-            </label>
+            <span className="flex justify-between items-center w-full">
+              <label className="form-label" htmlFor="password">
+                password
+              </label>
+              <span className="flex items-center justify-end gap-2 w-1/2">
+                <Link
+                  className="text-violet-800 font-medium dark:text-violet-300 text-xs capitalize underline"
+                  to={routesList?.resetPassword || "#"}
+                >
+                  forget password
+                </Link>
+              </span>
+            </span>
             <input
               className="form-input"
               type="password"
@@ -214,34 +250,24 @@ const Login = () => {
               required={true}
             />
           </span>
-          <span className="flex items-center justify-between w-3/4">
-            <span className="flex items-center justify-center gap-2 w-1/2">
-              <input
-                className="accent-violet-700 dark:accent-violet-300"
-                type="checkbox"
-                name="remember-me"
-                id="remember-me"
-                onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(ev)
-                }
-              />
-              <label
-                className="text-violet-700 dark:text-violet-300 font-medium text-sm capitalize"
-                htmlFor="remember-me"
-              >
-                remember me
-              </label>
-            </span>
-            <span className="flex items-center justify-center gap-2 w-1/2">
-              <Link
-                className="text-violet-800 font-medium dark:text-violet-300 text-sm capitalize"
-                to={routesList?.resetPassword || "#"}
-              >
-                forget password
-              </Link>
-            </span>
+          <span className="flex items-center justify-start gap-2 w-3/4">
+            <input
+              className=" w-3 h-3 rounded"
+              type="checkbox"
+              name="remember-me"
+              id="remember-me"
+              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(ev)
+              }
+            />
+            <label
+              className="text-violet-700 dark:text-violet-300 font-medium text-sm capitalize"
+              htmlFor="remember-me"
+            >
+              remember me
+            </label>
           </span>
-          <div className="mb-1 mt-9 w-3/4">
+          <div className="mb-1 mt-2 w-3/4">
             <button ref={submitBtnRef} className="login-btn" type="submit">
               {pending && (
                 <>
@@ -269,30 +295,8 @@ const Login = () => {
               )}
             </button>
           </div>
-          <span className="flex justify-evenly items-center w-3/5 mt-2">
-            <button
-              type="button"
-              className="text-2xl border-slate-500 transition-colors hover:text-[#3b5998]"
-            >
-              <i className="fi fi-brands-facebook"></i>
-            </button>
-
-            <button
-              type="button"
-              className="text-2xl border-slate-500 transition-colors hover:text-[#555555]"
-            >
-              <i className="fi fi-brands-apple"></i>
-            </button>
-
-            <button
-              type="button"
-              className="text-2xl border-slate-500 transition-colors hover:text-[#EA4335]"
-            >
-              <i className="fi fi-brands-google"></i>
-            </button>
-          </span>
           <span className="relative bg-gray-400 h-[1px] my-3 w-3/5">
-            <small className="absolute top-1/2 grid place-content-center px-[5px] py-[1px] rounded-full left-1/2 border -translate-x-1/2 -translate-y-1/2 bg-gray-100 text-indigo-700">
+            <small className="absolute top-1/2 grid place-content-center px-[5px] py-[1px] rounded-full left-1/2 border -translate-x-1/2 -translate-y-1/2 bg-gray-100 dark:bg-zinc-600 dark:border-slate-500 dark:text-white text-indigo-700">
               or
             </small>
           </span>
@@ -301,7 +305,7 @@ const Login = () => {
               create a new account ?
             </small>
             <Link
-              className="text-violet-600 font-medium text-sm uppercase px-4"
+              className="text-violet-600 dark:text-violet-400 font-medium text-sm uppercase px-4"
               to={routesList?.signUp || "#"}
             >
               sign up

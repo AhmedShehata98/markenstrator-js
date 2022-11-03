@@ -12,6 +12,9 @@ module.exports = {
       animation: {
         "spin-fast": "spin 0.6s linear infinite",
       },
+      fontFamily: {
+        poppins: ["Poppins", "sans-serif"],
+      },
     },
   },
   safelist: [

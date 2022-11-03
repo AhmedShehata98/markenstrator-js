@@ -1,12 +1,9 @@
 import React, { useLayoutEffect, useRef } from "react";
-import logo from "../assets/images/logo.png";
+import lightLogo from "../assets/images/logo-light.png";
 import logoDark from "../assets/images/logo-dark.png";
 import UserPannelBtn from "./UserPannelBtn";
 import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
 import { TOGGLE_THEME, TOGGLE_SIDEBAR } from "../Redux/Slice/AppSlice";
-import { LOGOUT_ACCOUNT } from "../Redux/Slice/UserSlice";
-import { Link } from "react-router-dom";
-import { routesList } from "../Router/RoutesList";
 import AccountMenu from "./AccountMenu";
 import NotificationsMenu from "./NotificationsMenu";
 import { notificationMenuData } from "../Utilities/dummyData";
@@ -29,11 +26,13 @@ const Navbar = () => {
   return (
     <header className="header">
       <section className="navbar-container">
-        {currentTheme === "dark" ? (
-          <img src={logoDark} alt="logo" className="h-52 object-cover" />
-        ) : (
-          <img src={logo} alt="logo" className="w-20 " />
-        )}
+        <figure className="flex items-center justify-center h-full w-36 px-5">
+          <img
+            src={currentTheme === "dark" ? logoDark : lightLogo}
+            alt="logo"
+            className="max-w-full object-cover"
+          />
+        </figure>
         <span className="hidden lg:flex lg:flex-col ">
           {pending && Object.entries(userData!)?.length === 0 && (
             <span className="flex flex-wrap flex-col items-start justify-center w-36 animate-pulse">

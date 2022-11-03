@@ -48,6 +48,7 @@ const AddProducts = () => {
     id: "",
     assest: {},
   });
+  const AddProductsRef = useRef<HTMLElement | null>(null);
 
   function handleDeleteVariant(
     _ev: React.MouseEvent,
@@ -279,6 +280,23 @@ const AddProducts = () => {
     console.table(data);
   };
 
+  let timeout: ReturnType<typeof setTimeout>;
+
+  useEffect(() => {
+    timeout = setTimeout(() => {
+      AddProductsRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    }, 5);
+    return () => {
+      clearTimeout(timeout);
+      AddProductsRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    };
+  }, []);
   useLayoutEffect(() => {
     window.addEventListener("resize", () => {
       setDocumentWidth(window.innerWidth);
@@ -352,7 +370,8 @@ const AddProducts = () => {
 
   return (
     <main
-      className={`main-wrapper divide-zinc-400 dark:divide-zinc-500`}
+      ref={AddProductsRef}
+      className={`main-wrapper section-fade-closed divide-zinc-400 dark:divide-zinc-500`}
       style={
         documentWidth >= 1024
           ? { width: "calc(100% - 12rem)" }

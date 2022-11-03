@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
+/**/
 @import url("https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css");
 @import url("https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css");
 @import url("https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css");
@@ -7,6 +9,9 @@
 /**/
 @tailwind base;
 @layer base {
+  body {
+    @apply font-poppins dark:bg-zinc-700;
+  }
   [type="text"],
   [type="email"],
   [type="url"],
@@ -26,6 +31,12 @@
   [type="search"]:focus,
   [type="tel"]:focus {
     @apply outline-none ring-0;
+  }
+  [type="checkbox"] {
+    @apply accent-violet-700 border-zinc-400 dark:border-zinc-500;
+  }
+  [type="checkbox"]:checked {
+    @apply outline-none ring-0 ring-violet-400 bg-violet-700 dark:bg-violet-400 dark:ring-violet-300;
   }
   select {
     @apply border border-slate-300 dark:border-slate-700 py-1 uppercase text-xs font-bold dark:bg-zinc-500 text-zinc-500 dark:text-zinc-200;
@@ -121,7 +132,7 @@
     @apply relative z-[3] flex items-center justify-start w-full h-full;
   }
   .dropdown-menu-link {
-    @apply flex items-center justify-start gap-5 w-full h-full px-2 py-1 rounded capitalize dark:text-gray-100 hover:bg-violet-400 dark:hover:bg-violet-300 transition-colors duration-500 ease-out hover:shadow;
+    @apply flex items-center justify-start gap-1 w-full h-full px-2 py-1 rounded-sm capitalize dark:text-gray-100 hover:bg-violet-400 dark:hover:bg-violet-200 dark:hover:text-violet-900 transition-colors duration-500 ease-out hover:shadow;
   }
   .dropdown-closed {
     @apply h-0 opacity-0 -translate-y-10 pointer-events-none !my-0;
@@ -134,6 +145,12 @@
   }
   .dropdown-active {
     @apply bg-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-600 dark:bg-zinc-600;
+  }
+  .section-fade-closed {
+    @apply transition-all duration-500 ease-out -translate-x-3 opacity-0;
+  }
+  .section-fade-open {
+    @apply transition-all duration-500 translate-x-0 opacity-100;
   }
   .main-home {
     @apply flex min-h-screen w-full bg-zinc-100 dark:bg-zinc-700 mt-14;
@@ -172,7 +189,7 @@
     @apply h-3 rounded-md inline-block w-full relative before:absolute before:top-0 before:left-0 before:h-full before:rounded-md before:transition-all underline-offset-2;
   }
   .loading-spiner {
-    @apply w-9 h-9 border-4 border-l-slate-800 border-t-slate-800 rounded-full animate-spin-fast;
+    @apply w-9 h-9 border-4 border-l-zinc-800 rounded-full animate-spin-fast;
   }
   .login-wrapper {
     @apply relative min-w-full min-h-screen flex justify-end items-center;
@@ -184,10 +201,10 @@
     @apply relative w-[67%] h-screen lg:flex items-center justify-center hidden bg-contain bg-center bg-no-repeat rounded-md before:absolute before:inset-0 before:bg-violet-900 before:w-full before:h-full before:opacity-50;
   }
   .login-bg-overlay {
-    @apply after:absolute after:w-full after:h-full after:inset-0 after:from-violet-800/20 after:to-orange-600/10 after:bg-gradient-to-tl  after:bg-opacity-30;
+    @apply after:absolute after:w-full after:h-full after:inset-0 after:from-violet-800/50 after:to-slate-800/60 after:bg-gradient-to-tl after:backdrop-blur-sm;
   }
   .login-input-wrapper {
-    @apply flex items-center justify-center gap-2 px-3 py-1 h-fit w-fit rounded mb-2 shadow-inner bg-zinc-200;
+    @apply flex items-start justify-center gap-1 flex-col mb-3;
   }
   .login-input {
     @apply w-full bg-transparent outline-none focus:outline-none focus:bg-gray-300 px-3 py-2 placeholder:capitalize dark:text-gray-100;
@@ -196,10 +213,10 @@
     @apply w-full flex items-center justify-center gap-3 capitalize py-2  px-4 rounded  text-black bg-violet-600 dark:bg-violet-300 dark:hover:bg-violet-500 transition-colors text-white dark:text-black;
   }
   .login-btn-disabled {
-    @apply bg-violet-200 dark:bg-violet-200 text-gray-200 dark:text-gray-400 pointer-events-none;
+    @apply bg-violet-200 dark:bg-violet-900 text-gray-200 dark:text-gray-700 pointer-events-none;
   }
   .section-main {
-    @apply flex items-start justify-center flex-wrap gap-3 min-h-screen lg:w-[1174px] bg-gray-100 dark:bg-zinc-700 mt-14 ml-auto px-4 py-4;
+    @apply flex items-start justify-center flex-wrap gap-3 min-h-screen lg:w-[1174px] bg-gray-100 dark:bg-zinc-700 mt-14 ml-auto px-4 py-4 transition-all -translate-x-5;
   }
   .section-width {
     @apply md:w-full lg:w-[825px] xl:w-[1095px];
@@ -208,13 +225,13 @@
     @apply flex flex-col items-start justify-start min-h-fit capitalize mb-3;
   }
   .form-input {
-    @apply h-9 w-full px-4 bg-inherit border border-slate-200 rounded dark:border-slate-400 dark:bg-zinc-700 focus:outline-none placeholder:text-gray-600 placeholder:capitalize placeholder:text-sm focus:bg-gray-50 dark:placeholder:text-gray-400 dark:focus:bg-gray-500 dark:text-white;
+    @apply inline-block w-full px-3 py-1 border rounded border-zinc-300 dark:border-zinc-500 bg-zinc-200 dark:bg-zinc-600 text-zinc-800 dark:text-zinc-200 placeholder:text-sm placeholder:capitalize dark:placeholder:text-zinc-400 focus:border-violet-400;
   }
   .form-label {
-    @apply h-fit text-sm text-gray-600 font-semibold dark:text-gray-200 capitalize;
+    @apply h-fit text-xs text-zinc-800 dark:text-zinc-200 font-medium uppercase;
   }
   .signup-bg-overlay {
-    @apply after:absolute after:w-full after:h-full after:inset-0 after:from-gray-700/20 after:to-violet-700/10 after:bg-gradient-to-tl  after:bg-opacity-30;
+    @apply after:absolute after:w-full after:h-full after:inset-0 after:from-gray-700/20 after:to-violet-700/10 after:bg-gradient-to-tl after:bg-opacity-30 after:backdrop-blur;
   }
   .variant-item {
     @apply w-full h-16 flex items-center justify-between gap-2;

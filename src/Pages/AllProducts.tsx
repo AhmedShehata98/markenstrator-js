@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import AllProductsTable from "../components/AllProductsTable";
 import AllProductsCards from "../components/AllProductsCards";
@@ -57,6 +57,24 @@ const AllProducts = () => {
     setViewMethod(currentView);
   };
 
+  const AllProductsRef = useRef<HTMLElement | null>(null);
+  let timeout: ReturnType<typeof setTimeout>;
+
+  useEffect(() => {
+    timeout = setTimeout(() => {
+      AllProductsRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    }, 5);
+    return () => {
+      clearTimeout(timeout);
+      AllProductsRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    };
+  }, []);
   useLayoutEffect(() => {
     window.addEventListener("resize", () => {
       setDocumentWidth(window.innerWidth);
@@ -74,7 +92,10 @@ const AllProducts = () => {
   }, [documentWidth]);
 
   return (
-    <main className="main-wrapper bg-white dark:bg-zinc-800">
+    <main
+      ref={AllProductsRef}
+      className="main-wrapper section-fade-closed bg-white dark:bg-zinc-800"
+    >
       <span className="sidebar-space"></span>
       <section className="content-container">
         <SectionHeader

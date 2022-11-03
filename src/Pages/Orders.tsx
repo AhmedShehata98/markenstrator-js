@@ -49,6 +49,24 @@ const Orders = () => {
   const deleteOrder = (id: number): void => {
     dispatch(DELETE_ORDER({ id }));
   };
+  const ordersRef = useRef<HTMLElement | null>(null);
+  let timeout: ReturnType<typeof setTimeout>;
+
+  useEffect(() => {
+    timeout = setTimeout(() => {
+      ordersRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    }, 5);
+    return () => {
+      clearTimeout(timeout);
+      ordersRef.current?.classList.replace(
+        "section-fade-closed",
+        "section-fade-open"
+      );
+    };
+  }, []);
   useLayoutEffect(
     function () {
       window.addEventListener("resize", () => {
@@ -67,7 +85,10 @@ const Orders = () => {
   }, []);
 
   return (
-    <main className="main-wrapper bg-slate-100 dark:bg-zinc-700">
+    <main
+      ref={ordersRef}
+      className="main-wrapper section-fade-closed bg-slate-100 dark:bg-zinc-700"
+    >
       <span className="sidebar-space"></span>
       <section className="content-container">
         <SectionHeader title="orders list" buttonTitle="add Order" to="#">

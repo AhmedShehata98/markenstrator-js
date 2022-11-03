@@ -1,3 +1,4 @@
+import { nanoid } from "@reduxjs/toolkit";
 import React from "react";
 import { ICategoryData } from "../Types/pages-types";
 
@@ -12,6 +13,10 @@ const CartegoriesCards = ({ categoriesData }: CartegoriesCardsProps) => {
           categoriesData &&
           categoriesData.map((category) => {
             return (
+              <li
+                className="py-3 px-5 border border-slate-300 bg-zinc-100 dark:border-slate-400 dark:bg-zinc-700"
+                key={nanoid(4)}
+              >
                 <span className="flex items-center first:text-emerald-500 dark:first:text-emerald-300 first:text-3xl mb-2">
                   <i
                     className={`${category.icon} leading-3 pointer-events-none`}

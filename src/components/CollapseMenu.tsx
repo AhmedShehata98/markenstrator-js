@@ -54,7 +54,7 @@ const CollapseMenu = ({
           end={end}
           onClick={(ev: React.MouseEvent) => handleCloseDropMenu(ev)}
         >
-          <span className="flex items-center justify-center w-1/5 aspect-square p-2 rounded-lg bg-gray-100 dark:bg-zinc-500 shadow-inner select-none pointer-events-none">
+          <span className="flex items-center justify-center w-1/5 aspect-square px-2 select-none pointer-events-none">
             {icon}
           </span>
           <p className="w-3/4 select-none pointer-events-none">{title}</p>
