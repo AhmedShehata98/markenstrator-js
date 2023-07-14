@@ -8,11 +8,17 @@ type ApiResponse = {
  *
  * User Auth
  */
+interface UserDataResponse extends ApiResponse {
+  data: UserData;
+}
 type UserData = {
-  _id: string;
-  fullname: string;
-  email: string;
-  phone: string;
+  user: {
+    _id: string;
+    fullname: string;
+    email: string;
+    phone: string;
+  };
+  userOrders: [];
 };
 type Signup = {
   fullname: string;

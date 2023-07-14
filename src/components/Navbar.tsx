@@ -7,12 +7,36 @@ import { TOGGLE_THEME, TOGGLE_SIDEBAR } from "../Redux/Slice/AppSlice";
 import AccountMenu from "./AccountMenu";
 import NotificationsMenu from "./NotificationsMenu";
 import { notificationMenuData } from "../Utilities/dummyData";
+import { useQuery } from "@tanstack/react-query";
+import { getUserData } from "../lib/apiMethods";
+import useGetToken from "../Hooks/useGetToken";
+import { ImSpinner } from "react-icons/im";
 
 const Navbar = () => {
+  /**
+   *
+   *
+   *
+   * NEED OPTIMAIZE !!
+   *
+   *
+   *
+   */
   const {
     "app-settings": { currentTheme, showSidebar },
-    user: { pending, isLoggedIn, userData },
+    user: { pending, isLoggedIn },
   } = useAppSelector((state) => state);
+  const { token } = useGetToken();
+  const {
+    data: userData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryFn: () => getUserData(token),
+    queryKey: ["user-data"],
+    enabled: Boolean(token),
+  });
+
   const dispatch = useAppDispatch();
   const accountMenuRef = useRef<HTMLUListElement>(null);
   const notificationsMenu = useRef<HTMLDivElement>(null);
@@ -33,7 +57,7 @@ const Navbar = () => {
             className="max-w-full object-cover"
           />
         </figure>
-        <span className="hidden lg:flex lg:flex-col ">
+        {/* <span className="hidden lg:flex lg:flex-col ">
           {pending && Object.entries(userData!)?.length === 0 && (
             <span className="flex flex-wrap flex-col items-start justify-center w-36 animate-pulse">
               <span className="h-4">
@@ -56,7 +80,7 @@ const Navbar = () => {
               </p>
             </>
           )}
-        </span>
+        </span> */}
         <form className="navbar-search hidden lg:flex">
           <input
             className="rounded-full h-8 focus:outline-none placeholder:capitalize placeholder:text-sm bg-inherit border-0 dark:placeholder:text-zinc-300 dark:bg-zinc-600"
@@ -109,7 +133,11 @@ const Navbar = () => {
               }
             >
               <p className=" capitalize text-sm font-bold text-gray-700 dark:text-zinc-100">
-                {`${userData?.firstname} ${userData?.lastname}`}
+                {isLoading ? (
+                  <ImSpinner className="inline-block text-lg" />
+                ) : (
+                  `${userData?.data?.user?.fullname}`
+                )}
               </p>
               <i className="fi fi-br-angle-down leading-[0.5rem] text-xs dark:text-zinc-100"></i>
             </button>
@@ -125,4 +153,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);

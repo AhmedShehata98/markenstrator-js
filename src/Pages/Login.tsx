@@ -55,7 +55,13 @@ const Login = () => {
 
   useEffect(() => {
     if (isSuccess) {
+      // toggle to authenticated user
       dispatch(SET_USER_AUTH_STATE(true));
+
+      // store token in cookies
+      const origin = window.location.origin;
+      window.document.cookie = `${origin}=${data.data.token}`;
+
       timeoutRef.current = +setTimeout(() => {
         navigator(routesList.app, { state: { isLoggedIn: true } });
       }, 1000);

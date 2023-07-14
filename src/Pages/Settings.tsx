@@ -1,11 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import useDocumentWidth from "../Hooks/useDocumentWidth";
 import ChangePassword from "../components/ChangePassword";
 import Notifications from "../components/Notifications";
 import EditProfile from "../components/EditProfile";
 
 const Settings = () => {
-  const { documentWidth } = useDocumentWidth();
   const settingsRef = useRef<HTMLElement | null>(null);
   let timeout: ReturnType<typeof setTimeout>;
 

@@ -7,6 +7,7 @@ import {
   SignupError,
   SignupSuccess,
   UserData,
+  UserDataResponse,
 } from "../../types";
 
 // Fetchers methods
@@ -50,11 +51,14 @@ const accountSignup = async ({
     throw new Error(error);
   }
 };
-const getUserData = async (token: string): Promise<UserData> => {
+const getUserData = async (
+  token: string | undefined
+): Promise<UserDataResponse> => {
   try {
     const res = await axios({
       method: "GET",
       baseURL: API_BASE_URL,
+      url: ENDPOINTS.user.me,
       headers: {
         Authorization: token,
       },

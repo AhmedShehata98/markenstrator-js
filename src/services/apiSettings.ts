@@ -5,6 +5,6 @@ let ENDPOINTS = {
     signup: "auth/signup",
     login: "auth/login",
   },
-  user: { me: "user/me" },
+  user: { me: "users/me" },
 };
 export { API_BASE_URL, ENDPOINTS };

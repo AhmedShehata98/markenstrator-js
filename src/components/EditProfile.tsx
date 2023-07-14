@@ -1,19 +1,24 @@
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
 import { ISettingProfile } from "../Types/pages-types";
+import useGetToken from "../Hooks/useGetToken";
+import { getUserData } from "../lib/apiMethods";
+import { useQuery } from "@tanstack/react-query";
 
 const EditProfile = () => {
-  const dispatch = useAppDispatch();
+  const { token } = useGetToken();
   const {
-    errorMessage,
+    data: userData,
     isError,
-    isLoggedIn,
+    isLoading,
     isSuccess,
-    pending,
-    successMessage,
-    userData,
-  } = useAppSelector((state) => state.user);
+  } = useQuery({
+    queryFn: () => getUserData(token),
+    queryKey: ["user-data"],
+    enabled: Boolean(token),
+  });
+
   const {
     register,
     handleSubmit,
@@ -25,20 +30,21 @@ const EditProfile = () => {
     console.log(data);
   };
 
-  useLayoutEffect(() => {
-    if (isLoggedIn && Object.keys(userData).length > 1) {
+  useEffect(() => {
+    if (Boolean(token) && isSuccess) {
       reset({
-        avatarUrl: userData?.avatarUrl,
-        fullname: `${userData?.firstname} ${userData?.lastname}`,
-        company_store_Name: userData?.company_store_Name || "",
-        location: userData?.location || "",
-        currency: userData?.currency || "",
-        email: userData?.email || "",
-        phone: userData?.phonenumber?.toString() || "",
-        address: userData?.address || "",
+        avatarUrl: "",
+        fullname: `${userData?.data.user.fullname}` ?? "",
+        company_store_Name: "NA-NA",
+        location: "NA-NA",
+        currency: "NA-NA",
+        email: userData?.data.user.email ?? "",
+        phone: userData?.data.user.phone ?? "",
+        address: "NA-NA",
       });
+      console.log(userData);
     }
-  }, [isLoggedIn, isSuccess, pending]);
+  }, [token, isSuccess, isLoading]);
   return (
     <>
       <h5 className="font-semibold capitalize py-2 text-gray-600 dark:text-gray-300">
