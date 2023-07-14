@@ -52,6 +52,7 @@ export type AddProductsProps = {
 export interface SignupFormdata {
   fullname: string;
   email: string;
+  phone: number;
   password: string;
   approval: boolean;
 }

@@ -6,8 +6,14 @@ import PieChart from "../components/PieChart";
 import Statistics from "../components/Statistics";
 import StreamChart from "../components/StreamChart";
 import TopSeller from "../components/TopSeller";
+import { useLocation, useNavigate } from "react-router-dom";
+import { routesList } from "../Router/RoutesList";
+import { useSelector } from "react-redux";
 
 const Home = () => {
+  const navigator = useNavigate();
+  const location = useLocation();
+  const state = useSelector((state) => state);
   let timeout: ReturnType<typeof setTimeout>;
   const homeRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
@@ -25,6 +31,7 @@ const Home = () => {
       );
     };
   }, []);
+
   return (
     <main ref={homeRef} className="main-home section-fade-closed">
       <section className="home-content-container lg:ml-48">

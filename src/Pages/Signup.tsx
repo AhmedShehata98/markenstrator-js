@@ -5,16 +5,23 @@ import background from "../assets/images/signup-bg.webp";
 import logoSignup from "../assets/images/logo-login.png";
 
 // 3rd party libraries
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../Redux/ReduxHooks";
-import { SET_PAGE_TITLE } from "../Redux/Slice/AppSlice";
+import { SET_PAGE_TITLE, SET_USER_AUTH_STATE } from "../Redux/Slice/AppSlice";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 // utilities
 import { routesList } from "../Router/RoutesList";
 import { SignupFormdata } from "../Types/pages-types";
 
+//API Hook
+import { useSignupMutation } from "../services/shoperzApi.service";
+
 const Signup = () => {
+  const navigator = useNavigate();
+  const [fetchSignup, signupResponse] = useSignupMutation();
+  const [responseMSG, setResponseMSG] = useState("");
+  const timeoutRef = useRef(0);
   const dispatch = useAppDispatch();
   const {
     register,
@@ -47,25 +54,47 @@ const Signup = () => {
       : passwordInput.setAttribute("type", "password");
   };
   const sendSignupData: SubmitHandler<Partial<SignupFormdata>> = (data) => {
-    console.log(data);
+    fetchSignup({
+      fullname: data.fullname,
+      email: data.email,
+      password: data.password,
+      phone: data.phone,
+    })
+      .unwrap()
+      .then((response) => {
+        setResponseMSG(
+          "account created success check your mail inbox!, redirect after 3 seconds"
+        );
+        dispatch(SET_USER_AUTH_STATE(true));
+        timeoutRef.current = +setTimeout(() => {
+          navigator("/", { state: response.data.token });
+        }, 3000);
+      })
+      .catch((err) =>
+        setResponseMSG(err.data.error?.[0].message || err.data.message)
+      );
   };
 
   useLayoutEffect(() => {
     const title: string = "Sign up";
     dispatch(SET_PAGE_TITLE({ title }));
+    return () => {
+      clearTimeout(timeoutRef.current);
+    };
   }, []);
   useEffect(() => {
     if (Object.keys(errors).length === 0) {
-      buttonRef.current?.removeAttribute("disabled");
-      console.log("removed");
+      // buttonRef.current?.removeAttribute("disabled");
     } else {
-      buttonRef.current?.setAttribute("disabled", "true");
-      console.log("added");
+      // buttonRef.current?.setAttribute("disabled", "true");
     }
-    console.log(isValid);
-    console.log(errors);
-    console.log(isDirty);
-  }, [watch("approval"), watch("fullname"), watch("email"), watch("password")]);
+  }, [
+    watch("approval"),
+    watch("fullname"),
+    watch("email"),
+    watch("password"),
+    watch("phone"),
+  ]);
   return (
     <main>
       <section
@@ -83,6 +112,17 @@ const Signup = () => {
         </article>
         <article className="relative z-10 flex justify-center items-center flex-col w-11/12 sm:w-10/12 md:w-1/2 lg:w-1/3 h-[90vh] md:mr-12 border rounded bg-gray-100 dark:bg-zinc-800 dark:border-slate-500">
           <div className="flex items-start justify-center flex-col w-3/4 h-fit mb-3">
+            {signupResponse.isError || signupResponse.isSuccess ? (
+              <div
+                className={`absolute top-0 left-0 w-full bg-gray-200 rounded border-b text-sm capitalize text-center font-medium p-2 ${
+                  signupResponse.isError
+                    ? "bg-red-200 !text-red-900 border-red-700"
+                    : "bg-emerald-200 !text-emerald-900 border-emerald-700"
+                }`}
+              >
+                {responseMSG}
+              </div>
+            ) : null}
             <h3 className="text-md font-semibold capitalize dark:text-white">
               welcome back to
               <mark className="bg-inherit text-violet-700 dark:text-violet-400 uppercase font-bold px-2">
@@ -90,7 +130,6 @@ const Signup = () => {
               </mark>
             </h3>
             <small className="dark:text-zinc-400">
-              {" "}
               create your new account now
             </small>
           </div>
@@ -130,23 +169,7 @@ const Signup = () => {
                 or
               </small>
             </span>
-            {/* <span className="flex items-center justify-center flex-col h-20">
-              <label
-                className="grid place-content-center text-3xl border-2 rounded-full h-14 w-14 bg-gray-300"
-                htmlFor="user-image"
-              >
-                <i className="fi fi-rs-user text-cyan-700"></i>
-              </label>
-              <p className="text-cyan-800 font-medium text-opacity-75 uppercase text-xs">
-                choose image
-              </p>
-              <input
-                className="hidden"
-                type="file"
-                name="user-image"
-                id="user-image"
-              />
-            </span> */}
+
             <span className="flex items-start justify-center flex-col gap-1 w-full">
               <label className="form-label" htmlFor="full-name">
                 full name
@@ -162,6 +185,23 @@ const Signup = () => {
               />
               <small className="text-xs capitalize text-red-600 font-semibold">
                 {errors.fullname?.message}
+              </small>
+            </span>
+            <span className="flex items-start justify-center flex-col gap-1 w-full">
+              <label className="form-label" htmlFor="phone">
+                phone number
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                className="form-input"
+                {...register("phone", {
+                  required: "your phone number is required",
+                })}
+                placeholder={"Ex : +201234567891 "}
+              />
+              <small className="text-xs capitalize text-red-600 font-semibold">
+                {errors.phone?.message}
               </small>
             </span>
             <span className="flex items-start justify-center flex-col gap-1 w-full">
@@ -238,10 +278,14 @@ const Signup = () => {
             <span className="flex items-start justify-center flex-col gap-1 w-full">
               <button
                 type="submit"
-                className="bg-violet-600 text-white w-full h-9 rounded hover:bg-violet-300 hover:text-violet-800 capitalize disabled:bg-violet-200 disabled:text-gray-500 disabled:pointer-events-none"
+                className="flex items-center justify-center bg-violet-600 text-white w-full h-9 rounded hover:bg-violet-300 hover:text-violet-800 capitalize disabled:bg-violet-200 disabled:text-gray-500 disabled:pointer-events-none"
                 ref={buttonRef}
               >
-                create an account
+                {signupResponse.isLoading ? (
+                  <span className="block w-6 h-6 rounded-full border-4 border-white border-t-stone-500 shadow-md animate-spin"></span>
+                ) : (
+                  "create an account"
+                )}
               </button>
             </span>
             <span className="flex items-center justify-center w-full">

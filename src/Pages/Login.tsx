@@ -4,163 +4,71 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import background from "../assets/images/login-bg.webp";
 import logoLogin from "../assets/images/logo-login.png";
 
-// 3rd party libraries
-import { Link, redirect, useLocation } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
-import { SET_PAGE_TITLE } from "../Redux/Slice/AppSlice";
+// Icons
+import { ImSpinner8 } from "react-icons/im";
 
-// redux actions
-import {
-  LOGIN_ACCOUNT_ACTION,
-  BACK_INITIAL_STATE,
-} from "../Redux/Slice/UserSlice";
+// 3rd party libraries
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../Redux/ReduxHooks";
+import { SET_PAGE_TITLE, SET_USER_AUTH_STATE } from "../Redux/Slice/AppSlice";
+
+// routes
 import { routesList } from "../Router/RoutesList";
+// redux rtk query
+import { useLoginMutation } from "../services/shoperzApi.service";
+import { useMutation } from "@tanstack/react-query";
+import { accountLogin } from "../lib/apiMethods";
+import { Login as loginType } from "../../types";
 
 const Login = () => {
-  const {
-    pending,
-    isLoggedIn,
-    isError,
-    errorMessage,
-    isSuccess,
-    successMessage,
-  } = useAppSelector((state) => state.user);
-
-  const dispatch = useAppDispatch();
-  const [formdata, setFormdata] = useState({
-    email: "",
-    password: "",
+  const { data, isError, error, isLoading, isSuccess, mutate } = useMutation({
+    mutationFn: (login: loginType) =>
+      accountLogin({ email: login.email, password: login.password }),
+    mutationKey: ["login"],
   });
+
+  const timeoutRef = useRef(0);
+  const navigator = useNavigate();
+  const dispatch = useAppDispatch();
+  const [isEmptyFields, setIsEmptyFields] = useState(true);
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
-  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (ev) => {
-    const name: string = ev.target.name;
-    const value: string = ev.target.value;
-    //
-    setFormdata((prev) => ({ ...prev, [name]: value }));
-  };
-  //
-  const handleSubmit = (ev: React.FormEvent) => {
+
+  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
-    dispatch(
-      LOGIN_ACCOUNT_ACTION({
-        email: formdata.email,
-        password: formdata.password,
-      })
-    );
+
+    const formdata = new FormData(ev.currentTarget);
+    const email = formdata.get("email") as string,
+      password = formdata.get("password") as string;
+    if (email || password) {
+      mutate({ email, password });
+    }
   };
 
-  const handleSubmitBtnBackground = (
-    buttonRef: React.MutableRefObject<HTMLButtonElement | null>,
-    state: "add" | "remove",
-    isError: boolean | "idle",
-    isSuccess: boolean | "idle"
-  ) => {
-    if (state === "remove") {
-      submitBtnRef.current?.classList.remove(
-        ...["bg-emerald-500", "text-black"]
-      );
-      submitBtnRef.current?.lastElementChild?.classList.remove(
-        ...["text-black"]
-      );
-      submitBtnRef.current?.classList.remove(...["bg-red-500", "text-white"]);
-      submitBtnRef.current?.lastElementChild?.classList.remove(
-        ...["text-white"]
-      );
-    }
-    if (state === "add") {
-      if (isError === true) {
-        if (submitBtnRef.current?.classList.contains("bg-emerald-500")) {
-          submitBtnRef.current?.classList.replace(
-            "bg-emerald-500",
-            "bg-red-500"
-          );
-          submitBtnRef.current?.classList.replace("text-white", "text-black");
-          submitBtnRef.current?.lastElementChild?.classList.replace(
-            "text-black",
-            "text-white"
-          );
-        } else {
-          submitBtnRef.current?.classList.add(...["bg-red-500", "text-white"]);
-          submitBtnRef.current?.lastElementChild?.classList.add(
-            ...["text-white"]
-          );
-        }
-      } else if (isSuccess === true) {
-        if (submitBtnRef.current?.classList.contains("bg-red-500")) {
-          submitBtnRef.current?.classList.replace(
-            "bg-red-500",
-            "bg-emerald-500"
-          );
-          submitBtnRef.current?.classList.replace("text-black", "text-white");
-          submitBtnRef.current?.lastElementChild?.classList.replace(
-            "text-white",
-            "text-black"
-          );
-        } else {
-          submitBtnRef.current?.classList.add(
-            ...["bg-emerald-500", "text-black"]
-          );
-          submitBtnRef.current?.lastElementChild?.classList.add(
-            ...["text-black"]
-          );
-        }
-      } else {
-        submitBtnRef.current?.classList.remove(
-          ...["bg-emerald-500", "text-black"]
-        );
-        submitBtnRef.current?.lastElementChild?.classList.remove(
-          ...["text-black"]
-        );
-        submitBtnRef.current?.classList.remove(...["bg-red-500", "text-white"]);
-        submitBtnRef.current?.lastElementChild?.classList.remove(
-          ...["text-white"]
-        );
-      }
+  const handleFormChanges = (ev: React.ChangeEvent<HTMLFormElement>) => {
+    if (ev.target.reportValidity()) {
+      setIsEmptyFields(false);
+    } else {
+      setIsEmptyFields(true);
     }
   };
   //
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(SET_USER_AUTH_STATE(true));
+      timeoutRef.current = +setTimeout(() => {
+        navigator(routesList.app, { state: { isLoggedIn: true } });
+      }, 1000);
+    }
+  }, [isSuccess]);
+
   useEffect(() => {
     const title: string = "Login";
     dispatch(SET_PAGE_TITLE({ title: title }));
+    return () => {
+      clearTimeout(timeoutRef.current);
+    };
   }, []);
-  useEffect(() => {
-    if (formdata.email === "" && formdata.password === "") {
-      submitBtnRef.current?.classList.add("login-btn-disabled");
-    } else {
-      submitBtnRef.current?.classList.remove("login-btn-disabled");
-    }
-  }, [formdata.email, formdata.password]);
-  useLayoutEffect(() => {
-    let timeout: number;
-    if (pending === false && isLoggedIn) {
-      timeout = +setTimeout(() => {
-        redirect("/", { status: 200, statusText: "ok" });
-      }, 2000);
-    }
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [pending, isLoggedIn, isError, isSuccess]);
-
-  useEffect(() => {
-    let timeout: number;
-
-    if (isSuccess === true) {
-      handleSubmitBtnBackground(submitBtnRef, "add", isError, isSuccess);
-    } else if (isError === true) {
-      handleSubmitBtnBackground(submitBtnRef, "add", isError, isSuccess);
-    }
-
-    timeout = +setTimeout(() => {
-      handleSubmitBtnBackground(submitBtnRef, "remove", isError, isSuccess);
-      dispatch(BACK_INITIAL_STATE());
-    }, 1600);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [isError, isSuccess]);
 
   return (
     <main className="min-h-screen w-full">
@@ -169,9 +77,22 @@ const Login = () => {
         className="flex items-center justify-between flex-col-reverse md:flex-row min-h-screen w-full bg-cover bg-no-repeat login-bg-overlay"
       >
         <form
-          onSubmit={(ev: React.FormEvent) => handleSubmit(ev)}
-          className="flex flex-col items-center justify-center z-10 w-11/12 sm:w-3/5 md:w-[40%] lg:w-[30%] h-[77vh] border shadow-lg p-3 bg-gray-100 dark:bg-zinc-800 dark:border-slate-500 sm:ml-14 sm:mr-4 rounded-md"
+          onSubmit={(ev: React.FormEvent<HTMLFormElement>) => handleSubmit(ev)}
+          className="relative flex flex-col items-center justify-center z-10 w-11/12 sm:w-3/5 md:w-[40%] lg:w-[30%] h-[77vh] border shadow-lg p-3 bg-gray-100 dark:bg-zinc-800 dark:border-slate-500 sm:ml-14 sm:mr-4 rounded-md"
+          onChange={handleFormChanges}
         >
+          {/* {loginResponse.isError || loginResponse.isSuccess ? ( */}
+          {isError || isSuccess ? (
+            <div
+              className={`absolute top-0 left-0 w-full bg-gray-200 rounded border-b text-sm capitalize text-center font-medium p-2 ${
+                isError
+                  ? "bg-red-200 !text-red-900 border-red-700"
+                  : "bg-emerald-200 !text-emerald-900 border-emerald-700"
+              }`}
+            >
+              {isError ? JSON.stringify(error) : data?.message}
+            </div>
+          ) : null}
           <div className="flex justify-center items-start gap-3 flex-col w-3/4 h-32">
             <h4 className="text-lg font-medium uppercase mb-2 dark:text-white">
               welcome back
@@ -215,12 +136,10 @@ const Login = () => {
               type="email"
               name="email"
               id="email"
-              value={formdata.email}
               placeholder="email address .."
-              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(ev)
-              }
               required={true}
+              disabled={isLoading}
+              readOnly={isLoading}
             />
           </span>
           <span className="login-input-wrapper w-3/4">
@@ -243,11 +162,9 @@ const Login = () => {
               name="password"
               id="password"
               placeholder="password .."
-              value={formdata.password}
-              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(ev)
-              }
               required={true}
+              disabled={isLoading}
+              readOnly={isLoading}
             />
           </span>
           <span className="flex items-center justify-start gap-2 w-3/4">
@@ -256,9 +173,6 @@ const Login = () => {
               type="checkbox"
               name="remember-me"
               id="remember-me"
-              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(ev)
-              }
             />
             <label
               className="text-violet-700 dark:text-violet-300 font-medium text-sm capitalize"
@@ -268,30 +182,16 @@ const Login = () => {
             </label>
           </span>
           <div className="mb-1 mt-2 w-3/4">
-            <button ref={submitBtnRef} className="login-btn" type="submit">
-              {pending && (
-                <>
-                  <span className="loading-spiner h-6 w-6 border-2"></span>
-                  <p className="uppercase font-semibold">signing in ..</p>
-                </>
-              )}
-              {isError === true && pending === false && (
-                <>
-                  <span>
-                    <i className="fi fi-sr-exclamation leading-3"></i>
-                  </span>
-                  <small className="uppercase font-semibold">
-                    {errorMessage}
-                  </small>
-                </>
-              )}
-              {!pending && isError === "idle" && isSuccess === "idle" && (
-                <>
-                  <p className="font-semibold">log in</p>
-                  <span className="flex items-center">
-                    <i className="fi fi-sr-sign-in-alt leading-3"></i>
-                  </span>
-                </>
+            <button
+              ref={submitBtnRef}
+              className="login-btn"
+              type="submit"
+              disabled={isLoading || isEmptyFields}
+            >
+              {isLoading ? (
+                <ImSpinner8 className="inline-block text-2xl animate-spin" />
+              ) : (
+                "login"
               )}
             </button>
           </div>

@@ -4,6 +4,7 @@ import React from "react";
 import { IProductFormData } from "../../Types/pages-types";
 
 type initialStateTypes = {
+  isLoggedIn: boolean;
   loading: boolean;
   currentTheme: string | null;
   showSidebar: boolean;
@@ -20,6 +21,7 @@ type setTitleActionType = {
   };
 };
 const initialState: initialStateTypes = {
+  isLoggedIn: false,
   loading: true,
   currentTheme: Boolean(window.localStorage.getItem("themeMode"))
     ? window.localStorage.getItem("themeMode")
@@ -62,6 +64,9 @@ export const appSlice = createSlice({
       state.initinalProductsData = action.payload.data;
       state.displayProductDetails = action.payload.displayProductDetails;
     },
+    SET_USER_AUTH_STATE: (state, action) => {
+      state.isLoggedIn = action.payload;
+    },
   },
 });
 
@@ -70,6 +75,7 @@ export const {
   TOGGLE_SIDEBAR,
   SET_PAGE_TITLE,
   SET_ADD_PRODUCT_INITIAL_STATE,
+  SET_USER_AUTH_STATE,
 } = appSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

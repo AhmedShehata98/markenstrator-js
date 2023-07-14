@@ -1,4 +1,6 @@
-import { lazy, Suspense, useLayoutEffect } from "react";
+import { lazy, Suspense, useLayoutEffect, useState } from "react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+
 import {
   BrowserRouter as Router,
   Route,
@@ -6,7 +8,6 @@ import {
 } from "react-router-dom";
 import LoadingModule from "../components/LoadingModule";
 import Navbar from "../components/Navbar";
-// import SideMenu from "../components/SideMenu";
 import Root from "../Pages/Root";
 import { useAppSelector } from "../Redux/ReduxHooks";
 const AddProducts: React.LazyExoticComponent<
@@ -41,96 +42,105 @@ import { routesList } from "./RoutesList";
 
 export default function Routes() {
   const {
-    user: { isLoggedIn, pending },
-    "app-settings": { currentTheme },
+    "app-settings": { currentTheme, isLoggedIn },
   } = useAppSelector((state) => state);
-
+  const [queryClient] = useState(new QueryClient());
   useLayoutEffect(() => {
     window.document.documentElement.classList.add(currentTheme as string);
   }, [currentTheme]);
 
   return (
-    <RoutesWrapper>
-      <Route
-        path={routesList?.app}
-        element={
-          <Suspense fallback={<LoadingModule />}>
-            {Boolean(isLoggedIn) ? (
-              <>
-                <Navbar />
-                <Root />
-              </>
-            ) : (
+    <QueryClientProvider client={queryClient}>
+      <RoutesWrapper>
+        <Route
+          path={routesList?.app}
+          element={
+            <Suspense fallback={<LoadingModule />}>
+              {isLoggedIn ? (
+                <>
+                  <Navbar />
+                  <Root />
+                </>
+              ) : (
+                <Login />
+              )}
+            </Suspense>
+          }
+        >
+          <Route
+            index={true}
+            element={
+              <Suspense fallback={<LoadingModule />}>
+                <Home />
+              </Suspense>
+            }
+          />
+          <Route
+            path={routesList?.allProducts}
+            element={
+              <Suspense fallback={<LoadingModule />}>
+                <AllProducts />
+              </Suspense>
+            }
+          />
+          <Route
+            path={routesList?.addProducts}
+            element={
+              <Suspense fallback={<LoadingModule />}>
+                <AddProducts />
+              </Suspense>
+            }
+          />
+          <Route
+            path={routesList?.category}
+            element={
+              <Suspense fallback={<LoadingModule />}>
+                <Categories />
+              </Suspense>
+            }
+          />
+          <Route
+            path={routesList?.orders}
+            element={
+              <Suspense fallback={<LoadingModule />}>
+                <Orders />
+              </Suspense>
+            }
+          />
+          <Route
+            path={routesList?.settings}
+            element={
+              <Suspense fallback={<LoadingModule />}>
+                <Settings />
+              </Suspense>
+            }
+          />
+          <Route
+            path={"*"}
+            element={
+              <Suspense fallback={<LoadingModule />}>
+                <NotFounded />
+              </Suspense>
+            }
+          />
+        </Route>
+        <Route
+          path={routesList.signUp}
+          element={
+            <Suspense fallback={<LoadingModule />}>
+              <Signup />
+            </Suspense>
+          }
+        />
+        <Route
+          path={routesList.login}
+          element={
+            <Suspense fallback={<LoadingModule />}>
               <Login />
-            )}
-          </Suspense>
-        }
-      >
-        <Route
-          index={true}
-          element={
-            <Suspense fallback={<LoadingModule />}>
-              <Home />
             </Suspense>
           }
         />
-        <Route
-          path={routesList?.allProducts}
-          element={
-            <Suspense fallback={<LoadingModule />}>
-              <AllProducts />
-            </Suspense>
-          }
-        />
-        <Route
-          path={routesList?.addProducts}
-          element={
-            <Suspense fallback={<LoadingModule />}>
-              <AddProducts />
-            </Suspense>
-          }
-        />
-        <Route
-          path={routesList?.category}
-          element={
-            <Suspense fallback={<LoadingModule />}>
-              <Categories />
-            </Suspense>
-          }
-        />
-        <Route
-          path={routesList?.orders}
-          element={
-            <Suspense fallback={<LoadingModule />}>
-              <Orders />
-            </Suspense>
-          }
-        />
-        <Route
-          path={routesList?.settings}
-          element={
-            <Suspense fallback={<LoadingModule />}>
-              <Settings />
-            </Suspense>
-          }
-        />
-        <Route
-          path={"*"}
-          element={
-            <Suspense fallback={<LoadingModule />}>
-              <NotFounded />
-            </Suspense>
-          }
-        />
-      </Route>
-      <Route
-        path={routesList.signUp}
-        element={
-          <Suspense fallback={<LoadingModule />}>
-            <Signup />
-          </Suspense>
-        }
-      />
-    </RoutesWrapper>
+      </RoutesWrapper>
+    </QueryClientProvider>
   );
 }
