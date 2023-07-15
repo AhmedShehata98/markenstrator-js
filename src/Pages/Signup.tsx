@@ -9,26 +9,44 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../Redux/ReduxHooks";
 import { SET_PAGE_TITLE, SET_USER_AUTH_STATE } from "../Redux/Slice/AppSlice";
 import { SubmitHandler, useForm } from "react-hook-form";
-
+import { useMutation } from "@tanstack/react-query";
 // utilities
 import { routesList } from "../Router/RoutesList";
 import { SignupFormdata } from "../Types/pages-types";
-
-//API Hook
-import { useSignupMutation } from "../services/shoperzApi.service";
+import { SignupForm, Signup as SignupType } from "../../types";
+import { accountSignup } from "../lib/apiMethods";
+import { ImSpinner8 } from "react-icons/im";
+import { checkFormValidatiy } from "../Utilities/utils";
 
 const Signup = () => {
   const navigator = useNavigate();
-  const [fetchSignup, signupResponse] = useSignupMutation();
   const [responseMSG, setResponseMSG] = useState("");
   const timeoutRef = useRef(0);
   const dispatch = useAppDispatch();
   const {
+    data: signupData,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+    mutate,
+  } = useMutation({
+    mutationFn: (signupData: SignupType) =>
+      accountSignup({
+        fullname: signupData.fullname,
+        email: signupData.email,
+        password: signupData.password,
+        phone: signupData.phone,
+      }),
+    queryKey: ["sign-up"],
+  });
+  const {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isValid, isDirty },
-  } = useForm<Partial<SignupFormdata>>();
+    formState: { errors },
+  } = useForm<Partial<SignupForm>>();
+  const [isEmptyFields, setIsEmptyFields] = useState(true);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleShowPassword = (ev: React.MouseEvent) => {
@@ -53,26 +71,37 @@ const Signup = () => {
       ? passwordInput.setAttribute("type", "text")
       : passwordInput.setAttribute("type", "password");
   };
-  const sendSignupData: SubmitHandler<Partial<SignupFormdata>> = (data) => {
-    fetchSignup({
-      fullname: data.fullname,
-      email: data.email,
-      password: data.password,
-      phone: data.phone,
-    })
-      .unwrap()
-      .then((response) => {
-        setResponseMSG(
-          "account created success check your mail inbox!, redirect after 3 seconds"
-        );
-        dispatch(SET_USER_AUTH_STATE(true));
-        timeoutRef.current = +setTimeout(() => {
-          navigator("/", { state: response.data.token });
-        }, 3000);
-      })
-      .catch((err) =>
-        setResponseMSG(err.data.error?.[0].message || err.data.message)
-      );
+
+  const handleFormChange = (ev: React.ChangeEvent<HTMLFormElement>) => {
+    checkFormValidatiy(ev, setIsEmptyFields);
+  };
+
+  const sendSignupData = (ev: React.FormEvent<HTMLFormElement>) => {
+    // prevent form default behavior
+    ev.preventDefault();
+
+    // get value of fields
+    const fd = new FormData(ev?.currentTarget);
+    const fullname = fd.get("fullname") as string,
+      phone = fd.get("phone") as string,
+      email = fd.get("email") as string,
+      password = fd.get("password") as string;
+
+    //send signup values to backend
+    mutate(
+      { fullname, email, phone, password },
+      {
+        onSuccess(data) {
+          const origin = window.location.origin;
+          document.cookie = `${origin}=${data.data.token}`;
+          dispatch(SET_USER_AUTH_STATE(true));
+
+          timeoutRef.current = +setTimeout(() => {
+            navigator(routesList.app, { state: { isLoggedIn: true } });
+          }, 1000);
+        },
+      }
+    );
   };
 
   useLayoutEffect(() => {
@@ -82,19 +111,7 @@ const Signup = () => {
       clearTimeout(timeoutRef.current);
     };
   }, []);
-  useEffect(() => {
-    if (Object.keys(errors).length === 0) {
-      // buttonRef.current?.removeAttribute("disabled");
-    } else {
-      // buttonRef.current?.setAttribute("disabled", "true");
-    }
-  }, [
-    watch("approval"),
-    watch("fullname"),
-    watch("email"),
-    watch("password"),
-    watch("phone"),
-  ]);
+
   return (
     <main>
       <section
@@ -112,15 +129,15 @@ const Signup = () => {
         </article>
         <article className="relative z-10 flex justify-center items-center flex-col w-11/12 sm:w-10/12 md:w-1/2 lg:w-1/3 h-[90vh] md:mr-12 border rounded bg-gray-100 dark:bg-zinc-800 dark:border-slate-500">
           <div className="flex items-start justify-center flex-col w-3/4 h-fit mb-3">
-            {signupResponse.isError || signupResponse.isSuccess ? (
+            {isError || isSuccess ? (
               <div
                 className={`absolute top-0 left-0 w-full bg-gray-200 rounded border-b text-sm capitalize text-center font-medium p-2 ${
-                  signupResponse.isError
+                  isError
                     ? "bg-red-200 !text-red-900 border-red-700"
                     : "bg-emerald-200 !text-emerald-900 border-emerald-700"
                 }`}
               >
-                {responseMSG}
+                {isError ? error?.message : signupData.message}
               </div>
             ) : null}
             <h3 className="text-md font-semibold capitalize dark:text-white">
@@ -134,7 +151,8 @@ const Signup = () => {
             </small>
           </div>
           <form
-            onSubmit={handleSubmit(sendSignupData)}
+            onSubmit={sendSignupData}
+            onChange={handleFormChange}
             className="flex items-center justify-start flex-col gap-3 w-3/4 overflow-y-auto"
           >
             <span className="flex justify-start items-center gap-3 w-full">
@@ -182,6 +200,7 @@ const Signup = () => {
                   required: "your name is required",
                 })}
                 placeholder={"Ex : John Doe"}
+                required
               />
               <small className="text-xs capitalize text-red-600 font-semibold">
                 {errors.fullname?.message}
@@ -199,6 +218,7 @@ const Signup = () => {
                   required: "your phone number is required",
                 })}
                 placeholder={"Ex : +201234567891 "}
+                required
               />
               <small className="text-xs capitalize text-red-600 font-semibold">
                 {errors.phone?.message}
@@ -214,6 +234,7 @@ const Signup = () => {
                 {...register("email", { required: "E-mail is required" })}
                 placeholder={"Ex : email@example.com"}
                 className="form-input"
+                required
               />
               <small className="text-xs capitalize text-red-600 font-semibold">
                 {errors.email?.message}
@@ -252,6 +273,7 @@ const Signup = () => {
                 {...register("password", { required: "password is required" })}
                 className="form-input"
                 placeholder={" at least 8 characters required..."}
+                required
               />
               <small className="text-xs capitalize text-red-600 font-semibold">
                 {errors.password?.message}
@@ -263,6 +285,7 @@ const Signup = () => {
                 id="Approval"
                 {...register("approval", { required: true })}
                 className="accent-blue-700 mt-1"
+                required
               />
               <label
                 className={
@@ -278,14 +301,11 @@ const Signup = () => {
             <span className="flex items-start justify-center flex-col gap-1 w-full">
               <button
                 type="submit"
-                className="flex items-center justify-center bg-violet-600 text-white w-full h-9 rounded hover:bg-violet-300 hover:text-violet-800 capitalize disabled:bg-violet-200 disabled:text-gray-500 disabled:pointer-events-none"
+                className="submit-btn"
                 ref={buttonRef}
+                disabled={isEmptyFields || isLoading}
               >
-                {signupResponse.isLoading ? (
-                  <span className="block w-6 h-6 rounded-full border-4 border-white border-t-stone-500 shadow-md animate-spin"></span>
-                ) : (
-                  "create an account"
-                )}
+                {isLoading ? <ImSpinner8 /> : "create an account"}
               </button>
             </span>
             <span className="flex items-center justify-center w-full">

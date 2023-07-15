@@ -209,7 +209,7 @@
   .login-input {
     @apply w-full bg-transparent outline-none focus:outline-none focus:bg-gray-300 px-3 py-2 placeholder:capitalize dark:text-gray-100;
   }
-  .login-btn {
+  .submit-btn {
     @apply w-full flex items-center justify-center gap-3 capitalize py-2  px-4 rounded  text-black bg-violet-600 dark:bg-violet-300 dark:hover:bg-violet-500 transition-colors text-white dark:text-black disabled:bg-gray-300 disabled:text-gray-700 disabled:cursor-not-allowed;
   }
   .login-btn-disabled {

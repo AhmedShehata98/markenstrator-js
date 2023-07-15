@@ -19,6 +19,7 @@ import { useLoginMutation } from "../services/shoperzApi.service";
 import { useMutation } from "@tanstack/react-query";
 import { accountLogin } from "../lib/apiMethods";
 import { Login as loginType } from "../../types";
+import { checkFormValidatiy } from "../Utilities/utils";
 
 const Login = () => {
   const { data, isError, error, isLoading, isSuccess, mutate } = useMutation({
@@ -45,11 +46,7 @@ const Login = () => {
   };
 
   const handleFormChanges = (ev: React.ChangeEvent<HTMLFormElement>) => {
-    if (ev.target.reportValidity()) {
-      setIsEmptyFields(false);
-    } else {
-      setIsEmptyFields(true);
-    }
+    checkFormValidatiy(ev, setIsEmptyFields);
   };
   //
 
@@ -190,7 +187,7 @@ const Login = () => {
           <div className="mb-1 mt-2 w-3/4">
             <button
               ref={submitBtnRef}
-              className="login-btn"
+              className="submit-btn"
               type="submit"
               disabled={isLoading || isEmptyFields}
             >

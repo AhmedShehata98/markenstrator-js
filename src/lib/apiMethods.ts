@@ -5,6 +5,7 @@ import {
   LoginResponse,
   Signup,
   SignupError,
+  SignupResponse,
   SignupSuccess,
   UserData,
   UserDataResponse,
@@ -37,7 +38,7 @@ const accountSignup = async ({
   fullname,
   password,
   phone,
-}: Signup): Promise<SignupSuccess | SignupError> => {
+}: Signup): Promise<SignupResponse> => {
   try {
     const res = await axios({
       method: "POST",

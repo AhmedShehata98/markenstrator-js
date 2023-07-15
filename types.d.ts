@@ -26,6 +26,19 @@ type Signup = {
   email: string;
   password: string;
 };
+interface SignupResponse extends ApiResponse {
+  data: {
+    token: string;
+  };
+}
+
+interface SignupForm {
+  fullname: string;
+  email: string;
+  phone: number;
+  password: string;
+  approval: boolean;
+}
 
 type SignupError = {
   data: null | {};
