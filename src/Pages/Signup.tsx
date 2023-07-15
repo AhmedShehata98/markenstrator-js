@@ -38,7 +38,7 @@ const Signup = () => {
         password: signupData.password,
         phone: signupData.phone,
       }),
-    queryKey: ["sign-up"],
+    mutationKey: ["sign-up"],
   });
   const {
     register,
@@ -137,7 +137,9 @@ const Signup = () => {
                     : "bg-emerald-200 !text-emerald-900 border-emerald-700"
                 }`}
               >
-                {isError ? error?.message : signupData.message}
+                {isError
+                  ? "there's something incorect with signup data"
+                  : signupData.message}
               </div>
             ) : null}
             <h3 className="text-md font-semibold capitalize dark:text-white">
