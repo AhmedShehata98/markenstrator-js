@@ -225,10 +225,10 @@
     @apply flex flex-col items-start justify-start min-h-fit capitalize mb-3;
   }
   .form-input {
-    @apply inline-block w-full px-3 py-1 border rounded border-zinc-300 dark:border-zinc-500 bg-zinc-200 dark:bg-zinc-600 text-zinc-800 dark:text-zinc-200 placeholder:text-sm placeholder:capitalize dark:placeholder:text-zinc-400 focus:border-violet-400 disabled:!border-transparent disabled:!bg-gray-300;
+    @apply inline-block w-full px-3 py-1 border rounded border-gray-200 dark:border-gray-500 bg-gray-100 dark:bg-gray-600 text-zinc-800 dark:text-zinc-200 placeholder:text-sm placeholder:capitalize dark:placeholder:text-zinc-400 focus:border-violet-400 disabled:!border-transparent disabled:!bg-gray-200;
   }
   .form-label {
-    @apply h-fit text-xs text-zinc-800 dark:text-zinc-200 font-medium uppercase;
+    @apply h-fit text-sm text-zinc-800 mb-1 dark:text-zinc-200 font-medium uppercase;
   }
   .signup-bg-overlay {
     @apply after:absolute after:w-full after:h-full after:inset-0 after:from-gray-700/20 after:to-violet-700/10 after:bg-gradient-to-tl after:bg-opacity-30 after:backdrop-blur;
@@ -268,6 +268,9 @@
   }
   .hide-menu {
     @apply -translate-y-4 scale-95 opacity-0 pointer-events-none select-none;
+  }
+  .image-add-btn {
+    @apply w-32 flex flex-col items-center gap-2 border-2 border-dashed border-gray-800;
   }
 }
 @tailwind utilities;

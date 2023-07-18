@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../Redux/ReduxHooks";
 import { SET_ADD_PRODUCT_INITIAL_STATE } from "../Redux/Slice/AppSlice";
 import { routesList } from "../Router/RoutesList";
-import { IAllProductsData } from "../Types/pages-types";
+import { Products } from "../../types";
 
 type AllProductsCardsProps = {
-  AllProductsCards: IAllProductsData[];
+  AllProductsCards: Products[];
 };
 
 const AllProductsCards = ({ AllProductsCards }: AllProductsCardsProps) => {
@@ -20,7 +20,7 @@ const AllProductsCards = ({ AllProductsCards }: AllProductsCardsProps) => {
     const optionMenu = tRow.children[1];
     optionMenu.classList.toggle("pd-table-opt-menu-hide");
   };
-  const handleShowProductDetails = (productDetails: IAllProductsData) => {
+  const handleShowProductDetails = (productDetails: Products) => {
     dispatch(
       SET_ADD_PRODUCT_INITIAL_STATE({
         data: productDetails,
@@ -36,36 +36,36 @@ const AllProductsCards = ({ AllProductsCards }: AllProductsCardsProps) => {
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {AllProductsCards &&
           Array.isArray(AllProductsCards) &&
-          AllProductsCards.map((product) => {
+          AllProductsCards.map((product, index) => {
             return (
               <li
                 key={nanoid(4)}
-                className="p-3 shadow-md rounded-md border border-zinc-300 dark:border-zinc-600"
+                className="p-3 shadow rounded-md border border-gray-200 dark:border-gray-600"
               >
                 <div className="flex items-center justify-start gap-2 h-16 mb-3">
                   <figure className="w-16 h-16 rounded-lg overflow-hidden">
                     <img
                       className="max-w-full rounded-lg"
-                      src={product.media[0].fileLivePreview}
-                      alt={"product-image" + " " + product.media[0].id}
+                      src={product.thumbnail}
+                      alt={`$product-media-#${index + 1}`}
                     />
                   </figure>
                   <span className="flex flex-col justify-start gap-1 h-full">
                     <figcaption className="dark:text-white capitalize">
-                      {product.productName}
+                      {product.name}
                     </figcaption>
                     <small className="text-zinc-500 dark:text-zinc-400 font-semibold">
                       {Intl.NumberFormat("en-EG", {
                         style: "currency",
-                        currency: product.price.unit,
-                      }).format(+product.price.value)}
+                        currency: "EGP",
+                      }).format(+product.price)}
                     </small>
                     <ul className="flex gap-2 w-fit bg-zinc-100 dark:bg-zinc-600 p-1 mx-1 rounded-lg">
-                      {product.variants.length > 0 &&
-                        product.variants.map((variant) => (
+                      {product.colors.length > 0 &&
+                        product.colors.map((colors) => (
                           <li
-                            key={variant.id}
-                            style={{ backgroundColor: variant.color }}
+                            key={colors}
+                            style={{ backgroundColor: colors }}
                             className={`w-3 aspect-square inline-block rounded-full shadow-md`}
                           ></li>
                         ))}
@@ -110,6 +110,7 @@ const AllProductsCards = ({ AllProductsCards }: AllProductsCardsProps) => {
                     </ul>
                   </button>
                 </div>
+                <br />
                 <div className="mb-3">
                   <h6 className="font-semibold capitalize">summury</h6>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
@@ -123,22 +124,22 @@ const AllProductsCards = ({ AllProductsCards }: AllProductsCardsProps) => {
                       {Intl.NumberFormat("en-EG", {
                         style: "percent",
                         signDisplay: "exceptZero",
-                      }).format(+product.changes!)}
+                      }).format((product as any).sales ?? 0)}
                     </small>
                   </li>
                   <li className="w-full flex justify-between items-center p-1 dark:text-white uppercase">
                     <p className="font-semibold text-sm">changes</p>
                     {Intl.NumberFormat("en-EG", {
                       style: "currency",
-                      currency: product.price.unit,
-                    }).format(+product.changes)}
+                      currency: "EGP",
+                    }).format((product as any).changes ?? 0)}
                   </li>
                   <li className="w-full flex justify-between items-center p-1 dark:text-white uppercase">
                     <p className="font-semibold text-sm">sold</p>
                     {Intl.NumberFormat("en-EG", {
                       style: "currency",
-                      currency: product.price.unit,
-                    }).format(+product.sold)}
+                      currency: "EGP",
+                    }).format((product as any).sold ?? 0)}
                   </li>
                 </ul>
               </li>

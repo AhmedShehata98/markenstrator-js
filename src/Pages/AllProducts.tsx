@@ -7,33 +7,48 @@ import { routesList } from "../Router/RoutesList";
 import { productsDataList } from "../Utilities/dummyData";
 import { useAppDispatch } from "../Redux/ReduxHooks";
 import { SET_ADD_PRODUCT_INITIAL_STATE } from "../Redux/Slice/AppSlice";
+import { useQuery } from "@tanstack/react-query";
+import { getAllProducts } from "../lib/apiMethods";
 
 const AllProducts = () => {
   const [documentWidth, setDocumentWidth] = useState<number>(window.innerWidth);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [viewMethod, setViewMethod] = useState<string>("list");
+  const [viewMethod, setViewMethod] = useState<string>("grid");
+  const {
+    data: products,
+    error,
+    isError,
+    isLoading,
+    isSuccess,
+  } = useQuery(["all-products"], getAllProducts);
 
   const handleNavigateAddProductPage = () => {
     dispatch(
       SET_ADD_PRODUCT_INITIAL_STATE({
         data: {
-          productName: "",
-          price: {
-            value: 0,
-            unit: "",
+          _id: "",
+          name: "",
+          description: "",
+          price: 0,
+          images: [],
+          thumbnail: "",
+          category_id: {
+            _id: "",
+            name: "",
           },
           sku: "",
-          weight: {
-            value: 0,
-            unit: "",
-          },
-          description: "",
-          media: [],
-          variants: [],
           brand: "",
-          category: "",
-          collection: "",
+          colors: [],
+          stock: 0,
+          discount: 0,
+          rating: 0,
+          isInCart: false,
+          createdAt: "",
+          updatedAt: "",
+          specifications: "",
+          deliveryCost: ["free"] || 0,
+          __v: 0,
         },
         displayProductDetails: false,
       })
@@ -87,7 +102,7 @@ const AllProducts = () => {
 
   useLayoutEffect(() => {
     if (documentWidth <= 992) {
-      setViewMethod("grid");
+      setViewMethod("list");
     }
   }, [documentWidth]);
 
@@ -127,9 +142,11 @@ const AllProducts = () => {
           </span>
         </SectionHeader>
         {viewMethod === "list" ? (
-          <AllProductsTable AllProductsTableData={productsDataList} />
+          <AllProductsTable
+            AllProductsTableData={products?.data.products ?? []}
+          />
         ) : (
-          <AllProductsCards AllProductsCards={productsDataList} />
+          <AllProductsCards AllProductsCards={products?.data.products ?? []} />
         )}
       </section>
     </main>

@@ -5,8 +5,9 @@ import { IAllProductsData } from "../Types/pages-types";
 import { SET_ADD_PRODUCT_INITIAL_STATE } from "../Redux/Slice/AppSlice";
 import { nanoid } from "@reduxjs/toolkit";
 import { routesList } from "../Router/RoutesList";
+import { Products } from "../../types";
 type AllProductsTableProps = {
-  AllProductsTableData: IAllProductsData[];
+  AllProductsTableData: Products[];
   children?: React.ReactNode;
 };
 // interface AllProductsTableData {
@@ -28,7 +29,7 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
   const navigate = useNavigate();
   const optionsMenuRef = useRef<HTMLUListElement | null>(null);
 
-  const handleShowProductDetails = (productDetails: IAllProductsData) => {
+  const handleShowProductDetails = (productDetails: Products) => {
     dispatch(
       SET_ADD_PRODUCT_INITIAL_STATE({
         data: productDetails,
@@ -45,6 +46,7 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
     const optionMenu = tRow.children[1];
     optionMenu.classList.toggle("pd-table-opt-menu-hide");
   };
+  console.log(AllProductsTableData);
 
   return (
     <article className="mt-8 mb-2 px-2 pb-2 flex flex-col items-start justify-center w-full border dark:border-zinc-400 bg-gray-100 dark:bg-zinc-700">
@@ -83,18 +85,18 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
                       <figure className="w-8 rounded-full aspect-square shadow m-0">
                         <img
                           className="max-w-full object-cover rounded-full"
-                          src={product?.media?.[0].fileLivePreview}
-                          alt={"product-media" + " " + "#" + index}
+                          src={product.thumbnail}
+                          alt={`$product-media-#${index + 1}`}
                         />
                       </figure>
                       <figcaption className=" grid place-items-start place-content-center text-sm font-semibold capitalize text-gray-600 dark:text-gray-300 max-w-full truncate">
-                        {product.productName}
+                        {product?.name ?? "NA-NA"}
                       </figcaption>
                     </button>
                   </td>
                   <td className="py-2 pl-3 text-start ">
                     <p className="bg-slate-500 dark:bg-slate-400 dark:text-black text-white text-center rounded-full px-3 py-[2px] max-w-full truncate">
-                      {product.category}
+                      {product?.category_id?.name}
                     </p>
                   </td>
                   <td>
@@ -102,25 +104,27 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
                       {Intl.NumberFormat("en-EG", {
                         style: "percent",
                         signDisplay: "exceptZero",
-                      }).format(+product.changes!)}
+                      }).format(+0)}
                     </p>
                   </td>
                   <td className="py-2 pl-3 text-start ">
                     <p className="max-w-full truncate">
                       {Intl.NumberFormat("en-EG", {
                         style: "currency",
-                        currency: product.price?.unit,
-                      }).format(product.price?.value as number)}
+                        currency: "EGP",
+                      }).format(product.price)}
                     </p>
                   </td>
                   <td className="py-2 pl-3 text-start ">
-                    <p className="max-w-full truncate">{product.sold}</p>
+                    <p className="max-w-full truncate">
+                      {(product as any).sold ?? "NA-NA"}
+                    </p>
                   </td>
                   <td className="py-2 pl-3 text-start ">
                     {Intl.NumberFormat("en-EG", {
                       style: "currency",
-                      currency: product.price?.unit,
-                    }).format(product.sales as number)}
+                      currency: "EGP",
+                    }).format((product as any).sales ?? 0)}
                   </td>
                   <td className="py-2 pl-3 text-start relative">
                     <button

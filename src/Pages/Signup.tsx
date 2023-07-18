@@ -1,26 +1,24 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 
 // assets
 import background from "../assets/images/signup-bg.webp";
 import logoSignup from "../assets/images/logo-login.png";
 
 // 3rd party libraries
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../Redux/ReduxHooks";
 import { SET_PAGE_TITLE, SET_USER_AUTH_STATE } from "../Redux/Slice/AppSlice";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 // utilities
 import { routesList } from "../Router/RoutesList";
-import { SignupFormdata } from "../Types/pages-types";
-import { SignupForm, Signup as SignupType } from "../../types";
+import { SignupError, SignupForm } from "../../types";
 import { accountSignup } from "../lib/apiMethods";
 import { ImSpinner8 } from "react-icons/im";
 import { checkFormValidatiy } from "../Utilities/utils";
 
 const Signup = () => {
   const navigator = useNavigate();
-  const [responseMSG, setResponseMSG] = useState("");
   const timeoutRef = useRef(0);
   const dispatch = useAppDispatch();
   const {
@@ -31,19 +29,12 @@ const Signup = () => {
     isSuccess,
     mutate,
   } = useMutation({
-    mutationFn: (signupData: SignupType) =>
-      accountSignup({
-        fullname: signupData.fullname,
-        email: signupData.email,
-        password: signupData.password,
-        phone: signupData.phone,
-      }),
+    mutationFn: accountSignup,
     mutationKey: ["sign-up"],
   });
+
   const {
     register,
-    handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Partial<SignupForm>>();
   const [isEmptyFields, setIsEmptyFields] = useState(true);
@@ -93,7 +84,7 @@ const Signup = () => {
       {
         onSuccess(data) {
           const origin = window.location.origin;
-          document.cookie = `${origin}=${data.data.token}`;
+          document.cookie = `${origin}=${data.data?.token}`;
           dispatch(SET_USER_AUTH_STATE(true));
 
           timeoutRef.current = +setTimeout(() => {
@@ -138,7 +129,8 @@ const Signup = () => {
                 }`}
               >
                 {isError
-                  ? "there's something incorect with signup data"
+                  ? (error as SignupError).error.errors?.at(0)?.message ??
+                    (error as SignupError).message
                   : signupData.message}
               </div>
             ) : null}
@@ -242,17 +234,6 @@ const Signup = () => {
                 {errors.email?.message}
               </small>
             </span>
-            {/* <span className="flex items-start justify-center flex-col gap-1 w-full">
-              <label className="capitalize text-sm mb-1" htmlFor="company-name">
-                company name
-              </label>
-              <input
-                type="text"
-                name="company-name"
-                id="company-name"
-                className="bg-gray-200 px-2 py-[2px] border-b-4 border-slate-500 rounded w-full outline-none focus:bg-slate-200"
-              />
-            </span> */}
             <span className="relative flex items-start justify-center flex-col gap-1 w-full">
               <label className="form-label" htmlFor="password">
                 password
@@ -307,7 +288,11 @@ const Signup = () => {
                 ref={buttonRef}
                 disabled={isEmptyFields || isLoading}
               >
-                {isLoading ? <ImSpinner8 /> : "create an account"}
+                {isLoading ? (
+                  <ImSpinner8 className="text-2xl animate-spin" />
+                ) : (
+                  "create an account"
+                )}
               </button>
             </span>
             <span className="flex items-center justify-center w-full">
@@ -316,7 +301,7 @@ const Signup = () => {
               </small>
               <Link
                 className="text-violet-700 dark:text-violet-500 font-medium text-sm uppercase px-4"
-                to={`/${routesList?.login}` || "#"}
+                to={`/${routesList?.login}` ?? "#"}
               >
                 login
               </Link>

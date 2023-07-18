@@ -39,6 +39,7 @@ const NotFounded: React.LazyExoticComponent<() => JSX.Element> = lazy(
 );
 
 import { routesList } from "./RoutesList";
+import AddCategory from "../Pages/AddCategory";
 
 export default function Routes() {
   const {
@@ -84,7 +85,7 @@ export default function Routes() {
             }
           />
           <Route
-            path={routesList?.addProducts}
+            path={`${routesList?.allProducts}/${routesList?.addProducts}`}
             element={
               <Suspense fallback={<LoadingModule />}>
                 <AddProducts />
@@ -96,6 +97,14 @@ export default function Routes() {
             element={
               <Suspense fallback={<LoadingModule />}>
                 <Categories />
+              </Suspense>
+            }
+          />
+          <Route
+            path={`${routesList?.category}/${routesList?.addCategory}`}
+            element={
+              <Suspense fallback={<LoadingModule />}>
+                <AddCategory />
               </Suspense>
             }
           />

@@ -1,14 +1,18 @@
 import axios from "axios";
 import { API_BASE_URL, ENDPOINTS } from "../services/apiSettings";
 import {
+  CategoriesResponse,
   Login,
   LoginResponse,
+  OneProductResponse,
+  Products,
+  ProductsResponse,
   Signup,
   SignupError,
   SignupResponse,
-  SignupSuccess,
-  UserData,
+  UploadProductImageResponse,
   UserDataResponse,
+  productQueriesParameter,
 } from "../../types";
 
 // Fetchers methods
@@ -38,7 +42,7 @@ const accountSignup = async ({
   fullname,
   password,
   phone,
-}: Signup): Promise<SignupResponse> => {
+}: Signup): Promise<SignupResponse | SignupError> => {
   try {
     const res = await axios({
       method: "POST",
@@ -49,7 +53,7 @@ const accountSignup = async ({
     const data = await res.data;
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    throw error.response.data;
   }
 };
 const getUserData = async (
@@ -70,5 +74,114 @@ const getUserData = async (
     throw new Error(error);
   }
 };
+const getAllProducts = async (): Promise<ProductsResponse> => {
+  try {
+    const res = await axios({
+      method: "GET",
+      baseURL: API_BASE_URL,
+      url: ENDPOINTS.products,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+const getProductById = async (
+  id: string,
+  querys: productQueriesParameter
+): Promise<OneProductResponse> => {
+  try {
+    const res = await axios({
+      method: "GET",
+      baseURL: `${API_BASE_URL}/${id}`,
+      url: ENDPOINTS.products,
+      params: { ...querys },
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+const addProduct = async (
+  product: Partial<Products>,
+  token: string | undefined
+): Promise<OneProductResponse> => {
+  try {
+    const res = await axios({
+      method: "POST",
+      baseURL: API_BASE_URL,
+      url: ENDPOINTS.products,
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: product,
+    });
 
-export { accountLogin, accountSignup, getUserData };
+    return res.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+const getAllCategories = async (): Promise<CategoriesResponse> => {
+  try {
+    const res = await axios({
+      method: "GET",
+      baseURL: API_BASE_URL,
+      url: ENDPOINTS.category,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+const getCategoryById = async (id: string): Promise<CategoriesResponse> => {
+  try {
+    const res = await axios({
+      method: "GET",
+      baseURL: `${API_BASE_URL}/${id}`,
+      url: ENDPOINTS.category,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+const uploadProductImage = async (
+  imageFile: FormData | null,
+  token: string
+): Promise<UploadProductImageResponse> => {
+  console.log(imageFile);
+  try {
+    const res = await axios({
+      method: "POST",
+      baseURL: API_BASE_URL,
+      url: ENDPOINTS.uploadImage.product,
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: imageFile,
+    });
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export {
+  accountLogin,
+  accountSignup,
+  getUserData,
+  getProductById,
+  getAllProducts,
+  addProduct,
+  getAllCategories,
+  getCategoryById,
+  uploadProductImage,
+};

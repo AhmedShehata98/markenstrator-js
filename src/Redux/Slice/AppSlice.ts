@@ -2,13 +2,14 @@ import { RootState } from "./../Store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import React from "react";
 import { IProductFormData } from "../../Types/pages-types";
+import { Products } from "../../../types";
 
 type initialStateTypes = {
   isLoggedIn: boolean;
   loading: boolean;
   currentTheme: string | null;
   showSidebar: boolean;
-  initinalProductsData: Partial<IProductFormData>;
+  initinalProductsData: Partial<Products>;
   displayProductDetails: boolean;
 };
 type actionTypes = {
@@ -57,7 +58,7 @@ export const appSlice = createSlice({
     SET_ADD_PRODUCT_INITIAL_STATE: (
       state: initialStateTypes,
       action: PayloadAction<{
-        data: IProductFormData;
+        data: Products;
         displayProductDetails: boolean;
       }>
     ) => {

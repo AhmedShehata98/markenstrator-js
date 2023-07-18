@@ -1,6 +1,6 @@
 export const routesList = {
   app: "/",
-  addProducts: "/add-products",
+  addProducts: "add-products",
   allProducts: "/all-products",
   statistics: "/statistics",
   users: "users",
@@ -10,6 +10,6 @@ export const routesList = {
   signUp: "sign-up",
   resetPassword: "reset-password",
   category: "category",
-  addCategory: "add-Category",
+  addCategory: "add-category",
   orders: "orders",
 };

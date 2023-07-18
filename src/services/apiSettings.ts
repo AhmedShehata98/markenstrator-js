@@ -6,5 +6,11 @@ let ENDPOINTS = {
     login: "auth/login",
   },
   user: { me: "users/me" },
+  products: "/products",
+  category: "/categories",
+  uploadImage: {
+    product: "upload/product",
+    category: "upload/category",
+  },
 };
 export { API_BASE_URL, ENDPOINTS };
