@@ -46,7 +46,7 @@ function ProductBasicDetailsForm() {
           <input
             className="form-input"
             type="text"
-            name="SKU"
+            name="sku"
             id="SKU"
             placeholder="SKU ...."
           />
@@ -70,7 +70,7 @@ function ProductBasicDetailsForm() {
             category
           </label>
           <select
-            name="category"
+            name="category_id"
             id="category"
             className="!py-2 accent-violet-400 focus:!border-violet-400"
           >

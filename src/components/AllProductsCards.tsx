@@ -21,14 +21,7 @@ const AllProductsCards = ({ AllProductsCards }: AllProductsCardsProps) => {
     optionMenu.classList.toggle("pd-table-opt-menu-hide");
   };
   const handleShowProductDetails = (productDetails: Products) => {
-    dispatch(
-      SET_ADD_PRODUCT_INITIAL_STATE({
-        data: productDetails,
-        displayProductDetails: true,
-      })
-    );
-
-    navigate(routesList.addProducts);
+    navigate(routesList.addProducts, { state: productDetails._id });
   };
 
   return (
@@ -46,7 +39,11 @@ const AllProductsCards = ({ AllProductsCards }: AllProductsCardsProps) => {
                   <figure className="w-16 h-16 rounded-lg overflow-hidden">
                     <img
                       className="max-w-full rounded-lg"
-                      src={product.thumbnail}
+                      src={
+                        (product.thumbnail as Object).hasOwnProperty("url")
+                          ? (product.thumbnail as any).url
+                          : product.thumbnail
+                      }
                       alt={`$product-media-#${index + 1}`}
                     />
                   </figure>

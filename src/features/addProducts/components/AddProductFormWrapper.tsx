@@ -3,6 +3,8 @@ import { addProduct, uploadProductImage } from "../../../lib/apiMethods";
 import useGetToken from "../../../Hooks/useGetToken";
 import { Products, UploadProductImageResponse } from "../../../../types";
 import Swal from "sweetalert2";
+import { ImSpinner8 } from "react-icons/im";
+import { useLocation } from "react-router-dom";
 
 type Props = {
   children: React.ReactNode[];
@@ -10,87 +12,93 @@ type Props = {
 
 function AddProductFormWrapper({ children }: Props) {
   const { token } = useGetToken();
-  const { mutateAsync, isLoading, data } = useMutation({
+  const { mutateAsync, isLoading: isLoadingMedia } = useMutation({
     mutationFn: (media: FormData) => uploadProductImage(media!, token!),
     mutationKey: ["media"],
   });
-
-  const { mutate } = useMutation({
+  const { mutate, isLoading: isLoadingProduct } = useMutation({
     mutationFn: (productData: Partial<Products>) =>
       addProduct(productData, token),
     mutationKey: ["create-product"],
   });
+  const { state: ProductId } = useLocation();
 
-  const uploadProductImages = async (filesList: FileList) => {
-    const files = Array.from(filesList).slice(0, 6);
+  const uploadProductImages = async (
+    filesList: FormDataEntryValue[]
+  ): Promise<UploadProductImageResponse> => {
     const formdata = new FormData();
-    files.forEach((file) => formdata.append("product-image", file));
-    let images = files.map((file) => ({
-      details: file,
-      url: URL.createObjectURL(file),
-    }));
+    Array.from(filesList).forEach((file) =>
+      formdata.append("product-image", file)
+    );
     return await mutateAsync(formdata);
   };
 
+  const getFormFields = (
+    ev: React.FormEvent<HTMLFormElement>
+  ): { formProductData: FormData; objectData: Partial<Products> } => {
+    const formProductData = new FormData(ev.currentTarget);
+    const name = formProductData.get("name")?.toString(),
+      price = Number(formProductData.get("price")),
+      sku = formProductData.get("sku")?.toString(),
+      stock = Number(formProductData.get("stock")),
+      categoryId = formProductData.get("category_id")?.toString(),
+      discount = Number(formProductData.get("discount")),
+      description = formProductData.get("description")?.toString(),
+      specifications = formProductData.get("specifications")?.toString(),
+      deliveryCost = Number(formProductData.get("deliveryCost")),
+      brand = formProductData.get("brand")?.toString(),
+      colors = formProductData.getAll("colors") as Array<string>;
+    const objectData = {
+      name,
+      price,
+      sku,
+      stock,
+      category_id: categoryId,
+      discount,
+      description,
+      specifications,
+      deliveryCost: deliveryCost!,
+      brand,
+      colors,
+    };
+
+    return { formProductData, objectData };
+  };
+
+  const sendFullProductData = (productData: Partial<Products>): void => {
+    mutate(productData, {
+      onError(error) {
+        Swal.fire({
+          title: "add product",
+          text:
+            (error as any).message.split(".").join("\n") ??
+            "error encorrect data",
+          icon: "error",
+          confirmButtonText: "close",
+        });
+      },
+      onSuccess(data) {
+        Swal.fire({
+          title: "add product",
+          text: data.message,
+          icon: "success",
+          confirmButtonText: "Okay",
+        });
+      },
+    });
+  };
   const handleSubmitProductData = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
-    const formdata = new FormData(ev.currentTarget);
-    const name = formdata.get("name")?.toString(),
-      price = Number(formdata.get("price")),
-      sku = formdata.get("SKU")?.toString(),
-      stock = Number(formdata.get("stock")),
-      categoryId = formdata.get("category")?.toString(),
-      discount = Number(formdata.get("discount")),
-      description = formdata.get("description")?.toString(),
-      specifications = formdata.get("specifications")?.toString(),
-      deliveryCost = Number(formdata.get("deliveryCost")),
-      brand = formdata.get("brand")?.toString(),
-      colors = formdata.getAll("colors-list") as Array<string>,
-      images = formdata.getAll("product-image") as File[] | FileList[];
+    const { formProductData, objectData } = getFormFields(ev);
 
-    const reader = new FileReader();
-    reader.onload = function (ev: ProgressEvent<FileReader>) {
-      console.log(reader.result);
-    };
-    reader.readAsText(images[0]);
-    uploadProductImages(images!).then((res: UploadProductImageResponse) => {
-      const imagesUrls = res.data.images;
-      mutate(
-        {
-          name,
-          price,
-          sku,
-          stock,
-          category_id: categoryId,
-          discount,
-          description,
-          specifications,
-          deliveryCost: deliveryCost!,
-          brand,
-          colors,
-          images: imagesUrls,
-          thumbnail: imagesUrls[0],
-        },
-        {
-          onError(error) {
-            Swal.fire({
-              title: "add product",
-              text: "error encorrect data",
-              icon: "error",
-              confirmButtonText: "close",
-            });
-            console.log(error);
-          },
-          onSuccess(data) {
-            Swal.fire({
-              title: "add product",
-              text: data.message,
-              icon: "success",
-              confirmButtonText: "Okay",
-            });
-          },
-        }
-      );
+    const imagesList = formProductData.getAll("images");
+    uploadProductImages(imagesList).then(({ data }) => {
+      const newObjectData: Partial<Products> = {
+        ...objectData,
+        images: data.images,
+        thumbnail: data.images[0].url,
+      };
+      sendFullProductData(newObjectData);
     });
   };
 
@@ -101,8 +109,16 @@ function AddProductFormWrapper({ children }: Props) {
       onSubmit={handleSubmitProductData}
     >
       {children}
-      <button type="submit" className="submit-btn w-1/4 ml-auto">
-        add product
+      <button
+        type="submit"
+        className="submit-btn w-1/4 ml-auto"
+        disabled={isLoadingProduct || isLoadingMedia}
+      >
+        {!isLoadingProduct && !isLoadingMedia && <p>add product</p>}
+        {isLoadingProduct ||
+          (isLoadingMedia && (
+            <ImSpinner8 className="inline-block text-lg animate-spin" />
+          ))}
       </button>
     </form>
   );

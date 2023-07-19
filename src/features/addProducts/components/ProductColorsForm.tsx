@@ -6,7 +6,7 @@ function ProductColorsForm() {
   const colorElementRef = useRef<HTMLInputElement | null>(null);
   const [colors, setColors] = useState([
     {
-      color: "#891a1a",
+      color: "#000",
       isSelected: true,
     },
   ]);
@@ -64,7 +64,7 @@ function ProductColorsForm() {
               >
                 <input
                   type="checkbox"
-                  name="colors-list"
+                  name="colors"
                   id={`color-${color}`}
                   checked={isSelected}
                   value={color}

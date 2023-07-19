@@ -16,7 +16,7 @@ function SelectImageBtn({ handleOnSelect, imagesLength }: Props) {
       </label>
       <input
         type="file"
-        name="product-image"
+        name="images"
         id="product-image"
         hidden
         onChange={handleOnSelect}

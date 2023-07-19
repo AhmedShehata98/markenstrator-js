@@ -5,9 +5,9 @@ function useGetToken() {
   useEffect(() => {
     const origin = window.location.origin;
     const cookies = window.document.cookie
-      .split(`${origin}=`)
-      .find((cookie) => cookie.includes("ey"));
-    const token = cookies;
+      .split(`; `)
+      .find((cookie) => cookie.startsWith(origin));
+    const token = cookies?.split("=")[1];
     if (token) {
       setToken(token);
     } else {

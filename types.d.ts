@@ -77,10 +77,12 @@ type Products = {
   price: number;
   images: Array<string>;
   thumbnail: string;
-  category_id: {
-    _id: string;
-    name: string;
-  };
+  category_id:
+    | {
+        _id: string;
+        name: string;
+      }
+    | string;
   sku: string;
   brand: string;
   colors: Array<string>;
@@ -151,5 +153,10 @@ type Categories = {
  */
 
 interface UploadProductImageResponse extends ApiResponse {
-  data: { images: [string] };
+  data: {
+    images: {
+      url: string;
+      filePath: string;
+    }[];
+  };
 }

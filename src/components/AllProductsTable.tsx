@@ -30,14 +30,7 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
   const optionsMenuRef = useRef<HTMLUListElement | null>(null);
 
   const handleShowProductDetails = (productDetails: Products) => {
-    dispatch(
-      SET_ADD_PRODUCT_INITIAL_STATE({
-        data: productDetails,
-        displayProductDetails: true,
-      })
-    );
-
-    navigate(routesList.addProducts);
+    navigate(routesList.addProducts, { state: productDetails._id });
   };
 
   const handleShowOptionsMenu = (ev: React.MouseEvent) => {
@@ -85,7 +78,11 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
                       <figure className="w-8 rounded-full aspect-square shadow m-0">
                         <img
                           className="max-w-full object-cover rounded-full"
-                          src={product.thumbnail}
+                          src={
+                            (product.thumbnail as Object).hasOwnProperty("url")
+                              ? (product.thumbnail as any).url
+                              : product.thumbnail
+                          }
                           alt={`$product-media-#${index + 1}`}
                         />
                       </figure>
@@ -96,7 +93,7 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
                   </td>
                   <td className="py-2 pl-3 text-start ">
                     <p className="bg-slate-500 dark:bg-slate-400 dark:text-black text-white text-center rounded-full px-3 py-[2px] max-w-full truncate">
-                      {product?.category_id?.name}
+                      {product?.category_id.name}
                     </p>
                   </td>
                   <td>
