@@ -2,6 +2,8 @@ import axios from "axios";
 import { API_BASE_URL, ENDPOINTS } from "../services/apiSettings";
 import {
   CategoriesResponse,
+  Category,
+  CategoryResponse,
   Login,
   LoginResponse,
   OneProductResponse,
@@ -86,16 +88,12 @@ const getAllProducts = async (): Promise<ProductsResponse> => {
     throw new Error(error);
   }
 };
-const getProductById = async (
-  id: string,
-  querys: productQueriesParameter
-): Promise<OneProductResponse> => {
+const getProductById = async (id: string): Promise<OneProductResponse> => {
   try {
     const res = await axios({
       method: "GET",
-      baseURL: `${API_BASE_URL}/${id}`,
-      url: ENDPOINTS.products,
-      params: { ...querys },
+      baseURL: API_BASE_URL,
+      url: `${ENDPOINTS.products}/${id}`,
     });
     return res.data;
   } catch (error: any) {
@@ -120,7 +118,7 @@ const addProduct = async (
 
     return res.data;
   } catch (error) {
-    throw error.response.data;
+    throw (error as any).response.data;
   }
 };
 
@@ -150,6 +148,25 @@ const getCategoryById = async (id: string): Promise<CategoriesResponse> => {
     throw new Error(error);
   }
 };
+const addCategory = async (
+  category: Partial<Category>,
+  token: string | undefined
+): Promise<CategoryResponse> => {
+  try {
+    const res = await axios({
+      method: "POST",
+      baseURL: API_BASE_URL,
+      url: ENDPOINTS.category,
+      headers: {
+        Authorization: token,
+      },
+      data: category,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
 
 const uploadProductImage = async (
   imageFile: FormData | null,
@@ -174,6 +191,30 @@ const uploadProductImage = async (
   }
 };
 
+const uploadCategoryImages = async (
+  image: FormData,
+  token: string | undefined
+) => {
+  console.log(image);
+
+  try {
+    const res = await axios({
+      method: "POST",
+      baseURL: API_BASE_URL,
+      url: ENDPOINTS.uploadImage.category,
+      headers: {
+        Authorization: token,
+        // "Content-Type": "application/x-www-form-urlencoded",
+        // "Content-Type": "multipart/form-data",
+      },
+      data: image,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 export {
   accountLogin,
   accountSignup,
@@ -183,5 +224,7 @@ export {
   addProduct,
   getAllCategories,
   getCategoryById,
+  addCategory,
   uploadProductImage,
+  uploadCategoryImages,
 };

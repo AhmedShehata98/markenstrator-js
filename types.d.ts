@@ -114,7 +114,7 @@ type ProductsResponse = {
 
 type OneProductResponse = {
   data: {
-    products: Products;
+    product: Products;
   };
   error: string | null;
   message: string;
@@ -158,5 +158,38 @@ interface UploadProductImageResponse extends ApiResponse {
       url: string;
       filePath: string;
     }[];
+  };
+}
+
+/**
+ *
+ * Categories Types
+ *
+ *
+ */
+
+type CategoryForm = {
+  image: string;
+  description: string;
+  name: string;
+};
+
+type Category = {
+  image: string;
+  description: string;
+  name: string;
+  slug: string;
+  id: string;
+};
+interface CategoryResponse extends ApiResponse {
+  data: { Category: Category };
+}
+
+interface UploadCategoryImageResponse extends ApiResponse {
+  data: {
+    image: {
+      url: string;
+      filePath: string;
+    };
   };
 }

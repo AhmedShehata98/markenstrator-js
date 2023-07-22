@@ -1,10 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
-import { addProduct, uploadProductImage } from "../../../lib/apiMethods";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  addProduct,
+  getProductById,
+  uploadProductImage,
+} from "../../../lib/apiMethods";
 import useGetToken from "../../../Hooks/useGetToken";
 import { Products, UploadProductImageResponse } from "../../../../types";
 import Swal from "sweetalert2";
 import { ImSpinner8 } from "react-icons/im";
 import { useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
 
 type Props = {
   children: React.ReactNode[];
@@ -12,6 +17,7 @@ type Props = {
 
 function AddProductFormWrapper({ children }: Props) {
   const { token } = useGetToken();
+
   const { mutateAsync, isLoading: isLoadingMedia } = useMutation({
     mutationFn: (media: FormData) => uploadProductImage(media!, token!),
     mutationKey: ["media"],
@@ -22,6 +28,14 @@ function AddProductFormWrapper({ children }: Props) {
     mutationKey: ["create-product"],
   });
   const { state: ProductId } = useLocation();
+  const {
+    data: product,
+    isLoading: isLoadingProdById,
+    isSuccess: isSuccessProdById,
+  } = useQuery({
+    queryFn: () => getProductById(ProductId),
+    queryKey: ["product", ProductId],
+  });
 
   const uploadProductImages = async (
     filesList: FormDataEntryValue[]
@@ -65,6 +79,21 @@ function AddProductFormWrapper({ children }: Props) {
     return { formProductData, objectData };
   };
 
+  const setFormFields = (product: Partial<Products>) => {
+    // fd.set("name", product.name!);
+    // fd.set("price", product.price?.toString()!);
+    // fd.set("sku", product.sku!);
+    // fd.set("stock", product.stock?.toString()!);
+    // fd.set("category_id", product.category_id?.name!);
+    // fd.set("discount", product.discount?.toString()!);
+    // fd.set("description", product.description!);
+    // fd.set("specifications", product.specifications!);
+    // fd.set("brand", product.brand!);
+    // fd.set("colors", product.colors!);
+    // fd.set("images", product.images!);
+    // fd.set("thumbnail", product.thumbnail!);
+  };
+
   const sendFullProductData = (productData: Partial<Products>): void => {
     mutate(productData, {
       onError(error) {
@@ -95,18 +124,26 @@ function AddProductFormWrapper({ children }: Props) {
     uploadProductImages(imagesList).then(({ data }) => {
       const newObjectData: Partial<Products> = {
         ...objectData,
-        images: data.images,
+        images: data.images as [],
         thumbnail: data.images[0].url,
       };
       sendFullProductData(newObjectData);
     });
   };
 
+  useEffect(() => {
+    if (isSuccessProdById && !isLoadingProdById) {
+      setFormFields(product.data.product);
+    }
+  }, [isLoadingProdById, isSuccessProdById, product]);
+
   return (
     <form
       action=""
       className="w-full flex flex-row gap-x-12 flex-wrap"
-      onSubmit={handleSubmitProductData}
+      onSubmit={(ev) => {
+        handleSubmitProductData(ev);
+      }}
     >
       {children}
       <button

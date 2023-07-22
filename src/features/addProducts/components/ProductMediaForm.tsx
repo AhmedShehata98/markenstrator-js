@@ -11,10 +11,8 @@ export type ImageData = {
   details: File;
 };
 
-type Props = {
-  imageUrls: React.MutableRefObject<string[]>;
-};
-function ProductMediaForm({ imageUrls }: Props) {
+type Props = {};
+function ProductMediaForm({}: Props) {
   const [mediaList, setMediaList] = useState<ImageData[] | null>(null);
 
   const handleGetImages = (ev: React.ChangeEvent<HTMLInputElement>) => {

@@ -93,7 +93,7 @@ function AllProductsTable({ AllProductsTableData }: AllProductsTableProps) {
                   </td>
                   <td className="py-2 pl-3 text-start ">
                     <p className="bg-slate-500 dark:bg-slate-400 dark:text-black text-white text-center rounded-full px-3 py-[2px] max-w-full truncate">
-                      {product?.category_id.name}
+                      {(product?.category_id as any).name}
                     </p>
                   </td>
                   <td>
