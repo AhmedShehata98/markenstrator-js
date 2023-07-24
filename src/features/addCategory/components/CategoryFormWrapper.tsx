@@ -1,22 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import InputGroup from "../../../components/InputGroup";
 import { BiPlus } from "react-icons/bi";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   Categories,
+  Category,
   CategoryForm,
   UploadCategoryImageResponse,
 } from "../../../../types";
-import { useMutation } from "@tanstack/react-query";
-import { addCategory, uploadCategoryImages } from "../../../lib/apiMethods";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  addCategory,
+  getCategoryById,
+  uploadCategoryImages,
+} from "../../../lib/apiMethods";
 import useGetToken from "../../../Hooks/useGetToken";
 import { ImSpinner8 } from "react-icons/im";
 import Swal from "sweetalert2";
+import { useLocation } from "react-router-dom";
 
 function CategoryFormWrapper() {
-  const { register, watch, resetField, handleSubmit } = useForm<CategoryForm>();
+  const { register, watch, resetField, reset, handleSubmit, setValue } =
+    useForm<CategoryForm>();
   const { token } = useGetToken();
+  const {
+    state: { id: categoryId, updateCategory },
+  } = useLocation();
   const isValidSrc = watch("image")?.length >= 1;
+  const isFile = typeof watch("image") === "object";
   const {
     mutate,
     isLoading: isLoadingCategoryData,
@@ -26,10 +37,14 @@ function CategoryFormWrapper() {
       addCategory(categoryData, token),
     mutationKey: ["add-category"],
   });
-
   const { mutateAsync } = useMutation({
     mutationFn: (image: FormData) => uploadCategoryImages(image, token),
     mutationKey: ["add-category-image"],
+  });
+
+  const { data: categoryData, isSuccess: isSuccessCategory } = useQuery({
+    queryFn: () => getCategoryById(categoryId),
+    queryKey: ["category", categoryId],
   });
 
   const resetThumbnail = () => {
@@ -62,6 +77,7 @@ function CategoryFormWrapper() {
             title: "add category",
             confirmButtonText: "okay",
           });
+          reset();
         },
         onError(data) {
           Swal.fire({
@@ -79,6 +95,19 @@ function CategoryFormWrapper() {
       handleSubmitCategoryData(data, res);
     });
   };
+  const handleSetFieldValues = (category: Category) => {
+    if (Boolean(category)) {
+      setValue("image", category.image);
+      setValue("name", category.name);
+      setValue("description", category.description);
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccessCategory) {
+      handleSetFieldValues(categoryData?.data.categories);
+    }
+  }, [isSuccessCategory]);
 
   return (
     <form
@@ -110,14 +139,16 @@ function CategoryFormWrapper() {
               <figure className="w-32 rounded-full overflow-hidden aspect-square shadow-md border-4 border-violet-600">
                 <img
                   src={
-                    isValidSrc && URL.createObjectURL(watch("image")[0] as any)
+                    isFile
+                      ? URL.createObjectURL(watch("image")[0] as any)
+                      : watch("image")
                   }
                   alt="preview"
                 />
               </figure>
               <span className="flex flex-col items-start gap-3 mx-2 max-md:mt-3">
                 <figcaption className="text-gray-600">
-                  {(watch("image")[0] as any).name}
+                  {isFile && (watch("image")[0] as any).name}
                 </figcaption>
                 <button
                   type="button"
@@ -179,27 +210,29 @@ function CategoryFormWrapper() {
         </button>
       </article>
       <article className="max-md:w-full w-1/3 flex flex-col items-center justify-center">
-        {isValidSrc && (
-          <ul className="max-md:w-full w-3/5 flex flex-col items-center justify-center gap-2 shadow-lg rounded-md border p-4">
-            <li className="w-full overflow-hidden">
-              <figure className="w-full aspect-square rounded-md shadow overflow-hidden">
+        <ul className="max-md:w-full w-3/5 flex flex-col items-center justify-center gap-2 shadow-lg rounded-md border p-4">
+          <li className="w-full overflow-hidden">
+            <figure className="w-full aspect-square rounded-md shadow overflow-hidden">
+              {isValidSrc && (
                 <img
                   src={
-                    isValidSrc && URL.createObjectURL(watch("image")[0] as any)
+                    isFile
+                      ? URL.createObjectURL(watch("image")[0] as any)
+                      : watch("image")
                   }
                   alt="category-img-preview"
-                  className="max-w-full object-cover"
+                  className="w-full object-cover"
                 />
-              </figure>
-            </li>
-            <li className="text-gray-800 font-semibold capitalize mt-6">
-              <h4>{watch("name")}</h4>
-            </li>
-            <li>
-              <h4 className="text-gray-600 ">{watch("description")}</h4>
-            </li>
-          </ul>
-        )}
+              )}
+            </figure>
+          </li>
+          <li className="text-gray-800 font-semibold capitalize mt-6">
+            <h4>{watch("name")}</h4>
+          </li>
+          <li>
+            <h4 className="text-gray-600 ">{watch("description")}</h4>
+          </li>
+        </ul>
       </article>
     </form>
   );

@@ -1,7 +1,4 @@
-import React from "react";
 import CategoryFormWrapper from "../features/addCategory/components/CategoryFormWrapper";
-import InputGroup from "../components/InputGroup";
-import { BiPlus } from "react-icons/bi";
 
 const AddCategory = () => {
   return (

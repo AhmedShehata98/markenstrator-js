@@ -6,6 +6,8 @@ import Swal, { SweetAlertResult } from "sweetalert2";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCategory } from "../../../lib/apiMethods";
 import useGetToken from "../../../Hooks/useGetToken";
+import { useNavigate } from "react-router-dom";
+import { routesList } from "../../../Router/RoutesList";
 
 type Props = {
   category?: Categories;
@@ -13,6 +15,7 @@ type Props = {
 function CategoryItem({ category }: Props) {
   const { token } = useGetToken();
   const { invalidateQueries } = useQueryClient();
+  const navigate = useNavigate();
   const { mutate } = useMutation({
     mutationFn: (id: string | undefined) => deleteCategory(id, token),
     mutationKey: ["delete-category"],
@@ -37,6 +40,10 @@ function CategoryItem({ category }: Props) {
     });
   };
 
+  const handleEdit = (id: string | undefined) => {
+    navigate(routesList.addCategory, { state: { id, updateCategory: true } });
+  };
+
   return (
     <li className="category-card">
       <div className="flex items-center justify-center gap-4">
@@ -53,7 +60,10 @@ function CategoryItem({ category }: Props) {
         </div>
       </div>
       <div className="w-full flex items-center justify-between gap-2">
-        <button className="max-md:w-full w-1/2 flex items-center justify-center bg-gray-400 py-2 rounded hover:bg-gray-300">
+        <button
+          onClick={() => handleEdit(category?._id)}
+          className="max-md:w-full w-1/2 flex items-center justify-center bg-gray-400 py-2 rounded hover:bg-gray-300"
+        >
           <BiEdit />
         </button>
         <button

@@ -145,29 +145,6 @@ type Categories = {
   slug: string;
 };
 
-/**
- *
- *
- * Uploads Types
- *
- */
-
-interface UploadProductImageResponse extends ApiResponse {
-  data: {
-    images: {
-      url: string;
-      filePath: string;
-    }[];
-  };
-}
-
-/**
- *
- * Categories Types
- *
- *
- */
-
 type CategoryForm = {
   image: string;
   description: string;
@@ -182,7 +159,22 @@ type Category = {
   id: string;
 };
 interface CategoryResponse extends ApiResponse {
-  data: { Category: Category };
+  data: { categories: Category };
+}
+/**
+ *
+ *
+ * Uploads Types
+ *
+ */
+
+interface UploadProductImageResponse extends ApiResponse {
+  data: {
+    images: {
+      url: string;
+      filePath: string;
+    }[];
+  };
 }
 
 interface UploadCategoryImageResponse extends ApiResponse {

@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import CartegoriesCards from "../components/CartegoriesCards";
 import SectionHeader from "../components/SectionHeader";
 import { routesList } from "../Router/RoutesList";
-import { CategoryiesList } from "../Utilities/dummyData";
 import CategoriesList from "../features/category/components/CategoriesList";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "../lib/apiMethods";
@@ -63,13 +61,6 @@ const Categories = () => {
         <CategoriesList categories={categoryResponse?.data.categories}>
           <CategoryItem />
         </CategoriesList>
-        {/* <CartegoriesCards
-          categoriesData={CategoryiesList.filter((category) =>
-            category["category-name"]
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-          )}
-        /> */}
       </section>
     </main>
   );

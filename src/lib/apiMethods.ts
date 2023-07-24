@@ -136,12 +136,12 @@ const getAllCategories = async (): Promise<CategoriesResponse> => {
     throw new Error(error);
   }
 };
-const getCategoryById = async (id: string): Promise<CategoriesResponse> => {
+const getCategoryById = async (id: string): Promise<CategoryResponse> => {
   try {
     const res = await axios({
       method: "GET",
-      baseURL: `${API_BASE_URL}/${id}`,
-      url: ENDPOINTS.category,
+      baseURL: API_BASE_URL,
+      url: `${ENDPOINTS.category}/${id}`,
     });
 
     return res.data;
