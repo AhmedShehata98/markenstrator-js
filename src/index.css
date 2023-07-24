@@ -272,5 +272,11 @@
   .image-add-btn {
     @apply w-32 flex flex-col items-center gap-2 border-2 border-dashed border-gray-800;
   }
+  .category-list {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full;
+  }
+  .category-card {
+    @apply flex items-center justify-center flex-col gap-3 rounded shadow border bg-gray-100 p-3;
+  }
 }
 @tailwind utilities;

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL, ENDPOINTS } from "../services/apiSettings";
 import {
+  ApiResponse,
   CategoriesResponse,
   Category,
   CategoryResponse,
@@ -167,6 +168,22 @@ const addCategory = async (
     throw new Error(error);
   }
 };
+const deleteCategory = async (
+  id: string | undefined,
+  token: string | undefined
+): Promise<ApiResponse> => {
+  try {
+    const res = await axios({
+      method: "DELETE",
+      baseURL: API_BASE_URL,
+      url: `${ENDPOINTS.category}/${id}`,
+      headers: { Authorization: token },
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
 
 const uploadProductImage = async (
   imageFile: FormData | null,
@@ -225,6 +242,7 @@ export {
   getAllCategories,
   getCategoryById,
   addCategory,
+  deleteCategory,
   uploadProductImage,
   uploadCategoryImages,
 };

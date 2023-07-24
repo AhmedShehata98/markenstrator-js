@@ -8,7 +8,7 @@ type CartegoriesCardsProps = {
 const CartegoriesCards = ({ categoriesData }: CartegoriesCardsProps) => {
   return (
     <article className="w-full flex items-start justify-start my-4">
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+      <ul>
         {Array.isArray(categoriesData) &&
           categoriesData &&
           categoriesData.map((category) => {

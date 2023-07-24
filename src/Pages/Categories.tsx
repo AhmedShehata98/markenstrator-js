@@ -3,11 +3,20 @@ import CartegoriesCards from "../components/CartegoriesCards";
 import SectionHeader from "../components/SectionHeader";
 import { routesList } from "../Router/RoutesList";
 import { CategoryiesList } from "../Utilities/dummyData";
+import CategoriesList from "../features/category/components/CategoriesList";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCategories } from "../lib/apiMethods";
+import CategoryItem from "../features/category/components/CategoryItem";
 
 const Categories = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const CategoriesRef = useRef<HTMLElement | null>(null);
   let timeout: ReturnType<typeof setTimeout>;
+  const { data: categoryResponse } = useQuery({
+    queryFn: getAllCategories,
+    queryKey: ["categories"],
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
     timeout = setTimeout(() => {
@@ -51,13 +60,16 @@ const Categories = () => {
             <i className="fi fi-rr-search leading-3 dark:text-white"></i>
           </form>
         </SectionHeader>
-        <CartegoriesCards
+        <CategoriesList categories={categoryResponse?.data.categories}>
+          <CategoryItem />
+        </CategoriesList>
+        {/* <CartegoriesCards
           categoriesData={CategoryiesList.filter((category) =>
             category["category-name"]
               .toLowerCase()
               .includes(searchQuery.toLowerCase())
           )}
-        />
+        /> */}
       </section>
     </main>
   );
