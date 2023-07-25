@@ -1,24 +1,25 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import AllProductsTable from "../components/AllProductsTable";
-import AllProductsCards from "../components/AllProductsCards";
+import { useNavigate } from "react-router-dom";
+import ProductsTableList from "../components/ProductsTableList";
+import ProductsGrid from "../components/ProductsGrid";
 import SectionHeader from "../components/SectionHeader";
 import { routesList } from "../Router/RoutesList";
-import { productsDataList } from "../Utilities/dummyData";
 import { useAppDispatch } from "../Redux/ReduxHooks";
 import { SET_ADD_PRODUCT_INITIAL_STATE } from "../Redux/Slice/AppSlice";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProducts } from "../lib/apiMethods";
+import ProductTableItem from "../features/addProducts/components/ProductTableItem";
+import ProductsGridList from "../components/ProductsGridList";
+import { BsGrid3X3GapFill } from "react-icons/bs";
+import { FaList } from "react-icons/fa";
 
 const AllProducts = () => {
   const [documentWidth, setDocumentWidth] = useState<number>(window.innerWidth);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [viewMethod, setViewMethod] = useState<string>("grid");
+  const [viewMethod, setViewMethod] = useState<"grid" | "list">("grid");
   const {
     data: products,
-    error,
-    isError,
     isLoading,
     isSuccess,
   } = useQuery(["all-products"], getAllProducts);
@@ -56,20 +57,8 @@ const AllProducts = () => {
     navigate(routesList.addProducts);
   };
 
-  const handletoggleview = (ev: React.MouseEvent) => {
-    const element = ev.target as HTMLElement;
-    const iconsArr = element.children;
-    const currentView = element.getAttribute("data-view") as string;
-    Array.from(iconsArr).forEach((icon) => {
-      if (icon.classList.contains("fi-sr-grid")) {
-        icon.classList.replace("fi-sr-grid", "fi-sr-list");
-        element.setAttribute("data-view", "list");
-      } else {
-        icon.classList.replace("fi-sr-list", "fi-sr-grid");
-        element.setAttribute("data-view", "grid");
-      }
-    });
-    setViewMethod(currentView);
+  const handletoggleview = () => {
+    setViewMethod((prev) => (prev === "grid" ? "list" : "grid"));
   };
 
   const AllProductsRef = useRef<HTMLElement | null>(null);
@@ -132,22 +121,31 @@ const AllProducts = () => {
           <span
             className="grid place-content-center h-full w-9  shadow border border-violet-400 cursor-pointer"
             data-view="grid"
-            onClick={(ev: React.MouseEvent) => handletoggleview(ev)}
+            onClick={() => handletoggleview()}
           >
-            {documentWidth <= 992 ? (
-              <i className="fi fi-sr-list font-bold leading-3 text-violet-700 pointer-events-none select-none"></i>
-            ) : (
-              <i className="fi fi-sr-grid font-bold leading-3 text-violet-700 pointer-events-none select-none"></i>
+            {viewMethod === "grid" && (
+              <BsGrid3X3GapFill className="text-xl text-violet-700 pointer-events-none select-none" />
+            )}
+            {viewMethod === "list" && (
+              <FaList className="text-xl text-violet-700 pointer-events-none select-none" />
             )}
           </span>
         </SectionHeader>
-        {viewMethod === "list" ? (
-          <AllProductsTable
-            AllProductsTableData={products?.data.products ?? []}
-          />
-        ) : (
-          <AllProductsCards AllProductsCards={products?.data.products ?? []} />
-        )}
+
+        <ProductsTableList
+          productsData={products?.data.products ?? []}
+          apiCallState={{ isLoading, isSuccess }}
+          productsView={viewMethod}
+        >
+          <ProductTableItem />
+        </ProductsTableList>
+        <ProductsGridList
+          productsData={products?.data.products ?? []}
+          apiCallState={{ isLoading, isSuccess }}
+          productsView={viewMethod}
+        >
+          <ProductsGrid />
+        </ProductsGridList>
       </section>
     </main>
   );

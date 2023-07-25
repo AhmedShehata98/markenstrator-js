@@ -278,5 +278,8 @@
   .category-card {
     @apply flex items-center justify-center flex-col gap-3 rounded shadow border bg-gray-100 p-3;
   }
+  .product-table-list {
+    @apply mt-8 mb-2 px-2 pb-2 flex flex-col items-start justify-center w-full border dark:border-zinc-400 bg-gray-100 dark:bg-zinc-700;
+  }
 }
 @tailwind utilities;

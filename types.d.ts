@@ -77,12 +77,10 @@ type Products = {
   price: number;
   images: Array<string>;
   thumbnail: string;
-  category_id:
-    | {
-        _id: string;
-        name: string;
-      }
-    | string;
+  category_id: {
+    _id: string;
+    name: string;
+  };
   sku: string;
   brand: string;
   colors: Array<string>;
