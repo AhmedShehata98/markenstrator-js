@@ -41,7 +41,9 @@ function CategoryItem({ category }: Props) {
   };
 
   const handleEdit = (id: string | undefined) => {
-    navigate(routesList.addCategory, { state: { id, updateCategory: true } });
+    navigate(routesList.addCategory, {
+      state: { categoryId: id, updateCategory: true },
+    });
   };
 
   return (

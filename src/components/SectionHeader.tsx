@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 type SectionHeaderProps = {
   title: string;
   children?: React.ReactNode;
-  to: string;
+  to?: string;
   buttonTitle: string;
   onClick?: React.MouseEventHandler;
 };
@@ -22,14 +22,13 @@ const SectionHeader = ({
       </h3>
       <nav className="flex gap-3 h-8">
         {children}
-        <NavLink
+        <button
           className="flex items-center justify-center gap-3 font-medium capitalize text-sm bg-violet-500 hover:bg-violet-400 dark:hover:bg-violet-200 dark:bg-violet-300 dark:text-black text-white px-4 h-full rounded shadow"
-          to={to}
           onClick={onClick}
         >
           <i className="fi fi-sr-plus leading-3 select-none pointer-events-none"></i>
           <p>{buttonTitle}</p>
-        </NavLink>
+        </button>
       </nav>
     </header>
   );

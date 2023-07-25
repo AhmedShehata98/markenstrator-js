@@ -5,12 +5,18 @@ import CategoriesList from "../features/category/components/CategoriesList";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "../lib/apiMethods";
 import CategoryItem from "../features/category/components/CategoryItem";
+import { useNavigate } from "react-router-dom";
 
 const Categories = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const CategoriesRef = useRef<HTMLElement | null>(null);
+  const navigator = useNavigate();
   let timeout: ReturnType<typeof setTimeout>;
-  const { data: categoryResponse } = useQuery({
+  const {
+    data: categoryResponse,
+    isLoading,
+    isSuccess,
+  } = useQuery({
     queryFn: getAllCategories,
     queryKey: ["categories"],
     refetchOnWindowFocus: false,
@@ -31,6 +37,11 @@ const Categories = () => {
       );
     };
   }, []);
+
+  const handleNavigateToAddCategory = () => {
+    navigator(routesList.addCategory, { state: { updateCategory: false } });
+  };
+
   return (
     <main
       ref={CategoriesRef}
@@ -41,7 +52,7 @@ const Categories = () => {
         <SectionHeader
           buttonTitle="add category"
           title="categories"
-          to={routesList.addCategory}
+          onClick={handleNavigateToAddCategory}
         >
           <form className="flex items-center h-full bg-zinc-100 dark:bg-zinc-700 border border-slate-300 dark:border-slate-400 rounded px-3 py-1">
             <input
@@ -58,7 +69,10 @@ const Categories = () => {
             <i className="fi fi-rr-search leading-3 dark:text-white"></i>
           </form>
         </SectionHeader>
-        <CategoriesList categories={categoryResponse?.data.categories}>
+        <CategoriesList
+          categories={categoryResponse?.data.categories}
+          apiCallState={{ isLoading, isSuccess }}
+        >
           <CategoryItem />
         </CategoriesList>
       </section>

@@ -1,13 +1,19 @@
 import React from "react";
 import { Categories } from "../../../../types";
+import { ImSpinner8 } from "react-icons/im";
 
 type Props = {
   children: React.ReactNode | React.ReactNode[];
   categories: Categories[] | undefined;
+  apiCallState: { isLoading: boolean; isSuccess: boolean };
 };
-function CategoriesList(props: Props) {
+function CategoriesList({
+  children,
+  categories,
+  apiCallState: { isLoading, isSuccess },
+}: Props) {
   const renderChildrenElements = (category: Categories) =>
-    React.Children.map(props.children as any, (child: React.ReactElement) =>
+    React.Children.map(children as any, (child: React.ReactElement) =>
       React.cloneElement(child, {
         key: category._id,
         category,
@@ -15,7 +21,15 @@ function CategoriesList(props: Props) {
     );
   return (
     <ul className="category-list">
-      {props.categories?.map((category) => renderChildrenElements(category))}
+      {isSuccess &&
+        !isLoading &&
+        categories?.map((category) => renderChildrenElements(category))}
+      {isLoading && (
+        <span>
+          <ImSpinner8 className="inline-block text-xl animate-spin" />
+          <p>processing ...</p>
+        </span>
+      )}
     </ul>
   );
 }
