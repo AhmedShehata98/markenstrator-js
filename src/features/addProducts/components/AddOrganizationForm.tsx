@@ -1,7 +1,12 @@
 import React from "react";
 import InputGroup from "../../../components/InputGroup";
+import { UseFormRegister } from "react-hook-form";
+import { ProductForm } from "../../../../types";
 
-function AddOrganizationForm() {
+type Props = {
+  register: UseFormRegister<ProductForm>;
+};
+function AddOrganizationForm({ register }: Props) {
   return (
     <div className="w-full flex flex-col items-center justify-between gap-3">
       <InputGroup dir="col" width={"100%"}>
@@ -11,7 +16,7 @@ function AddOrganizationForm() {
         <input
           className="form-input"
           type="text"
-          name="deliveryCost"
+          {...register("deliveryCost")}
           id="deliveryCost"
           defaultValue={0}
           placeholder="delivery Cost ...."
@@ -24,7 +29,7 @@ function AddOrganizationForm() {
         <input
           className="form-input"
           type="text"
-          name="brand"
+          {...register("brand")}
           id="brand"
           placeholder="brand ...."
         />

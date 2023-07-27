@@ -125,6 +125,22 @@ type productQueriesParameter = {
   parts?: "pagination" | "filter" | "pagination,filter" = "pagination,filter";
 };
 
+type ProductForm = {
+  name: string;
+  sku: string;
+  price: number;
+  stock: number;
+  category_id: string;
+  discount: number;
+  description: string;
+  specifications: string;
+  images: Array<string> | FileList | File[];
+  thumbnail: string;
+  deliveryCost: string;
+  brand: string;
+  colors: Array<string>;
+};
+
 /**
  *
  *
@@ -168,10 +184,7 @@ interface CategoryResponse extends ApiResponse {
 
 interface UploadProductImageResponse extends ApiResponse {
   data: {
-    images: {
-      url: string;
-      filePath: string;
-    }[];
+    images: ProductUploadImage[];
   };
 }
 
@@ -183,3 +196,8 @@ interface UploadCategoryImageResponse extends ApiResponse {
     };
   };
 }
+
+type ProductUploadImage = {
+  url: string;
+  filePath: string;
+};

@@ -1,12 +1,8 @@
-import React, { useLayoutEffect, useRef } from "react";
-import { Link, redirect, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../Redux/ReduxHooks";
-import { IAllProductsData } from "../Types/pages-types";
-import { SET_ADD_PRODUCT_INITIAL_STATE } from "../Redux/Slice/AppSlice";
-import { nanoid } from "@reduxjs/toolkit";
-import { routesList } from "../Router/RoutesList";
-import { Products } from "../../types";
+import React from "react";
 import { ImSpinner8 } from "react-icons/im";
+import { routesList } from "../../../Router/RoutesList";
+import { Products } from "../../../../types";
+routesList;
 type Props = {
   productsData: Products[];
   children?: React.ReactNode;
@@ -54,7 +50,10 @@ function ProductsTableList({
             !isLoading &&
             productsData.map((product) => renderChildren(product))}
           {isLoading && (
-            <ImSpinner8 className="inline-block animate-spin text-xl" />
+            <span className="absolute left-1/2 top-1/2 flex flex-col items-center gap-3">
+              <ImSpinner8 className="inline-block animate-spin text-3xl" />
+              <p className="text-gray-600 capitalize">processing ...</p>
+            </span>
           )}
         </tbody>
       </table>

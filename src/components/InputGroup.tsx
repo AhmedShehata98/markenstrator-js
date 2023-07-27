@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 type Props = {
   dir: "col" | "row";
-  children: ReactNode[];
+  children: ReactNode | ReactNode[];
   width: string | number;
   extraClassName?: string;
 };

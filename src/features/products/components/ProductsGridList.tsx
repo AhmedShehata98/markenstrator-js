@@ -1,6 +1,6 @@
 import React from "react";
-import { Products } from "../../types";
 import { ImSpinner8 } from "react-icons/im";
+import { Products } from "../../../../types";
 
 type Props = {
   productsData: Products[];
@@ -31,7 +31,10 @@ function ProductsGridList({
         !isLoading &&
         productsData.map((product) => renderChildren(product))}
       {isLoading && (
-        <ImSpinner8 className="inline-block animate-spin text-xl" />
+        <span className="absolute left-1/2 top-1/2 flex flex-col items-center gap-3">
+          <ImSpinner8 className="inline-block animate-spin text-3xl" />
+          <p className="text-gray-600 capitalize">processing ...</p>
+        </span>
       )}
     </ul>
   );

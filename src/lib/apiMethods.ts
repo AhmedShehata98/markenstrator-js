@@ -8,6 +8,7 @@ import {
   Login,
   LoginResponse,
   OneProductResponse,
+  ProductForm,
   Products,
   ProductsResponse,
   Signup,
@@ -102,7 +103,7 @@ const getProductById = async (id: string): Promise<OneProductResponse> => {
   }
 };
 const addProduct = async (
-  product: Partial<Products>,
+  product: ProductForm,
   token: string | undefined
 ): Promise<OneProductResponse> => {
   try {

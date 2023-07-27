@@ -1,90 +1,94 @@
 import { useRef, useState } from "react";
 import InputGroup from "../../../components/InputGroup";
 import { MdOutlineAdd } from "react-icons/md";
+import { ProductForm } from "../../../../types";
+import {
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
+import { BsFillTrashFill } from "react-icons/bs";
+import { RxDotFilled } from "react-icons/rx";
 
-function ProductColorsForm() {
-  const colorElementRef = useRef<HTMLInputElement | null>(null);
-  const [colors, setColors] = useState([
-    {
-      color: "#000",
-      isSelected: true,
-    },
-  ]);
+type Props = {
+  setValue: UseFormSetValue<ProductForm>;
+  register: UseFormRegister<ProductForm>;
+  watch: UseFormWatch<ProductForm>;
+};
+function ProductColorsForm({ setValue, watch, register }: Props) {
+  const colorsElement = useRef<HTMLInputElement | null>(null);
+  const colorsList = useRef(new Set());
 
-  // const handleGetColor = (ev: React.ChangeEvent<HTMLInputElement>) => {
-  //   const color = ev.target.value;
-
-  // };
-
-  const handleAddColor = () => {
-    const selectedColor = colorElementRef.current?.value as string;
-    setColors((prevColor) => [
-      ...prevColor,
-      { color: selectedColor, isSelected: true },
-    ]);
+  const addToFormValues = (
+    colorsList: React.MutableRefObject<Set<unknown>>
+  ) => {
+    const values = Array.from(colorsList.current) as Array<string>;
+    setValue("colors", values);
+    return values;
   };
 
-  const handleSelectColor = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    const targetColor = ev.currentTarget.value;
-    const newColors = colors.map((item) =>
-      item.color === targetColor
-        ? { ...item, isSelected: !item.isSelected }
-        : { ...item }
-    );
-    setColors(newColors);
+  const handleAddToColorsList = () => {
+    colorsList.current.add(colorsElement.current?.value);
+    const values = addToFormValues(colorsList);
+    setValue("colors", values);
   };
 
+  const handleRemoveFromColorsList = (color: string) => {
+    colorsList.current.delete(color);
+    addToFormValues(colorsList);
+  };
+
+  watch("colors");
   return (
-    <InputGroup dir="col" width={"100%"}>
-      <span className="w-max flex items-center justify-center gap-2 my-2">
+    <div>
+      <InputGroup
+        dir="row"
+        width={"100%"}
+        extraClassName="justify-between mt-3"
+      >
         <label htmlFor="colors" className="form-label">
-          colors
+          select color
         </label>
-        <input ref={colorElementRef} type="color" name="colorsa" width={600} />
+        <input
+          ref={colorsElement}
+          type="color"
+          name="color-select"
+          id="colors"
+          width={600}
+        />
+      </InputGroup>
+      <InputGroup dir="row" width={"100%"}>
         <button
           type="button"
-          className="flex items-center justify-center bg-violet-600 text-white px-4 py-1 rounded-full "
-          onClick={handleAddColor}
+          className="submit-btn mt-2"
+          onClick={handleAddToColorsList}
         >
-          <MdOutlineAdd />
-          <p>add</p>
+          add to list
         </button>
-      </span>
-      <hr />
-      <span className="flex items-center justify-start flex-col gap-3 self-start mt-3">
-        <p className="font-medium capitalize text-gray-600 text-sm self-start">
-          slected colors list :
-        </p>
-        <ul className="max-w-full h-8 flex flex-wrap gap-4 self-start">
-          {colors &&
-            colors.map(({ color, isSelected }) => (
-              <li
-                key={color}
-                className="flex items-center justify-center gap-3"
+      </InputGroup>
+      <InputGroup dir="col" width={"100%"}>
+        <h4>colors List :</h4>
+        <ul>
+          {Array.from(colorsList.current).map((color) => (
+            <span className="w-max flex items-center justify-center gap-4 border shadow-md bg-gray-50 px-3 py-1 ">
+              <RxDotFilled />
+              <label
+                htmlFor={color as string}
+                className="form-label w-16 h-5 inline-block rounded-xl border border-gray-500"
+                style={{ backgroundColor: color as string }}
+              ></label>
+              <button
+                type="button"
+                className="bg-red-300 p-1.5 text-red-700 hover:bg-red-400"
+                onClick={() => handleRemoveFromColorsList(color as string)}
               >
-                <input
-                  type="checkbox"
-                  name="colors"
-                  id={`color-${color}`}
-                  checked={isSelected}
-                  value={color}
-                  onChange={handleSelectColor}
-                />
-                <label
-                  htmlFor={`color-${color}`}
-                  className="flex items-center justify-center text-sm capitalize gap-2"
-                >
-                  <p>color : </p>
-                  <span
-                    className="w-10 h-5 rounded-md shadow-lg"
-                    style={{ background: color }}
-                  ></span>
-                </label>
-              </li>
-            ))}
+                <BsFillTrashFill />
+              </button>
+            </span>
+          ))}
         </ul>
-      </span>
-    </InputGroup>
+      </InputGroup>
+    </div>
   );
 }
 

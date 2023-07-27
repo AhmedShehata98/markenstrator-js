@@ -1,11 +1,14 @@
 import React from "react";
+import { UseFormRegister } from "react-hook-form";
 import { BiPlus } from "react-icons/bi";
+import { ProductForm } from "../../../../types";
 
 type Props = {
   handleOnSelect: React.ChangeEventHandler<HTMLInputElement>;
   imagesLength: number;
+  register: UseFormRegister<ProductForm>;
 };
-function SelectImageBtn({ handleOnSelect, imagesLength }: Props) {
+function SelectImageBtn({ handleOnSelect, imagesLength, register }: Props) {
   return (
     <li className={`${imagesLength >= 6 && "hidden"} image-add-btn`}>
       <label
@@ -16,7 +19,7 @@ function SelectImageBtn({ handleOnSelect, imagesLength }: Props) {
       </label>
       <input
         type="file"
-        name="images"
+        {...register("images")}
         id="product-image"
         hidden
         onChange={handleOnSelect}

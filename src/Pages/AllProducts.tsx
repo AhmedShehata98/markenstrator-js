@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProductsTableList from "../components/ProductsTableList";
-import ProductsGrid from "../components/ProductsGrid";
+import ProductsTableList from "../features/products/components/ProductsTableList";
+import ProductsGridItem from "../features/products/components/ProductsGridItem";
 import SectionHeader from "../components/SectionHeader";
 import { routesList } from "../Router/RoutesList";
 import { useAppDispatch } from "../Redux/ReduxHooks";
@@ -9,7 +9,7 @@ import { SET_ADD_PRODUCT_INITIAL_STATE } from "../Redux/Slice/AppSlice";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProducts } from "../lib/apiMethods";
 import ProductTableItem from "../features/addProducts/components/ProductTableItem";
-import ProductsGridList from "../components/ProductsGridList";
+import ProductsGridList from "../features/products/components/ProductsGridList";
 import { BsGrid3X3GapFill } from "react-icons/bs";
 import { FaList } from "react-icons/fa";
 
@@ -144,7 +144,7 @@ const AllProducts = () => {
           apiCallState={{ isLoading, isSuccess }}
           productsView={viewMethod}
         >
-          <ProductsGrid />
+          <ProductsGridItem />
         </ProductsGridList>
       </section>
     </main>

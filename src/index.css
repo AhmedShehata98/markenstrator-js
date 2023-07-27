@@ -281,5 +281,11 @@
   .product-table-list {
     @apply mt-8 mb-2 px-2 pb-2 flex flex-col items-start justify-center w-full border dark:border-zinc-400 bg-gray-100 dark:bg-zinc-700;
   }
+  .dropdown-menu {
+    @apply absolute top-6 right-2 z-20 w-3/4 bg-gray-50 shadow-lg border-2 transition-all duration-500;
+  }
+  .dropdown-menu-show {
+    @apply !translate-y-0 !scale-100 !opacity-100;
+  }
 }
 @tailwind utilities;

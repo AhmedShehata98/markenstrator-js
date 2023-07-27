@@ -1,16 +1,16 @@
-import { nanoid } from "@reduxjs/toolkit";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../Redux/ReduxHooks";
-import { SET_ADD_PRODUCT_INITIAL_STATE } from "../Redux/Slice/AppSlice";
-import { routesList } from "../Router/RoutesList";
-import { Products } from "../../types";
-
+import { useAppDispatch } from "../../../Redux/ReduxHooks";
+import { routesList } from "../../../Router/RoutesList";
+import { Products } from "../../../../types";
+import DropdownMenu from "../../../components/DropdownMenu";
+import { FiEdit } from "react-icons/fi";
+import { IoTrashOutline } from "react-icons/io5";
 type Props = {
   product?: Products;
 };
 
-const ProductsGrid = ({ product }: Props) => {
+const ProductsGridItem = ({ product }: Props) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -27,9 +27,9 @@ const ProductsGrid = ({ product }: Props) => {
   return (
     <li
       key={product?._id}
-      className="p-3 shadow rounded-md border border-gray-200 dark:border-gray-600"
+      className="p-3 rounded-md shadow-md border border-gray-100 dark:border-gray-600"
     >
-      <div className="flex items-center justify-start gap-2 h-16 mb-3">
+      <div className="relative flex items-center justify-start gap-2 h-16 mb-3">
         <figure className="w-16 h-16 rounded-lg overflow-hidden">
           <img
             className="max-w-full rounded-lg"
@@ -64,11 +64,30 @@ const ProductsGrid = ({ product }: Props) => {
         </span>
         <button
           type="button"
-          className="relative grid place-content-center self-start ml-auto cursor-pointer shadow hover:bg-zinc-200 dark:hover:bg-zinc-400 px-2 py-1 border border-zinc-200 dark:border-zinc-400 bg-zinc-100 dark:bg-zinc-500 rounded-md"
+          className="grid place-content-center self-start ml-auto cursor-pointer shadow hover:bg-zinc-200 dark:hover:bg-zinc-400 px-2 py-1 border border-zinc-200 dark:border-zinc-400 bg-zinc-100 dark:bg-zinc-500 rounded-md"
           onClick={(ev: React.MouseEvent) => handleShowOptionsMenu(ev)}
+          id="dropmenu-toggler"
         >
           <i className="fi fi-br-menu-dots leading-3 pointer-events-none select-none"></i>
-          <ul className="pd-card-opt-menu pd-table-opt-menu-hide">
+          <DropdownMenu
+            optionsListData={[
+              {
+                title: "open and Edit",
+                icon: <FiEdit />,
+                onClick: (ev) => {
+                  console.log(ev);
+                },
+              },
+              {
+                title: "move to sold",
+                icon: <IoTrashOutline />,
+                onClick: (ev) => {
+                  console.log(ev);
+                },
+              },
+            ]}
+          />
+          {/* <ul className="pd-card-opt-menu pd-table-opt-menu-hide">
             <li
               className="flex justify-start items-center gap-3 cursor-pointer py-1 px-2 w-32 border-transparent hover:border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={() => handleShowProductDetails(product?._id)}
@@ -96,7 +115,7 @@ const ProductsGrid = ({ product }: Props) => {
                 move sold
               </p>
             </li>
-          </ul>
+          </ul> */}
         </button>
       </div>
       <br />
@@ -135,4 +154,4 @@ const ProductsGrid = ({ product }: Props) => {
   );
 };
 
-export default ProductsGrid;
+export default ProductsGridItem;

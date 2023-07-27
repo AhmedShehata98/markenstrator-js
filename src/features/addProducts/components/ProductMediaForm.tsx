@@ -5,14 +5,23 @@ import SelectImageBtn from "./SelectImageBtn";
 import { useMutation } from "@tanstack/react-query";
 import { uploadProductImage } from "../../../lib/apiMethods";
 import useGetToken from "../../../Hooks/useGetToken";
+import {
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
+import { ProductForm } from "../../../../types";
 
 export type ImageData = {
   url: string;
   details: File;
 };
 
-type Props = {};
-function ProductMediaForm({}: Props) {
+type Props = {
+  register: UseFormRegister<ProductForm>;
+  setValue: UseFormSetValue<ProductForm>;
+};
+function ProductMediaForm({ setValue, register }: Props) {
   const [mediaList, setMediaList] = useState<ImageData[] | null>(null);
 
   const handleGetImages = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,6 +33,7 @@ function ProductMediaForm({}: Props) {
       url: URL.createObjectURL(file),
     }));
     setMediaList(images);
+    setValue("images", files);
   };
 
   return (
@@ -44,6 +54,7 @@ function ProductMediaForm({}: Props) {
       <SelectImageBtn
         imagesLength={mediaList?.length!}
         handleOnSelect={(ev) => handleGetImages(ev)}
+        register={register}
       />
     </ul>
   );
