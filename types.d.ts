@@ -95,7 +95,7 @@ type Products = {
   __v: number;
 };
 
-type ProductsResponse = {
+interface ProductsResponse extends ApiResponse {
   data: {
     products: Array<Products>;
     pagination: {
@@ -106,9 +106,7 @@ type ProductsResponse = {
       currentPage: string;
     };
   };
-  error: string | null;
-  message: string;
-};
+}
 
 type OneProductResponse = {
   data: {
@@ -124,6 +122,10 @@ type productQueriesParameter = {
   q?: string | undefined = undefined;
   parts?: "pagination" | "filter" | "pagination,filter" = "pagination,filter";
 };
+
+interface ProductUpdateResponse extends ApiResponse {
+  data: { product: string };
+}
 
 type ProductForm = {
   name: string;

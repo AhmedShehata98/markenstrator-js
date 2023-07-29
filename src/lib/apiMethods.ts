@@ -9,6 +9,7 @@ import {
   LoginResponse,
   OneProductResponse,
   ProductForm,
+  ProductUpdateResponse,
   Products,
   ProductsResponse,
   Signup,
@@ -121,6 +122,42 @@ const addProduct = async (
     return res.data;
   } catch (error) {
     throw (error as any).response.data;
+  }
+};
+
+const updateProduct = async (
+  product: ProductForm,
+  id: string | undefined,
+  token: string | undefined
+): Promise<ProductUpdateResponse> => {
+  try {
+    const res = await axios({
+      method: "PUT",
+      baseURL: API_BASE_URL,
+      url: `${ENDPOINTS.products}/${id}`,
+      headers: { Authorization: token },
+      data: product,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+const deleteProduct = async (
+  id: string | undefined,
+  token: string | undefined
+): Promise<ApiResponse> => {
+  try {
+    let res = await axios({
+      method: "DELETE",
+      baseURL: API_BASE_URL,
+      url: `${ENDPOINTS.products}/${id}`,
+      headers: { Authorization: token },
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };
 
@@ -240,6 +277,8 @@ export {
   getProductById,
   getAllProducts,
   addProduct,
+  updateProduct,
+  deleteProduct,
   getAllCategories,
   getCategoryById,
   addCategory,

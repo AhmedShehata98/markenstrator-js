@@ -6,6 +6,10 @@ import SidebarNavLink from "./SidebarNavLink";
 import CollapseMenu from "../components/CollapseMenu";
 import { nanoid } from "@reduxjs/toolkit";
 import { routesList } from "../Router/RoutesList";
+import AccordionMenuButton from "./AccordionMenuButton/AccordionMenuButton";
+import AccourdionMenuOption from "./AccordionMenuButton/AccourdionMenuOption";
+import { BsFillBoxSeamFill } from "react-icons/bs";
+import { MdCategory } from "react-icons/md";
 
 const SideMenu = () => {
   const dispatch = useAppDispatch();
@@ -51,56 +55,75 @@ const SideMenu = () => {
         </span>
       </div>
       <nav className="sidebar-navigation">
-        <SidebarNavLink
+        <AccordionMenuButton
+          buttonTitle="overview"
+          mainHref={routesList?.app}
           key={nanoid(3)}
-          icon={<i className="fi fi-sr-apps text-inherit leading-3"></i>}
-          title="overview"
-          to={routesList?.app}
-          end={true}
-        />
-        <SidebarNavLink
-          title="orders"
-          to={routesList?.orders}
+          Icon={<i className="fi fi-sr-apps text-inherit leading-3"></i>}
+        >
+          <AccourdionMenuOption />
+        </AccordionMenuButton>
+        <AccordionMenuButton
+          buttonTitle="orders"
+          mainHref={routesList?.orders}
           key={nanoid(3)}
-          icon={<i className="fi fi-sr-list text-inherit leading-3"></i>}
-        />
-        <CollapseMenu
-          key={nanoid(3)}
-          title="products"
-          to={routesList?.allProducts || "#"}
-          icon={<i className="fi fi-sr-boxes leading-3"></i>}
-          dropdownChildrenData={[
+          Icon={<i className="fi fi-sr-list text-inherit leading-3"></i>}
+        >
+          <AccourdionMenuOption />
+        </AccordionMenuButton>
+        <AccordionMenuButton
+          buttonTitle="products"
+          Icon={<BsFillBoxSeamFill />}
+          menuOptionsData={[
             {
-              id: nanoid(5),
-              title: "all products",
-              to: routesList.allProducts as string,
+              title: "products list",
+              navigateTo: routesList.allProducts,
             },
             {
-              id: nanoid(5),
-              title: "category",
-              to: routesList.category as string,
+              title: "add prodcts",
+              navigateTo: routesList.addProducts,
             },
           ]}
-        />
-
-        <SidebarNavLink
-          key={nanoid(3)}
-          icon={<i className="fi fi-sr-users text-inherit leading-3"></i>}
-          title="users"
-          to={routesList?.users}
-        />
-        <SidebarNavLink
-          key={nanoid(3)}
-          icon={<i className="fi fi-sr-treatment text-inherit leading-3"></i>}
-          title="invoices"
-          to={routesList?.invoices}
-        />
-        <SidebarNavLink
-          key={nanoid(3)}
-          icon={<i className="fi fi-sr-settings text-inherit leading-3"></i>}
-          title="settings"
-          to={routesList?.settings}
-        />
+        >
+          <AccourdionMenuOption />
+        </AccordionMenuButton>
+        <AccordionMenuButton
+          buttonTitle="categories"
+          Icon={<MdCategory />}
+          menuOptionsData={[
+            {
+              title: "categories list",
+              navigateTo: routesList.category,
+            },
+            {
+              title: "add category",
+              navigateTo: `${routesList.category}/${routesList.addCategory}`,
+            },
+          ]}
+        >
+          <AccourdionMenuOption />
+        </AccordionMenuButton>
+        <AccordionMenuButton
+          buttonTitle="users"
+          Icon={<i className="fi fi-sr-users text-inherit leading-3"></i>}
+          mainHref={routesList?.users}
+        >
+          <AccourdionMenuOption />
+        </AccordionMenuButton>
+        <AccordionMenuButton
+          buttonTitle="invoices"
+          Icon={<i className="fi fi-sr-treatment text-inherit leading-3"></i>}
+          mainHref={routesList?.invoices}
+        >
+          <AccourdionMenuOption />
+        </AccordionMenuButton>
+        <AccordionMenuButton
+          buttonTitle="settings"
+          Icon={<i className="fi fi-sr-settings text-inherit leading-3"></i>}
+          mainHref={routesList?.settings}
+        >
+          <AccourdionMenuOption />
+        </AccordionMenuButton>
       </nav>
     </aside>
   );

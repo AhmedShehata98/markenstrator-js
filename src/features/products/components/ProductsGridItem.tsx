@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../Redux/ReduxHooks";
 import { routesList } from "../../../Router/RoutesList";
@@ -6,22 +6,57 @@ import { Products } from "../../../../types";
 import DropdownMenu from "../../../components/DropdownMenu";
 import { FiEdit } from "react-icons/fi";
 import { IoTrashOutline } from "react-icons/io5";
+import useGetProductDetails from "../../addProducts/hooks/useGetProductDetails";
+import { useMutation } from "@tanstack/react-query";
+import { deleteProduct } from "../../../lib/apiMethods";
+import useGetToken from "../../../Hooks/useGetToken";
+import Swal, { SweetAlertResult } from "sweetalert2";
 type Props = {
   product?: Products;
 };
 
 const ProductsGridItem = ({ product }: Props) => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const { token } = useGetToken();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const { getProductDetails } = useGetProductDetails(product?._id);
+  const { mutateAsync: mutateDeleteProductAsync, isSuccess } = useMutation({
+    mutationFn: ({ id }: { id: string | undefined }) =>
+      deleteProduct(id, token),
+    mutationKey: ["delete-product"],
+  });
 
-  const handleShowOptionsMenu = (ev: React.MouseEvent) => {
-    const element = ev.target as HTMLElement;
-    const tRow = element.closest("button") as HTMLButtonElement;
-    const optionMenu = tRow.children[1];
-    optionMenu.classList.toggle("pd-table-opt-menu-hide");
-  };
-  const handleShowProductDetails = (id: string | undefined) => {
-    navigate(routesList.addProducts, { state: id });
+  const handleToggleDropdown = useCallback(
+    (open: boolean) => setShowDropdown(open),
+    []
+  );
+
+  const handleEditProduct = () => getProductDetails();
+  const handleRemoveProduct = (id: string | undefined) => {
+    Swal.fire({
+      title: "Delete Product",
+      text: "are you sure , want to delete this product ?!",
+      confirmButtonText: "delete",
+      showCancelButton: true,
+      cancelButtonText: "cancel",
+    }).then((res: SweetAlertResult) => {
+      if (res.isConfirmed) {
+        mutateDeleteProductAsync({ id })
+          .then((res) =>
+            Swal.fire({
+              title: "Delete Product",
+              text: "Product was deleted Success .",
+              icon: "success",
+            })
+          )
+          .catch((err) => {
+            Swal.fire({
+              title: "Delete Product",
+              text: JSON.stringify(err),
+              icon: "error",
+            });
+          });
+      }
+    });
   };
 
   return (
@@ -53,9 +88,9 @@ const ProductsGridItem = ({ product }: Props) => {
           </small>
           <ul className="flex gap-2 w-fit bg-zinc-100 dark:bg-zinc-600 p-1 mx-1 rounded-lg">
             {product?.colors?.length! > 0 &&
-              product?.colors.map((colors) => (
+              product?.colors.map((colors, index) => (
                 <li
-                  key={colors}
+                  key={index}
                   style={{ backgroundColor: colors }}
                   className={`w-3 aspect-square inline-block rounded-full shadow-md`}
                 ></li>
@@ -65,58 +100,27 @@ const ProductsGridItem = ({ product }: Props) => {
         <button
           type="button"
           className="grid place-content-center self-start ml-auto cursor-pointer shadow hover:bg-zinc-200 dark:hover:bg-zinc-400 px-2 py-1 border border-zinc-200 dark:border-zinc-400 bg-zinc-100 dark:bg-zinc-500 rounded-md"
-          onClick={(ev: React.MouseEvent) => handleShowOptionsMenu(ev)}
+          onClick={() => setShowDropdown((prev) => !prev)}
           id="dropmenu-toggler"
         >
           <i className="fi fi-br-menu-dots leading-3 pointer-events-none select-none"></i>
-          <DropdownMenu
-            optionsListData={[
-              {
-                title: "open and Edit",
-                icon: <FiEdit />,
-                onClick: (ev) => {
-                  console.log(ev);
-                },
-              },
-              {
-                title: "move to sold",
-                icon: <IoTrashOutline />,
-                onClick: (ev) => {
-                  console.log(ev);
-                },
-              },
-            ]}
-          />
-          {/* <ul className="pd-card-opt-menu pd-table-opt-menu-hide">
-            <li
-              className="flex justify-start items-center gap-3 cursor-pointer py-1 px-2 w-32 border-transparent hover:border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => handleShowProductDetails(product?._id)}
-            >
-              <span className="flex justify-center items-center pointer-events-none rounded-full w-6 aspect-square shadow-inner bg-violet-200 text-violet-900">
-                <i className="fi fi-br-vector-alt text-xs"></i>
-              </span>
-              <p className="font-semibold text-gray-600 dark:text-gray-100 text-sm">
-                open
-              </p>
-            </li>
-            <li className="flex justify-start items-center gap-3 cursor-pointer py-1 px-2 w-32 border-transparent hover:border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-              <span className="flex justify-center items-center pointer-events-none rounded-full w-6 aspect-square shadow-inner bg-violet-200 text-violet-900">
-                <i className="fi fi-br-edit leading-3 text-xs"></i>
-              </span>
-              <p className="font-semibold text-gray-600 dark:text-gray-100 text-sm">
-                edit
-              </p>
-            </li>
-            <li className="flex justify-start items-center gap-3 cursor-pointer py-1 px-2 w-32 border-transparent hover:border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-              <span className="flex justify-center items-center pointer-events-none rounded-full w-6 aspect-square shadow-inner bg-red-200 text-red-900">
-                <i className="fi fi-br-trash text-xs"></i>
-              </span>
-              <p className="font-semibold text-gray-600 dark:text-gray-100 text-sm">
-                move sold
-              </p>
-            </li>
-          </ul> */}
         </button>
+        <DropdownMenu
+          isToggled={showDropdown}
+          togglerFn={handleToggleDropdown}
+          optionsListData={[
+            {
+              title: "open and Edit",
+              icon: <FiEdit />,
+              onClick: handleEditProduct,
+            },
+            {
+              title: "move to sold",
+              icon: <IoTrashOutline />,
+              onClick: () => handleRemoveProduct(product?._id),
+            },
+          ]}
+        />
       </div>
       <br />
       <div className="mb-3">

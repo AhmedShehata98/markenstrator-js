@@ -90,24 +90,17 @@ function ProductTableItem({ product }: Props) {
         </button>
         <ul className="pd-table-opt-menu pd-table-opt-menu-hide">
           <li
-            className="flex justify-start items-center gap-3 cursor-pointer py-1 px-2 w-32 border-transparent hover:border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="flex justify-start items-center gap-3 cursor-pointer py-1 px-2 border-transparent hover:border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
             onClick={() => handleShowProductDetails(product?._id)}
           >
             <span className="flex justify-center items-center pointer-events-none rounded-full w-6 aspect-square shadow-inner bg-violet-200 text-violet-900">
               <i className="fi fi-br-vector-alt text-xs"></i>
             </span>
             <p className="font-semibold text-gray-600 dark:text-gray-100 text-sm">
-              open
+              open & edit
             </p>
           </li>
-          <li className="flex justify-start items-center gap-3 cursor-pointer py-1 px-2 w-32 border-transparent hover:border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-            <span className="flex justify-center items-center pointer-events-none rounded-full w-6 aspect-square shadow-inner bg-violet-200 text-violet-900">
-              <i className="fi fi-br-edit leading-3 text-xs"></i>
-            </span>
-            <p className="font-semibold text-gray-600 dark:text-gray-100 text-sm">
-              edit
-            </p>
-          </li>
+
           <li className="flex justify-start items-center gap-3 cursor-pointer py-1 px-2 w-32 border-transparent hover:border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
             <span className="flex justify-center items-center pointer-events-none rounded-full w-6 aspect-square shadow-inner bg-red-200 text-red-900">
               <i className="fi fi-br-trash text-xs"></i>

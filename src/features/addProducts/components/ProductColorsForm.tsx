@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import InputGroup from "../../../components/InputGroup";
 import { MdOutlineAdd } from "react-icons/md";
 import { ProductForm } from "../../../../types";
@@ -9,6 +9,7 @@ import {
 } from "react-hook-form";
 import { BsFillTrashFill } from "react-icons/bs";
 import { RxDotFilled } from "react-icons/rx";
+import { useLocation } from "react-router-dom";
 
 type Props = {
   setValue: UseFormSetValue<ProductForm>;
@@ -17,28 +18,52 @@ type Props = {
 };
 function ProductColorsForm({ setValue, watch, register }: Props) {
   const colorsElement = useRef<HTMLInputElement | null>(null);
-  const colorsList = useRef(new Set());
-
-  const addToFormValues = (
-    colorsList: React.MutableRefObject<Set<unknown>>
-  ) => {
-    const values = Array.from(colorsList.current) as Array<string>;
-    setValue("colors", values);
-    return values;
+  const isAppliedIncomingData = useRef<boolean>(false);
+  const [colorsList, setColorsList] = useState<string[]>([]);
+  const { state } = useLocation();
+  const handleAddToFormValues = () => {
+    setValue("colors", colorsList);
+    return colorsList;
   };
 
+  const isDublicated = (currentColor: string | undefined) =>
+    colorsList.some((prevColor) => prevColor === currentColor);
+
+  const handleSetIncomingColors = useCallback(() => {
+    if (state) {
+      const incomingColorList = watch("colors");
+      if (state?.isUpdateProduct)
+        setColorsList((prev) => [...prev, ...incomingColorList]);
+      isAppliedIncomingData.current = true;
+    }
+  }, [state]);
+
   const handleAddToColorsList = () => {
-    colorsList.current.add(colorsElement.current?.value);
-    const values = addToFormValues(colorsList);
-    setValue("colors", values);
+    const currentColor = colorsElement.current?.value;
+    const isExist = isDublicated(currentColor);
+    if (!isExist && currentColor) {
+      setColorsList((prev) => [...prev, currentColor]);
+      handleAddToFormValues();
+    }
   };
 
   const handleRemoveFromColorsList = (color: string) => {
-    colorsList.current.delete(color);
-    addToFormValues(colorsList);
+    const newColorList = colorsList.filter((prevColor) => prevColor !== color);
+    setColorsList(newColorList);
+    handleAddToFormValues();
   };
 
-  watch("colors");
+  useEffect(() => {
+    const incomingColorList = watch("colors");
+    if (
+      state &&
+      Array.isArray(incomingColorList) &&
+      !isAppliedIncomingData.current
+    ) {
+      handleSetIncomingColors();
+    }
+  }, [state, watch("colors")]);
+
   return (
     <div>
       <InputGroup
@@ -69,8 +94,11 @@ function ProductColorsForm({ setValue, watch, register }: Props) {
       <InputGroup dir="col" width={"100%"}>
         <h4>colors List :</h4>
         <ul>
-          {Array.from(colorsList.current).map((color) => (
-            <span className="w-max flex items-center justify-center gap-4 border shadow-md bg-gray-50 px-3 py-1 ">
+          {colorsList?.map((color, index) => (
+            <span
+              key={index}
+              className="w-max flex items-center justify-center gap-4 border shadow-md bg-gray-50 px-3 py-1 "
+            >
               <RxDotFilled />
               <label
                 htmlFor={color as string}

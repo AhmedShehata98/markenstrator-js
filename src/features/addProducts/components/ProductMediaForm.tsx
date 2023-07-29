@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MdPhotoSizeSelectActual } from "react-icons/md";
 import ImageCard from "./ImageCard";
 import SelectImageBtn from "./SelectImageBtn";
@@ -10,7 +10,8 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-import { ProductForm } from "../../../../types";
+import { ProductForm, ProductUploadImage } from "../../../../types";
+import { useLocation } from "react-router-dom";
 
 export type ImageData = {
   url: string;
@@ -20,9 +21,11 @@ export type ImageData = {
 type Props = {
   register: UseFormRegister<ProductForm>;
   setValue: UseFormSetValue<ProductForm>;
+  watch: UseFormWatch<ProductForm>;
 };
-function ProductMediaForm({ setValue, register }: Props) {
+function ProductMediaForm({ setValue, register, watch }: Props) {
   const [mediaList, setMediaList] = useState<ImageData[] | null>(null);
+  const { state } = useLocation();
 
   const handleGetImages = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(ev.target.files!).slice(0, 6);
@@ -36,10 +39,29 @@ function ProductMediaForm({ setValue, register }: Props) {
     setValue("images", files);
   };
 
+  const createImaegsDataFromUrl = useCallback(() => {
+    if (Array.isArray(watch("images"))) {
+      let newImagesData = (watch("images") as any[])?.map((prod) => ({
+        url: prod.url,
+        details: { name: "NA-NA" },
+      })) as ImageData[];
+
+      setMediaList(newImagesData);
+    }
+  }, [watch("images")]);
+
+  useEffect(() => {
+    if (state) {
+      if (state.isUpdateProduct) {
+        createImaegsDataFromUrl();
+      }
+    }
+  }, [createImaegsDataFromUrl]);
+
   return (
     <ul className="max-w-full flex gap-2 mb-6 overflow-x-auto">
-      {mediaList?.map((image) => (
-        <ImageCard key={image.details.name} image={image} />
+      {mediaList?.map((image, index) => (
+        <ImageCard key={index} image={image} />
       ))}
 
       {mediaList === null && (

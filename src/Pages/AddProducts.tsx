@@ -1,22 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { nanoid } from "@reduxjs/toolkit";
-import { useForm, SubmitHandler, UseFormSetValue } from "react-hook-form";
-import InputWrapper from "../components/InputWrapper";
-import VariantInput from "../components/VariantInput";
-import VariantItem from "../components/VariantItem";
-import MediaInput from "../components/MediaInput";
-import {
-  IClonedVariants,
-  IProductFormData,
-  MediaType,
-  VariantsType,
-} from "../Types/pages-types";
-import { useAppSelector } from "../Redux/ReduxHooks";
-import { Products } from "../../types";
-import AddOrganizationForm from "../features/addProducts/components/AddOrganizationForm";
-import ProductBasicDetailsForm from "../features/addProducts/components/ProductBasicDetailsForm";
-import ProductColorsForm from "../features/addProducts/components/ProductColorsForm";
-import ProductMediaForm from "../features/addProducts/components/ProductMediaForm";
+import React from "react";
 import AddProductFormWrapper from "../features/addProducts/components/AddProductFormWrapper";
 
 const AddProducts = () => {

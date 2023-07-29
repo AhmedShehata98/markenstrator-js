@@ -6,23 +6,18 @@ type Props = {
     icon: React.ReactNode;
     onClick: React.MouseEventHandler;
   }[];
+  isToggled: boolean;
+  togglerFn: (open: boolean) => void;
 };
-function DropdownMenu({ optionsListData }: Props) {
+function DropdownMenu({ optionsListData, isToggled, togglerFn }: Props) {
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
 
-  const handleMouseEvent = (ev: MouseEvent) => {
-    if (
-      (ev.target as HTMLElement).id !== "dropmenu-option"
-      //   (ev.target as HTMLElement).id !== "dropmenu-toggler"
-    ) {
-      dropdownMenuRef.current?.classList.remove(
-        "translate-y-4",
-        "scale-95",
-        "opacity-0"
-      );
-    }
-  };
   useEffect(() => {
+    const handleMouseEvent = (ev: MouseEvent) => {
+      if ((ev.target as HTMLElement).id !== "dropmenu-toggler") {
+        togglerFn(false);
+      }
+    };
     window.document.addEventListener("click", handleMouseEvent);
     return () => {
       window.document.removeEventListener("click", handleMouseEvent);
@@ -36,21 +31,18 @@ function DropdownMenu({ optionsListData }: Props) {
   return (
     <div
       ref={dropdownMenuRef}
-      className="dropdown-menu translate-y-4 scale-95 opacity-0"
+      className={`dropdown-menu ${isToggled ? "dropdown-menu-show" : null}`}
     >
-      <ul className="w-full flex flex-col items-start justify-center gap-1 p-1 divide-y-2">
+      <ul className="dropdown-list-options">
         {optionsListData.map((li) => (
           <li
+            key={li.title}
             id="dropmenu-option"
-            className="w-full flex gap-3 items-center justify-start p-2 hover:bg-gray-300"
+            className="dropdown-option"
             onClick={li.onClick}
           >
-            <span className="w-7 h-7 flex items-center justify-center bg-violet-300 rounded-full pointer-events-none">
-              {li.icon}
-            </span>
-            <p className="text-gray-700 font-medium text-sm capitalize">
-              {li.title}
-            </p>
+            <span className="dropdown-icon">{li.icon}</span>
+            <p className="dropdown-title">{li.title}</p>
           </li>
         ))}
       </ul>

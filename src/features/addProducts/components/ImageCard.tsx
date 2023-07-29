@@ -10,7 +10,7 @@ type Props = {
 };
 function ImageCard({ image: { url, details } }: Props) {
   return (
-    <li key={details.name} className="relative">
+    <li key={url} className="relative">
       <picture className="flex justify-center w-32 h-36 overflow-hidden rounded-t">
         <img
           src={url}
