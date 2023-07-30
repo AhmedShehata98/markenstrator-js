@@ -5,6 +5,7 @@ import {
   CategoriesResponse,
   Category,
   CategoryResponse,
+  Id,
   Login,
   LoginResponse,
   OneProductResponse,
@@ -15,6 +16,7 @@ import {
   Signup,
   SignupError,
   SignupResponse,
+  Token,
   UploadProductImageResponse,
   UserDataResponse,
   productQueriesParameter,
@@ -61,9 +63,7 @@ const accountSignup = async ({
     throw error.response.data;
   }
 };
-const getUserData = async (
-  token: string | undefined
-): Promise<UserDataResponse> => {
+const getUserData = async (token: Token): Promise<UserDataResponse> => {
   try {
     const res = await axios({
       method: "GET",
@@ -105,7 +105,7 @@ const getProductById = async (id: string): Promise<OneProductResponse> => {
 };
 const addProduct = async (
   product: ProductForm,
-  token: string | undefined
+  token: Token
 ): Promise<OneProductResponse> => {
   try {
     const res = await axios({
@@ -127,8 +127,8 @@ const addProduct = async (
 
 const updateProduct = async (
   product: ProductForm,
-  id: string | undefined,
-  token: string | undefined
+  id: Id,
+  token: Token
 ): Promise<ProductUpdateResponse> => {
   try {
     const res = await axios({
@@ -144,10 +144,7 @@ const updateProduct = async (
   }
 };
 
-const deleteProduct = async (
-  id: string | undefined,
-  token: string | undefined
-): Promise<ApiResponse> => {
+const deleteProduct = async (id: Id, token: Token): Promise<ApiResponse> => {
   try {
     let res = await axios({
       method: "DELETE",
@@ -174,7 +171,7 @@ const getAllCategories = async (): Promise<CategoriesResponse> => {
     throw new Error(error);
   }
 };
-const getCategoryById = async (id: string): Promise<CategoryResponse> => {
+const getCategoryById = async (id: Id): Promise<CategoryResponse> => {
   try {
     const res = await axios({
       method: "GET",
@@ -189,7 +186,7 @@ const getCategoryById = async (id: string): Promise<CategoryResponse> => {
 };
 const addCategory = async (
   category: Partial<Category>,
-  token: string | undefined
+  token: Token
 ): Promise<CategoryResponse> => {
   try {
     const res = await axios({
@@ -206,9 +203,29 @@ const addCategory = async (
     throw new Error(error);
   }
 };
+const updateCategory = async (
+  newCategory:
+    | Omit<Category, "slug" | "_id">
+    | Omit<Category, "slug" | "_id" | "image">,
+  token: Token,
+  id: Id
+) => {
+  try {
+    const response = await axios({
+      method: "PUT",
+      baseURL: API_BASE_URL,
+      url: `${ENDPOINTS.category}/${id}`,
+      headers: { Authorization: token },
+      data: newCategory,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
 const deleteCategory = async (
   id: string | undefined,
-  token: string | undefined
+  token: Token
 ): Promise<ApiResponse> => {
   try {
     const res = await axios({
@@ -222,10 +239,9 @@ const deleteCategory = async (
     throw new Error(error);
   }
 };
-
 const uploadProductImage = async (
   imageFile: FormData | null,
-  token: string
+  token: Token
 ): Promise<UploadProductImageResponse> => {
   console.log(imageFile);
   try {
@@ -245,13 +261,7 @@ const uploadProductImage = async (
     throw error;
   }
 };
-
-const uploadCategoryImages = async (
-  image: FormData,
-  token: string | undefined
-) => {
-  console.log(image);
-
+const uploadCategoryImages = async (image: FormData, token: Token) => {
   try {
     const res = await axios({
       method: "POST",
@@ -266,7 +276,7 @@ const uploadCategoryImages = async (
     });
     return res.data;
   } catch (error: any) {
-    throw new Error(error.message);
+    throw new Error(error.response.data.message);
   }
 };
 
@@ -282,6 +292,7 @@ export {
   getAllCategories,
   getCategoryById,
   addCategory,
+  updateCategory,
   deleteCategory,
   uploadProductImage,
   uploadCategoryImages,

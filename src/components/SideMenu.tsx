@@ -81,7 +81,7 @@ const SideMenu = () => {
             },
             {
               title: "add prodcts",
-              navigateTo: routesList.addProducts,
+              navigateTo: `${routesList.allProducts}/${routesList.addProducts}`,
             },
           ]}
         >

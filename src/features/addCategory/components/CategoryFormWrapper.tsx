@@ -12,6 +12,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   addCategory,
   getCategoryById,
+  updateCategory,
   uploadCategoryImages,
 } from "../../../lib/apiMethods";
 import useGetToken from "../../../Hooks/useGetToken";
@@ -30,34 +31,54 @@ function CategoryFormWrapper() {
   const { register, watch, resetField, reset, handleSubmit, setValue } =
     useForm<CategoryForm>();
   const { token } = useGetToken();
-  const {
-    // state: { id: categoryId, updateCategory },
-    state,
-  } = useLocation();
+  const { state } = useLocation();
   const isValidSrc = watch("image")?.length >= 1;
   const isFile = typeof watch("image") === "object";
   const {
-    mutate,
+    mutate: mutateCreateCategory,
     isLoading: isLoadingCategoryData,
     isSuccess: isSuccessCategoryData,
   } = useMutation({
-    mutationFn: (categoryData: Partial<Categories>) =>
-      addCategory(categoryData, token),
+    mutationFn: (
+      categoryData:
+        | Omit<Category, "slug" | "_id">
+        | Omit<Category, "slug" | "_id" | "image">
+    ) => addCategory(categoryData, token),
     mutationKey: ["add-category"],
   });
-  const { mutateAsync } = useMutation({
+  const {
+    mutate: mutateUpdateCategory,
+    isLoading: isLoadingUpdateCategoryData,
+    isSuccess: isSuccessUpdateCategoryData,
+  } = useMutation({
+    mutationFn: (
+      newCategoryData:
+        | Omit<Category, "slug" | "_id">
+        | Omit<Category, "slug" | "_id" | "image">
+    ) => updateCategory(newCategoryData, token, state?.id),
+    mutationKey: ["update-category"],
+  });
+  const { mutateAsync, isLoading: isLoadingUploadCategoryImage } = useMutation({
     mutationFn: (image: FormData) => uploadCategoryImages(image, token),
     mutationKey: ["add-category-image"],
   });
 
   const { data: categoryData, isSuccess: isSuccessCategory } = useQuery({
-    queryFn: () => getCategoryById(state?.categoryId),
-    queryKey: ["category", state?.categoryId],
-    enabled: Boolean(state?.categoryId),
+    queryFn: () => getCategoryById(state?.id),
+    queryKey: ["category", state?.id],
+    enabled: Boolean(state?.id),
   });
 
   const resetThumbnail = () => {
     resetField("image");
+  };
+
+  const handleSetFieldValues = (category: Category) => {
+    if (Boolean(category)) {
+      setValue("image", category.image);
+      setValue("name", category.name);
+      setValue("description", category.description);
+    }
   };
 
   const handleUploadImage = async (
@@ -67,12 +88,13 @@ function CategoryFormWrapper() {
     fd.append("category-image", image[0]);
     return await mutateAsync(fd);
   };
-  const handleSubmitCategoryData = (
+
+  const sendCategoryData = (
     data: CategoryForm,
     imageUrl: Pick<UploadCategoryImageResponse, "data">
   ) => {
     const { image } = imageUrl.data;
-    mutate(
+    mutateCreateCategory(
       {
         image: image.url,
         name: data.name,
@@ -99,22 +121,57 @@ function CategoryFormWrapper() {
       }
     );
   };
-  const onSubmitHandler: SubmitHandler<CategoryForm> = (data) => {
-    handleUploadImage(data.image).then((res) => {
-      handleSubmitCategoryData(data, res);
-    });
+
+  const sendCategoryUpdatedData = (
+    data:
+      | Omit<Category, "slug" | "_id">
+      | Omit<Category, "slug" | "_id" | "image">
+  ) => {
+    mutateUpdateCategory(
+      {
+        ...data,
+      },
+      {
+        onSuccess: () => {
+          Swal.fire({
+            title: "Update Category",
+            text: "category data was updated success .",
+            icon: "success",
+          });
+        },
+        onError: (err: any) => {
+          Swal.fire({
+            title: "Update Category",
+            text: err.message,
+            icon: "error",
+          });
+        },
+      }
+    );
   };
-  const handleSetFieldValues = (category: Category) => {
-    if (Boolean(category)) {
-      setValue("image", category.image);
-      setValue("name", category.name);
-      setValue("description", category.description);
+  const onSubmitHandler: SubmitHandler<CategoryForm> = (data) => {
+    const { description, name } = data;
+
+    if ((data.image as FileList | string) instanceof FileList) {
+      handleUploadImage(data.image)
+        .then((res) => {
+          sendCategoryData(data, res);
+        })
+        .catch((err) =>
+          Swal.fire({
+            title: "upload Image",
+            text: err.message,
+            icon: "error",
+          })
+        );
     }
+    sendCategoryUpdatedData({ description, name });
   };
 
+  console.log(state);
   useEffect(() => {
     if (isSuccessCategory) {
-      handleSetFieldValues(categoryData?.data.categories);
+      handleSetFieldValues(categoryData?.data.category);
     }
   }, [isSuccessCategory]);
 
@@ -177,8 +234,12 @@ function CategoryFormWrapper() {
           </span>
         </InputGroup>
         <SubmitCategoryBtn
-          isLoadingCategoryData={isLoadingCategoryData}
-          updateCategory={state.updateCategory}
+          isLoadingCategoryData={
+            isLoadingCategoryData ||
+            isLoadingUpdateCategoryData ||
+            isLoadingUploadCategoryImage
+          }
+          updateCategory={state?.updateCategory}
         />
       </article>
       <article className="max-md:w-full w-1/3 flex flex-col items-center justify-center">

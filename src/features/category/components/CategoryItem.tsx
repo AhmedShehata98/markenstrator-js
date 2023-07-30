@@ -8,12 +8,14 @@ import { deleteCategory } from "../../../lib/apiMethods";
 import useGetToken from "../../../Hooks/useGetToken";
 import { useNavigate } from "react-router-dom";
 import { routesList } from "../../../Router/RoutesList";
+import useGetCategoryDetails from "../../addCategory/hooks/useGetCategoryDetails";
 
 type Props = {
   category?: Categories;
 };
 function CategoryItem({ category }: Props) {
   const { token } = useGetToken();
+  const { getCategoryDetails } = useGetCategoryDetails();
   const { invalidateQueries } = useQueryClient();
   const navigate = useNavigate();
   const { mutate } = useMutation({
@@ -40,11 +42,7 @@ function CategoryItem({ category }: Props) {
     });
   };
 
-  const handleEdit = (id: string | undefined) => {
-    navigate(routesList.addCategory, {
-      state: { categoryId: id, updateCategory: true },
-    });
-  };
+  const handleEdit = (id: string | undefined) => getCategoryDetails(id);
 
   return (
     <li className="category-card">

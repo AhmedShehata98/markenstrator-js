@@ -172,10 +172,10 @@ type Category = {
   description: string;
   name: string;
   slug: string;
-  id: string;
+  _id: string;
 };
 interface CategoryResponse extends ApiResponse {
-  data: { categories: Category };
+  data: { category: Category };
 }
 /**
  *
@@ -203,3 +203,13 @@ type ProductUploadImage = {
   url: string;
   filePath: string;
 };
+
+/**
+ *
+ *
+ * Others
+ *
+ */
+
+type Token = string | undefined;
+type Id = string | undefined;
