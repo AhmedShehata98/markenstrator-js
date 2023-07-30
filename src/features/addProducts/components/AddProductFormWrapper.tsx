@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addProduct,
   getProductById,
@@ -28,6 +28,7 @@ type Props = {};
 function AddProductFormWrapper({}: Props) {
   const { token } = useGetToken();
   const navigate = useNavigate();
+  const queryCache = useQueryClient();
   const isAppliedIncomingData = useRef<boolean>(false);
   const { register, watch, setValue, getValues, handleSubmit, reset } =
     useForm<ProductForm>();
@@ -133,6 +134,12 @@ function AddProductFormWrapper({}: Props) {
             confirmButtonText: "Okay",
           });
           navigate(routesList.allProducts);
+          queryCache.invalidateQueries({
+            queryKey: ["all-products"],
+            exact: true,
+            type: "all",
+            fetchStatus: "fetching",
+          });
         },
       }
     );

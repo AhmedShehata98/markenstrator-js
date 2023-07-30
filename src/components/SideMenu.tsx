@@ -84,6 +84,7 @@ const SideMenu = () => {
               navigateTo: `${routesList.allProducts}/${routesList.addProducts}`,
             },
           ]}
+          mainHref={routesList.allProducts}
         >
           <AccourdionMenuOption />
         </AccordionMenuButton>
@@ -100,6 +101,7 @@ const SideMenu = () => {
               navigateTo: `${routesList.category}/${routesList.addCategory}`,
             },
           ]}
+          mainHref={routesList.category}
         >
           <AccourdionMenuOption />
         </AccordionMenuButton>

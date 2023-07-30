@@ -168,7 +168,6 @@ function CategoryFormWrapper() {
     sendCategoryUpdatedData({ description, name });
   };
 
-  console.log(state);
   useEffect(() => {
     if (isSuccessCategory) {
       handleSetFieldValues(categoryData?.data.category);

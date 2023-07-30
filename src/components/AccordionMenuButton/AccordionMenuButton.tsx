@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 type Props = {
   menuOptionsData?: OptionData[];
@@ -23,6 +23,7 @@ function AccordionMenuButton({
   children,
 }: Props) {
   const [openOptionsList, setOpenOptionsList] = useState(false);
+  const { pathname } = useLocation();
   const renderChildrens = (option: OptionData) => {
     return React.Children.map(
       children as any,
@@ -35,10 +36,16 @@ function AccordionMenuButton({
     (ev.target as HTMLButtonElement).classList.toggle("rotate-180");
     setOpenOptionsList((prev) => !prev);
   };
-
+  console.log(pathname.endsWith(`/${mainHref}`));
+  console.log(pathname);
+  console.log(`/${mainHref}`!);
   return (
     <div className="w-full flex flex-col items-center justify-between ">
-      <div className="w-full flex items-center justify-start rounded-md overflow-hidden hover:!text-violet-700 hover:bg-violet-200">
+      <div
+        className={`w-full flex items-center justify-start rounded-md overflow-hidden hover:!text-violet-700 hover:bg-violet-200 ${
+          pathname.endsWith(mainHref!) && "text-violet-700 bg-violet-200"
+        }`}
+      >
         <Link
           to={mainHref ?? "#"}
           type="button"

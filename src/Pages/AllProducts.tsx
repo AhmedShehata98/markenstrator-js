@@ -16,7 +16,6 @@ import { FaList } from "react-icons/fa";
 const AllProducts = () => {
   const [documentWidth, setDocumentWidth] = useState<number>(window.innerWidth);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [viewMethod, setViewMethod] = useState<"grid" | "list">("grid");
   const {
     data: products,
@@ -25,35 +24,6 @@ const AllProducts = () => {
   } = useQuery(["all-products"], getAllProducts);
 
   const handleNavigateAddProductPage = () => {
-    dispatch(
-      SET_ADD_PRODUCT_INITIAL_STATE({
-        data: {
-          _id: "",
-          name: "",
-          description: "",
-          price: 0,
-          images: [],
-          thumbnail: "",
-          category_id: {
-            _id: "",
-            name: "",
-          },
-          sku: "",
-          brand: "",
-          colors: [],
-          stock: 0,
-          discount: 0,
-          rating: 0,
-          isInCart: false,
-          createdAt: "",
-          updatedAt: "",
-          specifications: "",
-          deliveryCost: ["free"] || 0,
-          __v: 0,
-        },
-        displayProductDetails: false,
-      })
-    );
     navigate(routesList.addProducts);
   };
 
