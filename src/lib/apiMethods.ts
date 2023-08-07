@@ -9,6 +9,10 @@ import {
   Login,
   LoginResponse,
   OneProductResponse,
+  Order,
+  OrderByIdResponse,
+  OrderRequestParams,
+  OrdersResponse,
   ProductForm,
   ProductUpdateResponse,
   Products,
@@ -239,6 +243,43 @@ const deleteCategory = async (
     throw new Error(error);
   }
 };
+
+const getOrders = async ({
+  token,
+  limit,
+  page,
+}: OrderRequestParams): Promise<OrdersResponse> => {
+  try {
+    const { data } = await axios({
+      method: "GET",
+      baseURL: API_BASE_URL,
+      url: ENDPOINTS.order.orders,
+      headers: { authorization: token },
+      params: { limit, page },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getOrdersById = async ({
+  id,
+  token,
+}: OrderRequestParams): Promise<OrderByIdResponse> => {
+  try {
+    const { data } = await axios({
+      method: "GET",
+      baseURL: API_BASE_URL,
+      url: `${ENDPOINTS.order.orders}/${id}`,
+      headers: { Authorization: token },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const uploadProductImage = async (
   imageFile: FormData | null,
   token: Token
@@ -294,6 +335,8 @@ export {
   addCategory,
   updateCategory,
   deleteCategory,
+  getOrders,
+  getOrdersById,
   uploadProductImage,
   uploadCategoryImages,
 };

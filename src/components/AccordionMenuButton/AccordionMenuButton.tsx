@@ -36,9 +36,7 @@ function AccordionMenuButton({
     (ev.target as HTMLButtonElement).classList.toggle("rotate-180");
     setOpenOptionsList((prev) => !prev);
   };
-  console.log(pathname.endsWith(`/${mainHref}`));
-  console.log(pathname);
-  console.log(`/${mainHref}`!);
+
   return (
     <div className="w-full flex flex-col items-center justify-between ">
       <div

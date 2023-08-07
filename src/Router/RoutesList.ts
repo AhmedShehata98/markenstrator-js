@@ -12,4 +12,5 @@ export const routesList = {
   category: "category",
   addCategory: "add-category",
   orders: "orders",
+  orderDetails: "order-details",
 };

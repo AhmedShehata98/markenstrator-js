@@ -180,6 +180,59 @@ interface CategoryResponse extends ApiResponse {
 /**
  *
  *
+ * Orders
+ *
+ */
+
+interface OrderRequestParams {
+  limit?: number;
+  page?: number;
+  token: Token;
+  id?: Token;
+}
+interface OrdersResponse extends ApiResponse {
+  data: {
+    orders: Order[];
+    pagination: {
+      actualOrdersLength: number;
+      currentPage: string;
+      length: number;
+      limit: string;
+      remainingPages: number;
+    };
+  };
+}
+interface OrderByIdResponse extends ApiResponse {
+  data: Order;
+}
+
+type Order = {
+  addressId: string;
+  createdAt: string;
+  updatedAt: string;
+  discountedTotal: number;
+  totalPrice: number;
+  payment: OrderPayment;
+  products: { productId: Products; _id: string; quantity: number }[];
+  status: OrderStatus;
+  userId: { fullname: string; email: string; phone: string };
+  __v: string;
+  _id: string;
+};
+type OrderPayment = {
+  method: string;
+  status: OrderStatus;
+};
+type OrderStatus =
+  | "pending"
+  | "awaiting_fulfillment"
+  | "awaiting_shipment"
+  | "shipped"
+  | "completed"
+  | "cancelled";
+/**
+ *
+ *
  * Uploads Types
  *
  */

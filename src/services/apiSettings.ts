@@ -8,6 +8,7 @@ let ENDPOINTS = {
   user: { me: "users/me" },
   products: "/products",
   category: "/categories",
+  order: { orders: "orders" },
   uploadImage: {
     product: "upload/product",
     category: "upload/category",

@@ -1,54 +1,40 @@
 import { nanoid } from "@reduxjs/toolkit";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import OrderCard from "../components/OrderCard";
+import OrderCard from "../features/orders/OrderCard";
 import { ordersList, IOrders } from "../Utilities/dummyData";
 import { DELETE_ORDER, SET_ORDER } from "../Redux/Slice/OrdersSlice";
 import { useAppDispatch, useAppSelector } from "../Redux/ReduxHooks";
 import SectionHeader from "../components/SectionHeader";
 import { Dropdown } from "flowbite-react";
+import { getOrders } from "../lib/apiMethods";
+import useGetToken from "../Hooks/useGetToken";
+import OrdersListWrapper from "../features/orders/OrdersListWrapper";
+import { useQuery } from "@tanstack/react-query";
 
 const Orders = () => {
   const { ordersList, pending, success, error } = useAppSelector(
     (s) => s.orders
   );
+  const { token } = useGetToken();
+  const {
+    data: ordersResponse,
+    isSuccess,
+    isError,
+    isLoading,
+  } = useQuery({
+    queryKey: ["orders"],
+    queryFn: () => getOrders({ token, limit: 8, page: 1 }),
+    enabled: Boolean(token),
+  });
   const dispatch = useAppDispatch();
   const [documentWidth, setDocumentWidth] = useState<number>(window.innerWidth);
   const [searchMethod, setSearchMethod] =
     useState<keyof IOrders>("ordersCount");
   const [query, setQuery] = useState<string>("");
 
-  // const customSelectFunctionality = (ev: React.MouseEvent) => {
-  //   const element = ev.target as HTMLElement;
-  //   const selectWrapper = element.parentElement as HTMLDivElement;
-  //   const Label = element?.firstElementChild;
-  //   const list = selectWrapper?.lastElementChild as HTMLUListElement;
-  //   list?.classList.toggle("select-collapse");
-
-  //   //
-  //   Array.from(list.children).forEach((li) =>
-  //     li.addEventListener("click", () => {
-  //       const value = li?.getAttribute("data-value") as keyof IOrders;
-  //       const title = li?.getAttribute("data-title") as string;
-  //       const icon = li?.getAttribute("data-icon") as string;
-  //       const currentIcon = Label?.firstElementChild as HTMLSpanElement;
-  //       const currentValue = Label?.lastElementChild as HTMLSpanElement;
-  //       //
-  //       currentIcon.classList.replace(currentIcon?.classList[1], icon);
-  //       currentValue.innerText = title;
-  //       Label?.setAttribute("data-selected", value!);
-
-  //       toggleSearchMethod(value, setSearchMethod);
-  //     })
-  //   );
-  //   //
-  // };
-
   const handleSelectSearchMethod = (ev: React.ChangeEvent<HTMLSelectElement>) =>
     setSearchMethod(ev.target.value as keyof IOrders);
 
-  const deleteOrder = (id: number): void => {
-    dispatch(DELETE_ORDER({ id }));
-  };
   const ordersRef = useRef<HTMLElement | null>(null);
   let timeout: ReturnType<typeof setTimeout>;
 
@@ -80,9 +66,6 @@ const Orders = () => {
     },
     [window.innerWidth]
   );
-  useEffect(() => {
-    dispatch(SET_ORDER());
-  }, []);
 
   return (
     <main
@@ -91,7 +74,7 @@ const Orders = () => {
     >
       <span className="sidebar-space"></span>
       <section className="content-container">
-        <SectionHeader title="orders list" buttonTitle="add Order" to="#">
+        <SectionHeader title="orders list" buttonTitle="soon ..." to="#">
           <select
             value={searchMethod}
             onChange={(ev: React.ChangeEvent<HTMLSelectElement>) =>
@@ -133,7 +116,13 @@ const Orders = () => {
           </div>
         </SectionHeader>
         <article className="w-full">
-          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  w-full min-h-screen mt-7 gap-4 justify-center items-start">
+          <OrdersListWrapper
+            orders={ordersResponse?.data.orders!}
+            apiCallState={{ isSuccess, isError, isLoading }}
+          >
+            <OrderCard />
+          </OrdersListWrapper>
+          {/* <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  w-full min-h-screen mt-7 gap-4 justify-center items-start">
             {ordersList &&
               Array.isArray(ordersList) &&
               ordersList
@@ -174,7 +163,7 @@ const Orders = () => {
                     );
                   }
                 )}
-          </ul>
+          </ul> */}
         </article>
       </section>
     </main>

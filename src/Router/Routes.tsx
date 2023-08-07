@@ -40,6 +40,7 @@ const NotFounded: React.LazyExoticComponent<() => JSX.Element> = lazy(
 
 import { routesList } from "./RoutesList";
 import AddCategory from "../Pages/AddCategory";
+import OrderDetails from "../Pages/OrderDetails";
 
 export default function Routes() {
   const {
@@ -113,6 +114,14 @@ export default function Routes() {
             element={
               <Suspense fallback={<LoadingModule />}>
                 <Orders />
+              </Suspense>
+            }
+          />
+          <Route
+            path={`${routesList?.orders}/${routesList.orderDetails}`}
+            element={
+              <Suspense fallback={<LoadingModule />}>
+                <OrderDetails />
               </Suspense>
             }
           />
