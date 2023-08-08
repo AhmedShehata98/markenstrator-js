@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL, ENDPOINTS } from "../services/apiSettings";
 import {
+  AddressByIdResponse,
   ApiResponse,
   CategoriesResponse,
   Category,
@@ -280,6 +281,26 @@ const getOrdersById = async ({
   }
 };
 
+const getAddressById = async ({
+  id,
+  token,
+}: {
+  id: Id;
+  token: Token;
+}): Promise<AddressByIdResponse> => {
+  try {
+    const res = await axios({
+      method: "GET",
+      baseURL: API_BASE_URL,
+      url: `${ENDPOINTS.address}/${id}`,
+      headers: { Authorization: token },
+    });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const uploadProductImage = async (
   imageFile: FormData | null,
   token: Token
@@ -337,6 +358,7 @@ export {
   deleteCategory,
   getOrders,
   getOrdersById,
+  getAddressById,
   uploadProductImage,
   uploadCategoryImages,
 };

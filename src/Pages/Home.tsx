@@ -16,6 +16,10 @@ const Home = () => {
   const state = useSelector((state) => state);
   let timeout: ReturnType<typeof setTimeout>;
   const homeRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    window.document.title = "overview";
+  }, []);
   useEffect(() => {
     timeout = setTimeout(() => {
       homeRef.current?.classList.replace(

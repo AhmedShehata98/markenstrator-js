@@ -1,6 +1,7 @@
 import React from "react";
 import { Order } from "../../../types";
 import { CgSpinner } from "react-icons/cg";
+import LoadingSpiner from "../../components/LoadingSpiner";
 
 type Props = {
   orders: Order[];
@@ -17,19 +18,12 @@ function OrdersListWrapper({
       React.cloneElement(child as any, { order })
     );
   return (
-    <div className="w-full flex items-start justify-start gap-1 pe-4">
+    <div className="w-full flex items-center justify-center gap-1 pe-4">
       <ul className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {isSuccess &&
           !isLoading &&
           orders?.map((order) => renderOrdersChildren(order))}
-        {isLoading && (
-          <div className="mx-auto h-[50vh] flex flex-col items-center justify-center gap-2">
-            <small className="uppercase font-medium">
-              processing orders ...
-            </small>
-            <CgSpinner className="inline-block text-5xl animate-spin" />
-          </div>
-        )}
+        {isLoading && <LoadingSpiner title="orders" />}
       </ul>
     </div>
   );

@@ -5,7 +5,7 @@ import CategoriesList from "../features/category/components/CategoriesList";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "../lib/apiMethods";
 import CategoryItem from "../features/category/components/CategoryItem";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Categories = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -22,6 +22,15 @@ const Categories = () => {
     refetchOnWindowFocus: false,
   });
 
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.document.title = pathname
+      .split("/")
+      [pathname.split("/").length - 1].split("-")
+      .join(" ")
+      .toLocaleUpperCase();
+  }, []);
   useEffect(() => {
     timeout = setTimeout(() => {
       CategoriesRef.current?.classList.replace(

@@ -10,8 +10,9 @@ type Props = {
 function OrderProductCard({ product }: Props) {
   return (
     <li className="basis-44 flex items-start justify-center flex-col bg-white p-3 border shadow">
-      <figure className="w-full h-40 pt-2">
+      <figure className="w-full h-44 pt-2 overflow-hidden mb-2">
         <img
+          className="grid max-w-full object-cover"
           src={
             typeof product?.productId?.thumbnail === "string"
               ? product?.productId?.thumbnail

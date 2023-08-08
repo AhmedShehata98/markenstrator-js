@@ -6,6 +6,7 @@ let ENDPOINTS = {
     login: "auth/login",
   },
   user: { me: "users/me" },
+  address: "address",
   products: "/products",
   category: "/categories",
   order: { orders: "orders" },

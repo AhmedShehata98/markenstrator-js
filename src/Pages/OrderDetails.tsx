@@ -3,14 +3,16 @@ import InputGroup from "../components/InputGroup";
 import { useLocation, useNavigation, useParams } from "react-router-dom";
 import useGetToken from "../Hooks/useGetToken";
 import { useQuery } from "@tanstack/react-query";
-import { getOrdersById } from "../lib/apiMethods";
+import { getAddressById, getOrdersById } from "../lib/apiMethods";
 import OrderDetailsWrapper from "../features/orders/OrderDetailsWrapper";
 import OrderProductsWrapper from "../features/orders/OrderProductsWrapper";
 import OrderProductCard from "../features/orders/OrderProductCard";
+import OrderAddressWrapper from "../features/orders/OrderAddressWrapper";
+import AddressCard from "../features/orders/AddressCard";
 
 function OrderDetails() {
   const orderDetailssRef = useRef<HTMLElement | null>(null);
-  const { state } = useLocation();
+  const { state, pathname } = useLocation();
 
   const { token } = useGetToken();
   const {
@@ -23,8 +25,15 @@ function OrderDetails() {
     queryFn: () => getOrdersById({ id: state?.order, token }),
     enabled: Boolean(state) && Boolean(token),
   });
-  console.log(state);
-  console.log(orderResponse);
+
+  useEffect(() => {
+    window.document.title = pathname
+      .split("/")
+      [pathname.split("/").length - 1].split("-")
+      .join(" ")
+      .toLocaleUpperCase();
+  }, []);
+
   let timeout: ReturnType<typeof setTimeout>;
   useEffect(() => {
     timeout = setTimeout(() => {
@@ -61,6 +70,13 @@ function OrderDetails() {
         >
           <OrderProductCard />
         </OrderProductsWrapper>
+        <OrderAddressWrapper
+          addressData={orderResponse?.data.addressId}
+          apiCallState={{ isError, isLoading, isSuccess }}
+          fullname={orderResponse?.data.userId.fullname}
+        >
+          <AddressCard />
+        </OrderAddressWrapper>
       </section>
     </main>
   );

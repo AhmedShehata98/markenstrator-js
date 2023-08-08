@@ -2,6 +2,7 @@ import React from "react";
 import InputGroup from "../../components/InputGroup";
 import { Order, OrderStatus } from "../../../types";
 import { CgSpinner } from "react-icons/cg";
+import LoadingSpiner from "../../components/LoadingSpiner";
 
 type Props = {
   order: Order;
@@ -56,12 +57,7 @@ function OrderDetailsWrapper({
   };
   return (
     <form action="" className="w-full bg-white p-3">
-      {isLoading && (
-        <div className="mx-auto h-[50vh] flex flex-col items-center justify-center gap-2">
-          <small className="uppercase font-medium">processing orders ...</small>
-          <CgSpinner className="inline-block text-5xl animate-spin" />
-        </div>
-      )}
+      {isLoading && <LoadingSpiner title="order details" />}
       {isSuccess && (
         <>
           <div className="w-full flex max-sm:flex-col items-center justify-between gap-3 pb-5">

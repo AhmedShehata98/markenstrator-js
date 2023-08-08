@@ -207,15 +207,15 @@ interface OrderByIdResponse extends ApiResponse {
 }
 
 type Order = {
-  addressId: string;
   createdAt: string;
   updatedAt: string;
   discountedTotal: number;
   totalPrice: number;
   payment: OrderPayment;
+  addressId: Address;
   products: { productId: Products; _id: string; quantity: number }[];
-  status: OrderStatus;
   userId: { fullname: string; email: string; phone: string };
+  status: OrderStatus;
   __v: string;
   _id: string;
 };
@@ -230,6 +230,34 @@ type OrderStatus =
   | "shipped"
   | "completed"
   | "cancelled";
+
+/**
+ *
+ *
+ * Address types
+ *
+ */
+
+interface AddressByIdResponse extends ApiResponse {
+  data: { address: Address[] };
+}
+
+type Address = {
+  _id: string;
+  userId: string;
+  country: string;
+  province: string;
+  city: string;
+  street: string;
+  additionalLandmarks: string;
+  postalCode: string;
+  contactPhone: string;
+  default: boolean;
+  addressLabel: "Home" | "Work";
+  createdAt: string;
+  updatedAt: string;
+  __v: 0;
+};
 /**
  *
  *

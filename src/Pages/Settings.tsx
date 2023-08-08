@@ -2,10 +2,20 @@ import React, { useEffect, useRef } from "react";
 import ChangePassword from "../components/ChangePassword";
 import Notifications from "../components/Notifications";
 import EditProfile from "../components/EditProfile";
+import { useLocation } from "react-router-dom";
 
 const Settings = () => {
   const settingsRef = useRef<HTMLElement | null>(null);
   let timeout: ReturnType<typeof setTimeout>;
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.document.title = pathname
+      .split("/")
+      [pathname.split("/").length - 1].split("-")
+      .join(" ")
+      .toLocaleUpperCase();
+  }, []);
 
   useEffect(() => {
     timeout = setTimeout(() => {

@@ -10,6 +10,7 @@ import { getOrders } from "../lib/apiMethods";
 import useGetToken from "../Hooks/useGetToken";
 import OrdersListWrapper from "../features/orders/OrdersListWrapper";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 const Orders = () => {
   const { ordersList, pending, success, error } = useAppSelector(
@@ -26,7 +27,7 @@ const Orders = () => {
     queryFn: () => getOrders({ token, limit: 8, page: 1 }),
     enabled: Boolean(token),
   });
-  const dispatch = useAppDispatch();
+  const { pathname } = useLocation();
   const [documentWidth, setDocumentWidth] = useState<number>(window.innerWidth);
   const [searchMethod, setSearchMethod] =
     useState<keyof IOrders>("ordersCount");
@@ -37,6 +38,13 @@ const Orders = () => {
 
   const ordersRef = useRef<HTMLElement | null>(null);
   let timeout: ReturnType<typeof setTimeout>;
+  useEffect(() => {
+    window.document.title = pathname
+      .split("/")
+      [pathname.split("/").length - 1].split("-")
+      .join(" ")
+      .toLocaleUpperCase();
+  }, []);
 
   useEffect(() => {
     timeout = setTimeout(() => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ProductsTableList from "../features/products/components/ProductsTableList";
 import ProductsGridItem from "../features/products/components/ProductsGridItem";
 import SectionHeader from "../components/SectionHeader";
@@ -34,6 +34,15 @@ const AllProducts = () => {
   const AllProductsRef = useRef<HTMLElement | null>(null);
   let timeout: ReturnType<typeof setTimeout>;
 
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.document.title = pathname
+      .split("/")
+      [pathname.split("/").length - 1].split("-")
+      .join(" ")
+      .toLocaleUpperCase();
+  }, []);
   useEffect(() => {
     timeout = setTimeout(() => {
       AllProductsRef.current?.classList.replace(
