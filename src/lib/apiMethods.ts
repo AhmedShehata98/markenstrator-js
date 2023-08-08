@@ -280,6 +280,22 @@ const getOrdersById = async ({
     throw error;
   }
 };
+const removeOrder = async ({
+  id,
+  token,
+}: OrderRequestParams): Promise<OrderByIdResponse> => {
+  try {
+    const { data } = await axios({
+      method: "DELETE",
+      baseURL: API_BASE_URL,
+      url: `${ENDPOINTS.order.orders}/${id}`,
+      headers: { Authorization: token },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const getAddressById = async ({
   id,
@@ -358,6 +374,7 @@ export {
   deleteCategory,
   getOrders,
   getOrdersById,
+  removeOrder,
   getAddressById,
   uploadProductImage,
   uploadCategoryImages,

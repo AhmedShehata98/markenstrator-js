@@ -8,7 +8,6 @@ type Props = {
   fullname?: string | undefined;
 };
 export default function AddressCard({ address, fullname }: Props) {
-  console.log(address);
   return (
     <li className="w-full md:w-8/12 flex flex-col items-start p-3">
       <div className="w-full flex items-center justify-start gap-3 py-2 mb-4 border-b-2">

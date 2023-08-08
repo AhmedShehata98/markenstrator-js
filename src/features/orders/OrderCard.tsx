@@ -4,12 +4,17 @@ import { PiUserSquareFill } from "react-icons/pi";
 import { GrOverview } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 import { routesList } from "../../Router/RoutesList";
+import { removeOrder } from "../../lib/apiMethods";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useGetToken from "../../Hooks/useGetToken";
+import { ImSpinner8 } from "react-icons/im";
 
 type Props = {
   order?: Order;
 };
 function OrderCard({ order }: Props) {
   const navigator = useNavigate();
+  const { token } = useGetToken();
   const determineOrderStatusColor = (status: OrderStatus | undefined) => {
     switch (status) {
       case "pending":
@@ -47,6 +52,20 @@ function OrderCard({ order }: Props) {
       default:
         return "bg-grey-300";
     }
+  };
+  const { invalidateQueries } = useQueryClient();
+  const { mutateAsync, isLoading } = useMutation({
+    mutationFn: (id: string | undefined) => removeOrder({ token, id }),
+  });
+  const handleRemoveOrder = async (id: string | undefined) => {
+    mutateAsync(id).then(() =>
+      invalidateQueries({
+        queryKey: ["orders"],
+        fetchStatus: "fetching",
+        refetchType: "all",
+        exact: true,
+      })
+    );
   };
   const orderFormattedDate = new Date(order?.createdAt!).toLocaleDateString();
   return (
@@ -110,8 +129,15 @@ function OrderCard({ order }: Props) {
             className="flex items-center justify-center bg-gray-100 rounded h-12 border hover:bg-slate-200 dark:bg-zinc-700 dark:border-slate-500"
             type="button"
             title="delete order"
+            disabled={isLoading}
+            onClick={() => handleRemoveOrder(order?._id)}
           >
-            <i className="fi fi-sr-trash leading text-red-500 dark:text-red-300"></i>
+            {isLoading && (
+              <ImSpinner8 className="inline-block text-2xl animate-spin" />
+            )}
+            {!isLoading && (
+              <i className="fi fi-sr-trash leading text-red-500 dark:text-red-300"></i>
+            )}
           </button>
           <button
             className="flex items-center justify-center bg-gray-100 rounded h-12 border hover:bg-slate-200 dark:bg-zinc-700 dark:border-slate-500"
