@@ -6,7 +6,7 @@ type Props = {
 };
 function LoadingSpiner({ title }: Props) {
   return (
-    <div className="mx-auto h-36 w-max flex flex-col items-center justify-center gap-4 bg-white border shadow p-3 rounded">
+    <div className="mx-auto h-36 w-max flex flex-col m-auto items-center justify-center self-center gap-4 bg-white border shadow p-3 rounded">
       <small className="uppercase font-semibold">processing {title} ...</small>
       <CgSpinner className="inline-block text-5xl animate-spin" />
     </div>

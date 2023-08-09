@@ -105,7 +105,7 @@ const SideMenu = () => {
         >
           <AccourdionMenuOption />
         </AccordionMenuButton>
-        <AccordionMenuButton
+        {/* <AccordionMenuButton
           buttonTitle="users"
           Icon={<i className="fi fi-sr-users text-inherit leading-3"></i>}
           mainHref={routesList?.users}
@@ -118,7 +118,7 @@ const SideMenu = () => {
           mainHref={routesList?.invoices}
         >
           <AccourdionMenuOption />
-        </AccordionMenuButton>
+        </AccordionMenuButton> */}
         <AccordionMenuButton
           buttonTitle="settings"
           Icon={<i className="fi fi-sr-settings text-inherit leading-3"></i>}

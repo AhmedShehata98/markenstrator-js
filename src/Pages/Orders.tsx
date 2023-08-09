@@ -11,20 +11,23 @@ import useGetToken from "../Hooks/useGetToken";
 import OrdersListWrapper from "../features/orders/OrdersListWrapper";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
+import PaginationWrapper from "../components/pagginition/PaginationWrapper";
+import PaginationBtn from "../components/pagginition/PaginationBtn";
+import { FiRefreshCw } from "react-icons/fi";
+import { BiTimeFive } from "react-icons/bi";
 
 const Orders = () => {
-  const { ordersList, pending, success, error } = useAppSelector(
-    (s) => s.orders
-  );
+  const [page, setPage] = useState(1);
   const { token } = useGetToken();
   const {
     data: ordersResponse,
     isSuccess,
     isError,
     isLoading,
+    refetch,
   } = useQuery({
-    queryKey: ["orders"],
-    queryFn: () => getOrders({ token, limit: 8, page: 1 }),
+    queryKey: ["orders", page],
+    queryFn: () => getOrders({ token, limit: 8, page }),
     enabled: Boolean(token),
   });
   const { pathname } = useLocation();
@@ -75,6 +78,13 @@ const Orders = () => {
     [window.innerWidth]
   );
 
+  const handleChangePage = (pageNo: string | undefined) => {
+    if (pageNo) {
+      setPage(+pageNo);
+    }
+    console.log(pageNo);
+  };
+
   return (
     <main
       ref={ordersRef}
@@ -111,9 +121,16 @@ const Orders = () => {
             </form>
             <button
               type="button"
-              className="flex items-center justify-center w-8 rounded-sm aspect-square border border-slate-300  bg-violet-100 dark:text-indigo-400 dark:bg-zinc-800 dark:border-indigo-300"
+              className="flex items-center justify-center w-8 rounded-sm aspect-square border border-slate-300  bg-violet-100 dark:text-indigo-400 dark:bg-zinc-800 dark:border-indigo-300 disabled:!bg-gray-200 disabled:!text-gray-500"
+              onClick={() => refetch()}
+              disabled={isLoading}
             >
-              <i className="fi fi-sr-rotate-right leading-3 text-violet-700 dark:text-indigo-300"></i>
+              {!isLoading && (
+                <FiRefreshCw className="fi fi-sr-rotate-right leading-3 text-violet-700 dark:text-indigo-300" />
+              )}
+              {isLoading && (
+                <BiTimeFive className="fi fi-sr-rotate-right leading-3 text-orange-400 dark:text-indigo-300" />
+              )}
             </button>
             <button
               type="button"
@@ -123,13 +140,27 @@ const Orders = () => {
             </button>
           </div>
         </SectionHeader>
-        <article className="w-full">
+        <article className="w-full flex flex-col gap-4 items-center justify-center min-h-screen">
           <OrdersListWrapper
             orders={ordersResponse?.data.orders!}
             apiCallState={{ isSuccess, isError, isLoading }}
           >
             <OrderCard />
           </OrdersListWrapper>
+          <PaginationWrapper
+            onClickToChangePage={(ev) =>
+              handleChangePage((ev.target as HTMLButtonElement).dataset.pageno)
+            }
+            actualOrdersLength={
+              ordersResponse?.data.pagination.actualOrdersLength
+            }
+            currentPage={ordersResponse?.data.pagination.currentPage}
+            length={ordersResponse?.data.pagination.length}
+            limit={ordersResponse?.data.pagination.limit}
+            remainingPages={ordersResponse?.data.pagination.remainingPages}
+          >
+            <PaginationBtn />
+          </PaginationWrapper>
           {/* <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  w-full min-h-screen mt-7 gap-4 justify-center items-start">
             {ordersList &&
               Array.isArray(ordersList) &&
