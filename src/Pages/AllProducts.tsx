@@ -28,7 +28,7 @@ const AllProducts = () => {
     data: products,
     isLoading,
     isSuccess,
-  } = useQuery(["all-products", debouncedSearchTerm], () =>
+  } = useQuery(["all-products", debouncedSearchTerm, page], () =>
     getAllProducts({
       limit: 8,
       page,
@@ -141,7 +141,7 @@ const AllProducts = () => {
         >
           <ProductsGridItem />
         </ProductsGridList>
-
+        <div className="w-full my-6 border"></div>
         <PaginationWrapper
           onClickToChangePage={(ev) => {
             const pageNo = (ev.target as HTMLButtonElement).dataset.pageno;
