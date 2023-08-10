@@ -119,7 +119,7 @@ type OneProductResponse = {
 type productQueriesParameter = {
   limit: number = 8;
   page?: number = 1;
-  q?: string | undefined = undefined;
+  q?: string | number | undefined = undefined;
   parts?: "pagination" | "filter" | "pagination,filter" = "pagination,filter";
 };
 

@@ -84,12 +84,23 @@ const getUserData = async (token: Token): Promise<UserDataResponse> => {
     throw new Error(error);
   }
 };
-const getAllProducts = async (): Promise<ProductsResponse> => {
+const getAllProducts = async ({
+  parts,
+  page,
+  limit,
+  q,
+}: productQueriesParameter): Promise<ProductsResponse> => {
   try {
     const res = await axios({
       method: "GET",
       baseURL: API_BASE_URL,
       url: ENDPOINTS.products,
+      params: {
+        parts,
+        page,
+        limit,
+        q,
+      },
     });
     return res.data;
   } catch (error: any) {
@@ -129,7 +140,6 @@ const addProduct = async (
     throw (error as any).response.data;
   }
 };
-
 const updateProduct = async (
   product: ProductForm,
   id: Id,
@@ -148,7 +158,6 @@ const updateProduct = async (
     throw new Error(error.message);
   }
 };
-
 const deleteProduct = async (id: Id, token: Token): Promise<ApiResponse> => {
   try {
     let res = await axios({
@@ -162,7 +171,6 @@ const deleteProduct = async (id: Id, token: Token): Promise<ApiResponse> => {
     throw new Error(error.message);
   }
 };
-
 const getAllCategories = async (): Promise<CategoriesResponse> => {
   try {
     const res = await axios({
@@ -244,7 +252,6 @@ const deleteCategory = async (
     throw new Error(error);
   }
 };
-
 const getOrders = async ({
   token,
   limit,
@@ -263,7 +270,6 @@ const getOrders = async ({
     throw error;
   }
 };
-
 const getOrdersById = async ({
   id,
   token,
@@ -316,7 +322,6 @@ const getAddressById = async ({
     throw error;
   }
 };
-
 const uploadProductImage = async (
   imageFile: FormData | null,
   token: Token

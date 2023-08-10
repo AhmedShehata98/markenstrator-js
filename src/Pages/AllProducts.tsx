@@ -4,8 +4,6 @@ import ProductsTableList from "../features/products/components/ProductsTableList
 import ProductsGridItem from "../features/products/components/ProductsGridItem";
 import SectionHeader from "../components/SectionHeader";
 import { routesList } from "../Router/RoutesList";
-import { useAppDispatch } from "../Redux/ReduxHooks";
-import { SET_ADD_PRODUCT_INITIAL_STATE } from "../Redux/Slice/AppSlice";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProducts } from "../lib/apiMethods";
 import ProductTableItem from "../features/addProducts/components/ProductTableItem";
@@ -14,17 +12,30 @@ import { BsGrid3X3GapFill } from "react-icons/bs";
 import { FaList } from "react-icons/fa";
 import PaginationWrapper from "../components/pagginition/PaginationWrapper";
 import PaginationBtn from "../components/pagginition/PaginationBtn";
+import useDebounceValue from "../Hooks/useDebounceValue";
 
 const AllProducts = () => {
+  const navigate = useNavigate();
   const [documentWidth, setDocumentWidth] = useState<number>(window.innerWidth);
   const [page, setPage] = useState<number>(1);
-  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const { debouncedValue: debouncedSearchTerm } = useDebounceValue(
+    searchTerm,
+    500
+  );
   const [viewMethod, setViewMethod] = useState<"grid" | "list">("grid");
   const {
     data: products,
     isLoading,
     isSuccess,
-  } = useQuery(["all-products"], getAllProducts);
+  } = useQuery(["all-products", debouncedSearchTerm], () =>
+    getAllProducts({
+      limit: 8,
+      page,
+      parts: "pagination",
+      q: debouncedSearchTerm ?? undefined,
+    })
+  );
 
   const handleNavigateAddProductPage = () => {
     navigate(routesList.addProducts);
@@ -97,6 +108,8 @@ const AllProducts = () => {
               name="search-product"
               id="search-product"
               placeholder="search product .."
+              value={searchTerm}
+              onChange={(ev) => setSearchTerm(ev.target.value)}
             />
             <i className="fi fi-rr-search leading-3"></i>
           </form>
@@ -129,7 +142,7 @@ const AllProducts = () => {
           <ProductsGridItem />
         </ProductsGridList>
 
-        {/* <PaginationWrapper
+        <PaginationWrapper
           onClickToChangePage={(ev) => {
             const pageNo = (ev.target as HTMLButtonElement).dataset.pageno;
             if (pageNo) setPage(+pageNo);
@@ -141,7 +154,7 @@ const AllProducts = () => {
           remainingPages={products?.data.pagination.remainingPages}
         >
           <PaginationBtn />
-        </PaginationWrapper> */}
+        </PaginationWrapper>
       </section>
     </main>
   );
