@@ -12,9 +12,12 @@ import ProductTableItem from "../features/addProducts/components/ProductTableIte
 import ProductsGridList from "../features/products/components/ProductsGridList";
 import { BsGrid3X3GapFill } from "react-icons/bs";
 import { FaList } from "react-icons/fa";
+import PaginationWrapper from "../components/pagginition/PaginationWrapper";
+import PaginationBtn from "../components/pagginition/PaginationBtn";
 
 const AllProducts = () => {
   const [documentWidth, setDocumentWidth] = useState<number>(window.innerWidth);
+  const [page, setPage] = useState<number>(1);
   const navigate = useNavigate();
   const [viewMethod, setViewMethod] = useState<"grid" | "list">("grid");
   const {
@@ -125,6 +128,20 @@ const AllProducts = () => {
         >
           <ProductsGridItem />
         </ProductsGridList>
+
+        {/* <PaginationWrapper
+          onClickToChangePage={(ev) => {
+            const pageNo = (ev.target as HTMLButtonElement).dataset.pageno;
+            if (pageNo) setPage(+pageNo);
+          }}
+          actualOrdersLength={products?.data.pagination.actualProductsLength}
+          currentPage={products?.data.pagination.currentPage}
+          length={products?.data.pagination.length}
+          limit={products?.data.pagination.limit}
+          remainingPages={products?.data.pagination.remainingPages}
+        >
+          <PaginationBtn />
+        </PaginationWrapper> */}
       </section>
     </main>
   );

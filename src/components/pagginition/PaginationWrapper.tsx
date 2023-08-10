@@ -29,13 +29,33 @@ function PaginationWrapper({
       });
     });
   return (
-    <div>
-      <ul className="w-full flex items-center justify-around gap-2">
+    <div className="w-full max-w-full flex items-center justify-evenly gap-2 overflow-auto">
+      <button
+        className={`pagination-btn capitalize font-normal ${
+          currentPage &&
+          +currentPage <= 1 &&
+          "opacity-50 cursor-no-drop pointer-events-none"
+        }`}
+      >
+        prev
+      </button>
+      <ul className="w-max flex items-center justify-around gap-2">
         {limit &&
           Array.from({ length: +limit }, (_, k) => k + 1)?.map((pageNumber) =>
             renderPaginationButtons(+pageNumber)
           )}
       </ul>
+      <button
+        className={`pagination-btn capitalize font-normal
+      ${
+        remainingPages &&
+        +remainingPages <= 1 &&
+        "opacity-50 cursor-no-drop pointer-events-none"
+      }
+      `}
+      >
+        next
+      </button>
     </div>
   );
 }

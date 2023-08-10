@@ -21,7 +21,7 @@ export default function PaginationBtn({
   } else {
     return (
       <button
-        className="flex items-center justify-center rounded shadow-md px-5 py-3 bg-zinc-300 text-neutral-900 font-bold hover:bg-zinc-200 disabled:bg-violet-700 disabled:text-gray-100"
+        className="pagination-btn"
         disabled={pageNo === currentPage}
         onClick={onClickToChangePage}
         data-pageNo={pageNo}

@@ -297,5 +297,8 @@
   .dropdown-menu-show {
     @apply !translate-y-0 !opacity-100 !pointer-events-auto;
   }
+  .pagination-btn {
+    @apply flex items-center justify-center rounded shadow-md px-4 py-2 bg-zinc-300 text-neutral-900 font-bold hover:bg-zinc-200 disabled:bg-violet-700 disabled:text-gray-100;
+  }
 }
 @tailwind utilities;
