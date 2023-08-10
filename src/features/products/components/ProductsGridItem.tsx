@@ -60,10 +60,7 @@ const ProductsGridItem = ({ product }: Props) => {
   };
 
   return (
-    <li
-      key={product?._id}
-      className="p-3 rounded-md shadow-md border border-gray-100 dark:border-gray-600"
-    >
+    <li key={product?._id} className="product-grid-card">
       <div className="relative flex items-center justify-start gap-2 h-16 mb-3">
         <figure className="w-16 h-16 rounded-lg overflow-hidden">
           <img

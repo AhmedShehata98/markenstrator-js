@@ -19,22 +19,18 @@ function ProductTableItem({ product }: Props) {
     optionMenu.classList.toggle("pd-table-opt-menu-hide");
   };
   return (
-    <tr
-      key={product?._id}
-      className="py-3 pl-3 text-start text-sm dark:text-gray-100 capitalize bg-gray-100 dark:bg-zinc-700 border-b border-zinc-300 dark:border-zinc-600"
-    >
+    <tr key={product?._id} className="product-table-item">
       <td className="py-2 pl-3 text-start ">
         <p className="max-w-full truncate">{product?.sku}</p>
       </td>
       <td className="py-2 pl-3 text-start flex gap-3">
-        <button
+        <span
           className="flex items-center gap-2 justify-center cursor-pointer"
-          type="button"
           onClick={() => handleShowProductDetails(product?._id)}
         >
-          <figure className="w-8 rounded-full aspect-square shadow m-0">
+          <figure className="w-14 rounded-full aspect-square overflow-hidden shadow border-2 m-0">
             <img
-              className="max-w-full object-cover rounded-full"
+              className="w-full object-cover rounded-full"
               src={
                 (product?.thumbnail as Object).hasOwnProperty("url")
                   ? (product?.thumbnail as any).url
@@ -43,13 +39,13 @@ function ProductTableItem({ product }: Props) {
               alt={`product-media`}
             />
           </figure>
-          <figcaption className=" grid place-items-start place-content-center text-sm font-semibold capitalize text-gray-600 dark:text-gray-300 max-w-full truncate">
+          <figcaption className="max-w-xs grid place-items-start place-content-center text-sm font-bold capitalize text-gray-700 dark:text-gray-300 overflow-hidden truncate">
             {product?.name ?? "NA-NA"}
           </figcaption>
-        </button>
+        </span>
       </td>
       <td className="py-2 pl-3 text-start ">
-        <p className="bg-slate-500 dark:bg-slate-400 dark:text-black text-white text-center rounded-full px-3 py-[2px] max-w-full truncate">
+        <p className="bg-gray-300 dark:bg-gray-300 dark:text-black text-center font-medium rounded-full px-3 py-2 max-w-full truncate uppercase">
           {product?.category_id?.name ?? "NA-NA"}
         </p>
       </td>

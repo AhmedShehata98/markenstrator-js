@@ -32,7 +32,7 @@ function ProductsTableList({
     >
       <table className="w-full h-fit rounded-md">
         <thead>
-          <tr className="bg-gray-100 dark:bg-zinc-700 dark:text-white capitalize text-sm border-b border-gray-300 dark:border-gray-400 ">
+          <tr className="bg-white dark:bg-zinc-700 dark:text-white capitalize text-sm border-b border-gray-300 dark:border-gray-400 ">
             <th className="py-2 pl-3 text-start uppercase min-w-max ">
               product code
             </th>
