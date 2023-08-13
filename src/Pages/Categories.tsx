@@ -52,40 +52,33 @@ const Categories = () => {
   };
 
   return (
-    <main
+    <section
       ref={CategoriesRef}
-      className="main-wrapper section-fade-closed dark:bg-zinc-800"
+      className="content-container section-fade-closed"
     >
-      <span className="sidebar-space "></span>
-      <section className="content-container dark:bg-zinc-800">
-        <SectionHeader
-          buttonTitle="add category"
-          title="categories"
-          onClick={handleNavigateToAddCategory}
-        >
-          <form className="flex items-center h-full bg-zinc-100 dark:bg-zinc-700 border border-slate-300 dark:border-slate-400 rounded px-3 py-1">
-            <input
-              className="h-full bg-inherit border-0 rounded-sm mr-2 dark:placeholder:text-zinc-400"
-              type="search"
-              name="search-category"
-              id="searchCategory"
-              placeholder="search on categories .."
-              value={searchQuery}
-              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
-                setSearchQuery(ev.target.value)
-              }
-            />
-            <i className="fi fi-rr-search leading-3 dark:text-white"></i>
-          </form>
-        </SectionHeader>
-        <CategoriesList
-          categories={categoryResponse?.data.categories}
-          apiCallState={{ isLoading, isSuccess }}
-        >
-          <CategoryItem />
-        </CategoriesList>
-      </section>
-    </main>
+      <SectionHeader
+        buttonTitle="add category"
+        title="categories"
+        onClick={handleNavigateToAddCategory}
+      >
+        <form className="w-full flex items-center justify-center min-w-fit rounded border dark:border-slate-600 bg-white dark:bg-zinc-700 dark:text-white py-2 px-3">
+          <input
+            className="w-full bg-inherit outline-none border-0 h-5 mr-3 rounded focus:!border-slate-400"
+            type="search"
+            name="search-product"
+            id="search-product"
+            placeholder="search product .."
+          />
+          <i className="fi fi-rr-search leading-3"></i>
+        </form>
+      </SectionHeader>
+      <CategoriesList
+        categories={categoryResponse?.data.categories}
+        apiCallState={{ isLoading, isSuccess }}
+      >
+        <CategoryItem />
+      </CategoriesList>
+    </section>
   );
 };
 

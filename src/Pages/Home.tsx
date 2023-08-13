@@ -11,9 +11,6 @@ import { routesList } from "../Router/RoutesList";
 import { useSelector } from "react-redux";
 
 const Home = () => {
-  const navigator = useNavigate();
-  const location = useLocation();
-  const state = useSelector((state) => state);
   let timeout: ReturnType<typeof setTimeout>;
   const homeRef = useRef<HTMLElement | null>(null);
 
@@ -37,33 +34,26 @@ const Home = () => {
   }, []);
 
   return (
-    <main ref={homeRef} className="main-home section-fade-closed">
-      <section className="home-content-container lg:ml-48">
-        <article className="home-content-children">
-          <div className="flex flex-col w-full lg:w-3/4 h-full flex-wrap">
-            <div className="flex items-center w-full mb-4">
-              <Statistics />
-            </div>
-            <div className="flex items-center flex-col lg:flex-row gap-3">
-              <PieChart />
-              <StreamChart className="w-full lg:w-2/3 h-52 p-3  bg-white rounded-md shadow dark:bg-zinc-800 dark:text-zinc-100" />
-            </div>
-          </div>
-          <article className="w-full lg:w-1/4 h-full">
-            <CustomerReviews />
-          </article>
-        </article>
-        <article className="home-content-children mt-4">
-          <article className="w-full lg:w-1/3 h-60">
-            <TopSeller />
-          </article>
-          <article className="w-full lg:w-1/3 h-60">
-            <StreamChart className="w-full  h-56 p-3  bg-white rounded-md shadow dark:bg-zinc-800 dark:text-zinc-100" />
-          </article>
-          <article className="w-full lg:w-1/3 h-60"></article>
-        </article>
-      </section>
-    </main>
+    <section ref={homeRef} className="content-container section-fade-closed">
+      <article className="w-full min-w-full h-full flex flex-col flex-wrap">
+        <Statistics />
+        <div className="w-full min-w-full flex items-center flex-col lg:flex-row gap-3">
+          <PieChart />
+          <StreamChart className="w-full lg:w-2/3 h-52 p-3  bg-white rounded-md shadow dark:bg-zinc-800 dark:text-zinc-100" />
+        </div>
+      </article>
+      <article className="w-full min-w-full h-full flex gap-3 max-lg::flex-wrap">
+        <div className="w-full lg:w-1/3 h-full">
+          <CustomerReviews />
+        </div>
+        <div className="w-full lg:w-1/3 h-60">
+          <TopSeller />
+        </div>
+        <div className="w-full lg:w-1/3 h-60">
+          <StreamChart className="w-full h-56 p-3 bg-white rounded-md shadow dark:bg-zinc-800 dark:text-zinc-100" />
+        </div>
+      </article>
+    </section>
   );
 };
 

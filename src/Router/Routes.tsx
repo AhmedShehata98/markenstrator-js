@@ -60,7 +60,6 @@ export default function Routes() {
             <Suspense fallback={<LoadingModule />}>
               {isLoggedIn ? (
                 <>
-                  <Navbar />
                   <Root />
                 </>
               ) : (

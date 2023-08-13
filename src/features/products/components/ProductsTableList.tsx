@@ -25,7 +25,7 @@ function ProductsTableList({
     });
 
   return (
-    <article
+    <div
       className={`product-table-list ${
         productsView !== "list" ? "hidden" : ""
       }`}
@@ -57,7 +57,7 @@ function ProductsTableList({
           )}
         </tbody>
       </table>
-    </article>
+    </div>
   );
 }
 

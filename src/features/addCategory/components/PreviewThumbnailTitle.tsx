@@ -8,7 +8,7 @@ type Props = {
 };
 function PreviewThumbnailTitle({ isFile, watch }: Props) {
   return (
-    <figcaption className="text-gray-600">
+    <figcaption className="bg-white text-gray-600">
       {isFile && (watch("image")[0] as any).name}
     </figcaption>
   );

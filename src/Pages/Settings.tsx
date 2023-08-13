@@ -33,25 +33,20 @@ const Settings = () => {
     };
   }, []);
   return (
-    <main
+    <section
       ref={settingsRef}
-      className="main-wrapper section-fade-closed dark:bg-zinc-800"
+      className="content-container section-fade-closed"
     >
-      <span className="sidebar-space"></span>
-      <section className="content-container p-0">
-        <article className="w-full bg-white dark:bg-zinc-800 rounded p-2">
-          <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            <li className="flex flex-col mb-3">
-              <ChangePassword />
-              <Notifications />
-            </li>
-            <li className="mb-3 h-fit">
-              <EditProfile />
-            </li>
-          </ul>
-        </article>
-      </section>
-    </main>
+      <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <li className="flex flex-col mb-3">
+          <ChangePassword />
+          <Notifications />
+        </li>
+        <li className="mb-3 h-fit">
+          <EditProfile />
+        </li>
+      </ul>
+    </section>
   );
 };
 

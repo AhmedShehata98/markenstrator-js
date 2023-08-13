@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserData } from "../lib/apiMethods";
 import useGetToken from "../Hooks/useGetToken";
 import { ImSpinner } from "react-icons/im";
+import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
   /**
@@ -26,6 +27,7 @@ const Navbar = () => {
     "app-settings": { currentTheme, showSidebar },
     user: { pending, isLoggedIn },
   } = useAppSelector((state) => state);
+  const { pathname } = useLocation();
   const { token } = useGetToken();
   const {
     data: userData,
@@ -81,13 +83,10 @@ const Navbar = () => {
             </>
           )}
         </span> */}
-        <form className="navbar-search hidden lg:flex">
-          <input
-            className="rounded-full h-8 focus:outline-none placeholder:capitalize placeholder:text-sm bg-inherit border-0 dark:placeholder:text-zinc-300 dark:bg-zinc-600"
-            type="search"
-            placeholder="search on something"
-          />
-          <i className="fi fi-rr-search text-gray-600 px-3 leading-3 dark:text-zinc-100 "></i>
+        <form className="navbar-title-wrapper hidden lg:flex">
+          <p className="bg-inherit capitalize font-medium">
+            {pathname.split("/")[1].split("-").join(" ")}
+          </p>
         </form>
         <nav className="navbar flex-row-reverse lg:flex-row">
           <div className="flex items-center gap-3 lg:mr-4 ">

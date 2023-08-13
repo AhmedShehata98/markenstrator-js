@@ -9,7 +9,7 @@ type Props = {
 };
 function ShowCategoryDataCard({ isValidSrc, watch, isFile }: Props) {
   return (
-    <ul className="max-md:w-full w-3/5 flex flex-col items-center justify-center gap-2 shadow-lg rounded-md border p-4">
+    <ul className="max-md:w-full w-3/5 flex flex-col items-center justify-center gap-2 shadow-lg rounded-md border p-4 bg-white">
       <li className="w-full overflow-hidden">
         <figure className="w-full aspect-square rounded-md shadow overflow-hidden">
           {isValidSrc && (

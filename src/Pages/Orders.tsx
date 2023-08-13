@@ -108,120 +108,65 @@ const Orders = () => {
   };
 
   return (
-    <main
-      ref={ordersRef}
-      className="main-wrapper section-fade-closed bg-slate-100 dark:bg-zinc-700"
-    >
-      <span className="sidebar-space"></span>
-      <section className="content-container">
-        <SectionHeader title="orders list" buttonTitle="soon ..." to="#">
-          <OrderFilterSelect onChangeFilter={handleSetFilter} />
-          <div className="flex items-center justify-between gap-3 bg-inherit dark:border-slate-600 rounded h-full px-2 text-gray-500 ">
-            <form
-              onSubmit={(ev) => ev.preventDefault()}
-              className="flex items-center h-full bg-zinc-100 dark:bg-zinc-700 border border-slate-300 dark:border-slate-400 rounded px-3 py-1"
-            >
-              <input
-                type="search"
-                name="search-order"
-                id="searchOrder"
-                className="h-full bg-inherit border-0 rounded-sm mr-2 dark:placeholder:text-zinc-400"
-                placeholder="search orders ..."
-                value={query}
-                onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-                  setQuery(ev.target.value);
-                  // setOrderFilter("all");
-                }}
-              />
-              <i className="fi fi-rr-search leading-3 dark:text-white"></i>
-            </form>
-            <button
-              type="button"
-              className="flex items-center justify-center w-8 rounded-sm aspect-square border border-slate-300  bg-violet-100 dark:text-indigo-400 dark:bg-zinc-800 dark:border-indigo-300 disabled:!bg-gray-200 disabled:!text-gray-500"
-              onClick={() => refetch()}
-              disabled={isLoading}
-            >
-              {!isLoading && (
-                <FiRefreshCw className="fi fi-sr-rotate-right leading-3 text-violet-700 dark:text-indigo-300" />
-              )}
-              {isLoading && (
-                <BiTimeFive className="fi fi-sr-rotate-right leading-3 text-orange-400 dark:text-indigo-300" />
-              )}
-            </button>
-            <button
-              type="button"
-              className="flex items-center justify-center w-8 rounded-sm aspect-square text-white border border-violet-800 bg-violet-700 dark:bg-violet-400 dark:text-black dark:border-violet-400"
-            >
-              <i className="fi fi-sr-download leading-3 text-white dark:text-black"></i>
-            </button>
-          </div>
-        </SectionHeader>
-        <article className="w-full flex flex-col gap-4 items-center justify-between min-h-screen">
-          <OrdersListWrapper
-            orders={filterdOrdersList(ordersResponse?.data.orders)!}
-            apiCallState={{ isSuccess, isError, isLoading }}
+    <section ref={ordersRef} className="content-container section-fade-closed">
+      <SectionHeader title="orders list" buttonTitle="soon ..." to="#">
+        <OrderFilterSelect onChangeFilter={handleSetFilter} />
+        <div className="flex items-center justify-between gap-3 bg-inherit dark:border-slate-600 rounded h-full px-2 text-gray-500 ">
+          <form className="w-full flex items-center justify-center min-w-fit rounded border dark:border-slate-600 bg-white dark:bg-zinc-700 dark:text-white py-2 px-3">
+            <input
+              className="w-full bg-inherit outline-none border-0 h-5 mr-3 rounded focus:!border-slate-400"
+              type="search"
+              name="search-product"
+              id="search-product"
+              placeholder="search orders ..."
+              value={query}
+              onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
+                setQuery(ev.target.value);
+                // setOrderFilter("all");
+              }}
+            />
+            <i className="fi fi-rr-search leading-3"></i>
+          </form>
+          <button
+            type="button"
+            className="flex items-center justify-center w-8 rounded-sm aspect-square border border-slate-300  bg-violet-100 dark:text-indigo-400 dark:bg-zinc-800 dark:border-indigo-300 disabled:!bg-gray-200 disabled:!text-gray-500"
+            onClick={() => refetch()}
+            disabled={isLoading}
           >
-            <OrderCard />
-          </OrdersListWrapper>
-          <PaginationWrapper
-            onClickToChangePage={(ev) =>
-              handleChangePage((ev.target as HTMLButtonElement).dataset.pageno)
-            }
-            actualOrdersLength={
-              ordersResponse?.data.pagination.actualOrdersLength
-            }
-            currentPage={ordersResponse?.data.pagination.currentPage}
-            length={ordersResponse?.data.pagination.length}
-            limit={ordersResponse?.data.pagination.limit}
-            remainingPages={ordersResponse?.data.pagination.remainingPages}
+            {!isLoading && (
+              <FiRefreshCw className="fi fi-sr-rotate-right leading-3 text-violet-700 dark:text-indigo-300" />
+            )}
+            {isLoading && (
+              <BiTimeFive className="fi fi-sr-rotate-right leading-3 text-orange-400 dark:text-indigo-300" />
+            )}
+          </button>
+          <button
+            type="button"
+            className="flex items-center justify-center w-8 rounded-sm aspect-square text-white border border-violet-800 bg-violet-700 dark:bg-violet-400 dark:text-black dark:border-violet-400"
           >
-            <PaginationBtn />
-          </PaginationWrapper>
-          {/* <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  w-full min-h-screen mt-7 gap-4 justify-center items-start">
-            {ordersList &&
-              Array.isArray(ordersList) &&
-              ordersList
-                .filter((order) =>
-                  order[searchMethod].toString().includes(query)
-                )
-                .map(
-                  (
-                    {
-                      id,
-                      username,
-                      orderDate,
-                      orderID,
-                      orderState,
-                      ordersCount,
-                      paymentMethod,
-                      price,
-                      userImg,
-                    },
-                    index
-                  ) => {
-                    return (
-                      <OrderCard
-                        key={nanoid(4)}
-                        ordersCount={ordersCount}
-                        orderState={orderState}
-                        userImg={userImg}
-                        username={username}
-                        orderDate={orderDate}
-                        orderID={orderID}
-                        paymentMethod={{
-                          method: paymentMethod.method,
-                          info: paymentMethod.info,
-                        }}
-                        price={price}
-                        onClick={() => deleteOrder(id)}
-                      />
-                    );
-                  }
-                )}
-          </ul> */}
-        </article>
-      </section>
-    </main>
+            <i className="fi fi-sr-download leading-3 text-white dark:text-black"></i>
+          </button>
+        </div>
+      </SectionHeader>
+      <OrdersListWrapper
+        orders={filterdOrdersList(ordersResponse?.data.orders)!}
+        apiCallState={{ isSuccess, isError, isLoading }}
+      >
+        <OrderCard />
+      </OrdersListWrapper>
+      <PaginationWrapper
+        onClickToChangePage={(ev) =>
+          handleChangePage((ev.target as HTMLButtonElement).dataset.pageno)
+        }
+        actualOrdersLength={ordersResponse?.data.pagination.actualOrdersLength}
+        currentPage={ordersResponse?.data.pagination.currentPage}
+        length={ordersResponse?.data.pagination.length}
+        limit={ordersResponse?.data.pagination.limit}
+        remainingPages={ordersResponse?.data.pagination.remainingPages}
+      >
+        <PaginationBtn />
+      </PaginationWrapper>
+    </section>
   );
 };
 

@@ -209,7 +209,7 @@ function CategoryFormWrapper() {
             type="text"
             {...register("name")}
             id="name"
-            className="form-input"
+            className="form-input !bg-white"
           />
         </InputGroup>
         <InputGroup dir="col" width={"100%"}>
@@ -220,7 +220,7 @@ function CategoryFormWrapper() {
             rows={3}
             {...register("description")}
             id="description"
-            className="!form-input"
+            className="!form-input bg-white"
             maxLength={150}
           />
           <span className="flex items-center justify-start mt-1 gap-2">

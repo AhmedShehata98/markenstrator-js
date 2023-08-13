@@ -29,7 +29,7 @@ function PaginationWrapper({
       });
     });
   return (
-    <div className="w-full max-w-full flex items-center justify-evenly gap-2 overflow-auto">
+    <div className="w-full flex items-center justify-evenly gap-2 overflow-auto mt-2 mb-4">
       <button
         className={`pagination-btn capitalize font-normal ${
           currentPage &&
@@ -39,7 +39,7 @@ function PaginationWrapper({
       >
         prev
       </button>
-      <ul className="w-max flex items-center justify-around gap-2">
+      <ul className="flex items-center justify-around gap-2">
         {limit &&
           Array.from({ length: +limit }, (_, k) => k + 1)?.map((pageNumber) =>
             renderPaginationButtons(+pageNumber)

@@ -60,16 +60,16 @@
     @apply lg:fixed w-full;
   }
   .header {
-    @apply fixed top-0 z-30 bg-white dark:bg-zinc-800 dark:text-white dark:border-zinc-500 border-b h-14 min-w-full;
+    @apply relative w-full flex overflow-hidden bg-white dark:bg-zinc-800 dark:text-white dark:border-zinc-500 border-b;
   }
   .navbar-container {
-    @apply pr-4 lg:pr-6 flex items-center justify-between h-14 min-w-full;
+    @apply flex items-center justify-between h-full w-full px-4 py-3;
   }
   .navbar {
     @apply flex items-center gap-2;
   }
-  .navbar-search {
-    @apply flex flex-row-reverse items-center border rounded-full overflow-hidden h-8 bg-zinc-100 dark:bg-zinc-600 dark:border-zinc-500;
+  .navbar-title-wrapper {
+    @apply w-56 flex items-center justify-center border-2 rounded overflow-hidden h-8 bg-zinc-100 dark:bg-zinc-600 dark:border-zinc-500;
   }
   .side-menu-search {
     @apply flex items-center justify-between border-2 border-gray-400 w-11/12 mb-3 mx-auto lg:hidden;
@@ -90,16 +90,13 @@
     @apply flex gap-3 items-center justify-start  hover:bg-gray-200 px-2 py-1 cursor-pointer rounded-md dark:hover:bg-zinc-500;
   }
   .sidebar-menu {
-    @apply lg:!fixed lg:left-0 lg:top-14 py-4 lg:py-14 bg-white w-48 h-screen border-r flex flex-col items-center dark:bg-zinc-800 dark:border-zinc-500 transition-all lg:-translate-x-0 -translate-x-full z-10;
-  }
-  .side-menu-show {
-    @apply w-3/4 lg:w-48 items-start justify-start lg:items-center absolute lg:!fixed left-0 translate-x-0 z-30 drop-shadow-2xl lg:drop-shadow-none;
+    @apply max-lg:w-full max-lg:absolute w-1/5 h-full flex flex-col items-start justify-start max-lg:bg-gray-600 max-lg:bg-opacity-50 bg-white dark:bg-zinc-800 dark:border-zinc-500 transition-all z-20;
   }
   .side-menu-hide {
-    @apply w-auto items-start lg:items-center justify-start -translate-x-full lg:-translate-x-0 absolute drop-shadow-none;
+    @apply -translate-x-full;
   }
   .sidebar-navigation {
-    @apply w-48 gap-1 flex flex-col items-start justify-around px-2;
+    @apply w-full gap-1 flex flex-col items-start justify-around;
   }
   .sidebar-link {
     @apply flex items-center justify-start gap-3 px-4 py-2 rounded w-full h-fit dark:text-white;
@@ -158,23 +155,14 @@
   .sidebar-space {
     @apply hidden lg:flex w-48 min-h-screen;
   }
-  .main-wrapper {
-    @apply flex items-start justify-between min-h-screen w-full;
-  }
   .content-container {
-    @apply flex flex-col justify-start items-start w-full lg:w-[85%] mt-14 p-2 min-h-screen;
-  }
-  .home-content-container {
-    @apply flex flex-col px-3 lg:px-10 w-full min-h-screen mt-7;
-  }
-  .home-content-children {
-    @apply w-full flex gap-3 items-start justify-between flex-col lg:flex-row mb-3;
+    @apply grid items-start justify-stretch gap-3 h-full w-4/5 overflow-y-auto bg-gray-100 dark:bg-zinc-800 p-3;
   }
   .overview-statistics {
-    @apply flex flex-col lg:flex-row justify-between grid-cols-1 lg:grid lg:grid-cols-4 gap-4 text-center h-fit w-full mb-3 shadow;
+    @apply w-full flex items-start justify-between gap-3 my-3;
   }
   .statistics-box {
-    @apply flex flex-col justify-between items-center bg-white rounded-md shadow-sm px-2 py-4 hover:-translate-y-3 transition-transform duration-500 dark:bg-zinc-800;
+    @apply basis-1/4 flex flex-col justify-between items-center bg-white rounded-md shadow-sm px-2 py-4 hover:-translate-y-3 transition-transform duration-500 dark:bg-zinc-800;
   }
   .statistic-box-icon {
     @apply grid place-content-center aspect-square h-12 text-white p-3 rounded-full;
@@ -271,10 +259,10 @@
     @apply w-32 flex flex-col items-center gap-2 border-2 border-dashed border-gray-800;
   }
   .category-list {
-    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full;
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full mb-auto;
   }
   .category-card {
-    @apply flex items-center justify-center flex-col gap-3 rounded shadow border bg-gray-100 p-3;
+    @apply flex items-center justify-center flex-col gap-3 rounded shadow border bg-white p-3;
   }
   .product-table-list {
     @apply mt-8 mb-2 px-2 pb-2 flex flex-col items-start justify-center w-full border dark:border-zinc-400 bg-white dark:bg-zinc-700;

@@ -4,14 +4,13 @@ function useDocumentWidth() {
   const [documentWidth, setDocumentWidth] = useState<number>(window.innerWidth);
 
   useLayoutEffect(() => {
-    window.addEventListener("resize", () => {
-      setDocumentWidth(window.innerWidth);
-    });
-    return () =>
-      removeEventListener("resize", () => {
-        setDocumentWidth(window.innerWidth);
-      });
-  }, [window.innerWidth]);
+    const width = window.document.documentElement.clientWidth;
+    const handleWidthChange = () => {
+      setDocumentWidth(width);
+    };
+    window.addEventListener("resize", handleWidthChange);
+    return () => removeEventListener("resize", handleWidthChange);
+  }, []);
 
   return { documentWidth };
 }

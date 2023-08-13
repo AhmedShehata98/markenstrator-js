@@ -89,75 +89,71 @@ const AllProducts = () => {
   }, [documentWidth]);
 
   return (
-    <main
+    <section
       ref={AllProductsRef}
-      className="main-wrapper section-fade-closed bg-gray-100 dark:bg-zinc-800"
+      className="content-container section-fade-closed"
     >
-      <span className="sidebar-space"></span>
-      <section className="content-container">
-        <SectionHeader
-          title="all products"
-          buttonTitle="add Products"
-          to={routesList.addProducts}
-          onClick={() => handleNavigateAddProductPage()}
+      <SectionHeader
+        title="all products"
+        buttonTitle="add Products"
+        to={routesList.addProducts}
+        onClick={() => handleNavigateAddProductPage()}
+      >
+        <form className="w-full flex items-center justify-center min-w-fit rounded border dark:border-slate-600 bg-white dark:bg-zinc-700 dark:text-white py-2 px-3">
+          <input
+            className="w-full bg-inherit outline-none border-0 h-5 mr-3 rounded focus:!border-slate-400"
+            type="search"
+            name="search-product"
+            id="search-product"
+            placeholder="search product .."
+            value={searchTerm}
+            onChange={(ev) => setSearchTerm(ev.target.value)}
+          />
+          <i className="fi fi-rr-search leading-3"></i>
+        </form>
+        <span
+          className="max-lg:hidden grid place-content-center shadow border border-violet-400 cursor-pointer px-3 py-2"
+          data-view="grid"
+          onClick={() => handletoggleview()}
         >
-          <form className="w-full flex items-center justify-center min-w-fit rounded border dark:border-slate-600 bg-white dark:bg-zinc-700 dark:text-white py-2 px-3">
-            <input
-              className="w-full bg-inherit outline-none border-0 h-5 mr-3 rounded focus:!border-slate-400"
-              type="search"
-              name="search-product"
-              id="search-product"
-              placeholder="search product .."
-              value={searchTerm}
-              onChange={(ev) => setSearchTerm(ev.target.value)}
-            />
-            <i className="fi fi-rr-search leading-3"></i>
-          </form>
-          <span
-            className="max-lg:hidden grid place-content-center shadow border border-violet-400 cursor-pointer px-3 py-2"
-            data-view="grid"
-            onClick={() => handletoggleview()}
-          >
-            {viewMethod === "grid" && (
-              <BsGrid3X3GapFill className="text-lg text-violet-700 pointer-events-none select-none" />
-            )}
-            {viewMethod === "list" && (
-              <FaList className="text-lg text-violet-700 pointer-events-none select-none" />
-            )}
-          </span>
-        </SectionHeader>
-        <article className="w-full flex items-start justify-between flex-col min-h-screen">
-          <ProductsTableList
-            productsData={products?.data.products ?? []}
-            apiCallState={{ isLoading, isSuccess }}
-            productsView={viewMethod}
-          >
-            <ProductTableItem />
-          </ProductsTableList>
-          <ProductsGridList
-            productsData={products?.data.products ?? []}
-            apiCallState={{ isLoading, isSuccess }}
-            productsView={viewMethod}
-          >
-            <ProductsGridItem />
-          </ProductsGridList>
-          <div className="w-full my-6 border"></div>
-          <PaginationWrapper
-            onClickToChangePage={(ev) => {
-              const pageNo = (ev.target as HTMLButtonElement).dataset.pageno;
-              if (pageNo) setPage(+pageNo);
-            }}
-            actualOrdersLength={products?.data.pagination.actualProductsLength}
-            currentPage={products?.data.pagination.currentPage}
-            length={products?.data.pagination.length}
-            limit={products?.data.pagination.limit}
-            remainingPages={products?.data.pagination.remainingPages}
-          >
-            <PaginationBtn />
-          </PaginationWrapper>
-        </article>
-      </section>
-    </main>
+          {viewMethod === "grid" && (
+            <BsGrid3X3GapFill className="text-lg text-violet-700 pointer-events-none select-none" />
+          )}
+          {viewMethod === "list" && (
+            <FaList className="text-lg text-violet-700 pointer-events-none select-none" />
+          )}
+        </span>
+      </SectionHeader>
+
+      <ProductsTableList
+        productsData={products?.data.products ?? []}
+        apiCallState={{ isLoading, isSuccess }}
+        productsView={viewMethod}
+      >
+        <ProductTableItem />
+      </ProductsTableList>
+      <ProductsGridList
+        productsData={products?.data.products ?? []}
+        apiCallState={{ isLoading, isSuccess }}
+        productsView={viewMethod}
+      >
+        <ProductsGridItem />
+      </ProductsGridList>
+
+      <PaginationWrapper
+        onClickToChangePage={(ev) => {
+          const pageNo = (ev.target as HTMLButtonElement).dataset.pageno;
+          if (pageNo) setPage(+pageNo);
+        }}
+        actualOrdersLength={products?.data.pagination.actualProductsLength}
+        currentPage={products?.data.pagination.currentPage}
+        length={products?.data.pagination.length}
+        limit={products?.data.pagination.limit}
+        remainingPages={products?.data.pagination.remainingPages}
+      >
+        <PaginationBtn />
+      </PaginationWrapper>
+    </section>
   );
 };
 
